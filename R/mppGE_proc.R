@@ -23,47 +23,35 @@
 #' @param trait.name \code{Character} name of the studied trait.
 #' Default = "trait1".
 #'
-#' @param trait \code{Data.frame} with phenotypic trait value. Each column
-#' correspond to a different trait or environment.
+#' @param mppData An object of class \code{mppData}.
+#'
+#' @param trait \code{Character vector} specifying which traits should be used.
 #'
 #' @param EnvNames \code{character} expression indicating the environment or trait
 #' labels. By default it is labeled Env_1, 2, 3, etc.
-#'
-#' @param mppData An object of class \code{mppData}.
 #'
 #' @param Q.eff \code{Character} expression indicating the assumption concerning
 #' the QTL effect: 1) "cr" for cross-specific effects; 2) "par" parental
 #' effects; 3) "anc" for an ancestral effects; 4) "biall" for a bi-allelic
 #' effects. Default = "cr".
 #'
-#' @param par.clu Required argument for the ancesral model \code{(Q.eff = "anc")}.
-#' \code{Interger matrix} representing the results of a parents genotypes
-#' clustering. The columns represent the parental lines and the rows
-#' the different markers or in between positions. \strong{The columns names must
-#' be the same as the parents list of the mppData object. The rownames must be
-#' the same as the map marker list of the mppData object.} At a particular
-#' position, parents with the same value are assumed to inherit from the same
-#' ancestor. Default = NULL.
-#'
-#' @param VCOV \code{Character} expression defining the type of variance
-#' covariance structure used: 1) "h.err" for an homogeneous variance residual term
-#' (HRT) linear model; 2) "Env.err" for environmental (trait) specific variance.
-#' Default = "h.err".
+#' @param VCOV VCOV \code{Character} expression defining the type of variance
+#' covariance structure used. "ID" for identity, "CS" for compound symmetry,
+#' "DG" for heterogeneous environmental (residual) variance,
+#' "UCH" for uniform covariance with heterogeneous environmental variance,
+#' and "UN" for unstructured. Default = "ID".
 #'
 #' @param plot.gen.eff \code{Logical} value. If \code{plot.gen.eff = TRUE},
 #' the function will save the decomposed genetic effects per cross/parent.
 #' These results can be ploted with the function \code{\link{plot_genEffects_GE}}
 #' to visualize a genome-wide decomposition of the genetic effects.
-#' \strong{This functionality is ony available for the cross-specific,
-#' parental and ancestral models.}
 #' Default value = FALSE.
 #'
 #' @param thre.cof \code{Numeric} value representing the -log10(p-value)
-#' threshold above which a position can be peaked as a cofactor. Default = 3.
+#' threshold above which a position can be peaked as a cofactor. Default = 4.
 #'
 #' @param win.cof \code{Numeric} value in centi-Morgan representing the minimum
-#' distance between two selected cofactors. By default, the function select
-#' maximum 1 cofactor per chromosome.
+#' distance between two selected cofactors. Default = 50 cM.
 #'
 #' @param N.cim \code{Numeric} value specifying the number of time the CIM
 #' analysis is repeated. Default = 1.
@@ -72,7 +60,7 @@
 #' cofactor position where it is not included in the model. Default = 20.
 #'
 #' @param thre.QTL \code{Numeric} value representing the -log10(p-value)
-#' threshold above which a position can be selected as QTL. Default = 3.
+#' threshold above which a position can be selected as QTL. Default = 4.
 #'
 #' @param win.QTL \code{Numeric} value in centi-Morgan representing the minimum
 #' distance between two selected QTLs. Default = 20.
@@ -83,8 +71,7 @@
 #' @param parallel \code{Logical} value specifying if the function should be
 #' executed in parallel on multiple cores. To run function in parallel user must
 #' provide cluster in the \code{cluster} argument. \strong{Parallelization is
-#' only available for HRT (linear) models \code{VCOV = "h.err"}}.
-#' Default = FALSE.
+#' only available for 'ID' model}. Default = FALSE.
 #'
 #' @param cluster Cluster object obtained with the function \code{makeCluster()}
 #' from the parallel package. Default = NULL.
@@ -94,7 +81,7 @@
 #' \code{mpp_proc()}, especially the printing of \code{asreml()}. Default = TRUE.
 #'
 #' @param output.loc Path where a folder will be created to save the results.
-#' By default the function uses the current working directory.
+#' Default = NULL.
 #'
 #'
 #' @return Return:
@@ -143,88 +130,45 @@
 #' @export
 #'
 
-####### example
-
-# argument
-
 # setwd("F:/Data_mppR/EUNAM_Flint")
 #
-# # pheno
-#
-# pheno_KWS <- read.csv("./data/pheno/Adj_means_KWS.csv", row.names = 1)
-# pheno_CIAM <- read.csv("./data/pheno/Adj_means_CIAM.csv", row.names = 1)
-#
-# # gather the trait in the same matrix. The number of column correspond to
-# # the number of environments.
-#
-# trait <- cbind(pheno_KWS[, 1], pheno_CIAM[, 1])
-# rownames(trait) <- rownames(pheno_CIAM)
-# colnames(trait) <- c("Env_1", "Env_2")
-#
-# # mppData
-#
-# data_bi <- readRDS(file = "./data/mpp_data/mppData_bi.rds")
-# data <- readRDS(file = "./data/mpp_data/mppData.rds")
-#
-# # par.clu
-#
-# par.clu <- read.table("./data/clustering/par_clu.txt", h = TRUE,
-#                       check.names = FALSE)
-# par.clu <- as.matrix(par.clu)
-#
-# # focus on the first chromosome
-#
-# mk.sel <- data$map[data$map[, 2]==1, 1]
-#
-# data <- mppData_subset(mppData = data, mk.list = mk.sel)
-# data_bi <- mppData_subset(mppData = data_bi, mk.list = mk.sel)
-# par.clu <- par.clu[mk.sel, ]
-#
-# # other arguments
+# load('./data/mpp_data/mppDataGE_toy.RData')
 #
 # pop.name = "MPP"
 # trait.name = "trait1"
-# trait = trait
+# trait = c("PH_KWS", "PH_CIAM")
 # EnvNames = c("KWS", "CIAM")
-# mppData = data
 # Q.eff = "cr"
-# par.clu = par.clu
-# VCOV = "h.err"
+# VCOV = "ID"
 # plot.gen.eff = TRUE
-# thre.cof = 3
-# win.cof = 20
+# thre.cof = 4
+# win.cof = 50
 # N.cim = 1
 # window = 20
-# thre.QTL = 3
+# thre.QTL = 4
 # win.QTL = 20
 # text.size = 18
 # parallel = FALSE
 # cluster = NULL
 # verbose = TRUE
-# output.loc = "F:/mppGE/results"
-#
-# source('F:/mppGE/functions/CheckModelGE.R')
+# output.loc = "F:/mppGxE/results/toy_example"
 
-mppGE_proc <- function(pop.name = "MPP", trait.name = "trait1", trait,
-                       EnvNames = NULL, mppData, Q.eff = "cr", par.clu = NULL,
-                       VCOV = "h.err", plot.gen.eff = FALSE, thre.cof = 3,
-                       win.cof = NULL, N.cim = 1, window = 20, thre.QTL = 3,
+
+mppGE_proc <- function(pop.name = "MPP", trait.name = "trait1", mppData, trait,
+                       EnvNames = NULL,  Q.eff = "cr", VCOV = "ID",
+                       plot.gen.eff = FALSE, thre.cof = 4,
+                       win.cof = 50, N.cim = 1, window = 20, thre.QTL = 4,
                        win.QTL = 20, text.size = 18, parallel = FALSE,
-                       cluster = NULL, verbose = TRUE, output.loc = getwd()) {
+                       cluster = NULL, verbose = TRUE, output.loc = NULL) {
 
 
   # 1. Check the validity of the parameters that have been introduced
   ###################################################################
 
-  # check.mpp.proc(mppData = mppData, Q.eff = Q.eff, VCOV = VCOV,
-  #                par.clu = par.clu, plot.gen.eff = plot.gen.eff,
-  #                ref.par = ref.par, parallel = parallel, cluster = cluster,
-  #                output.loc = output.loc)
-
-  CheckModelGE(mppData = mppData, trait = trait, Q.eff = Q.eff, VCOV = VCOV,
-               par.clu = par.clu, plot.gen.eff = plot.gen.eff,
-               parallel = parallel, cluster = cluster, EnvNames = EnvNames,
-               fct = "SIM")
+  # CheckModelGE(mppData = mppData, trait = trait, Q.eff = Q.eff, VCOV = VCOV,
+  #              plot.gen.eff = plot.gen.eff,
+  #              parallel = parallel, cluster = cluster, EnvNames = EnvNames,
+  #              fct = "SIM")
 
   if(is.null(EnvNames)){
 
@@ -232,36 +176,25 @@ mppGE_proc <- function(pop.name = "MPP", trait.name = "trait1", trait,
 
   }
 
-  if(is.null(win.cof)){
-
-    chr_fact <- factor(mppData$map[, 2], levels = unique(mppData$map[, 2]))
-
-    max_chr_len <- tapply(X = mppData$map[, 4], INDEX = chr_fact,
-                          FUN = function(x) max(x))
-    max_chr_len <- max(unlist(max_chr_len))
-
-    win.cof <- max_chr_len + 1
-
-  }
+  # if(is.null(win.cof)){
+  #
+  #   chr_fact <- factor(mppData$map[, 2], levels = unique(mppData$map[, 2]))
+  #
+  #   max_chr_len <- tapply(X = mppData$map[, 4], INDEX = chr_fact,
+  #                         FUN = function(x) max(x))
+  #   max_chr_len <- max(unlist(max_chr_len))
+  #
+  #   win.cof <- max_chr_len + 1
+  #
+  # }
 
   # 2. Create a directory to store the results
   ############################################
 
   # create a directory to store the results of the QTL analysis
 
-  end.char <- substr(output.loc, nchar(output.loc), nchar(output.loc))
-
-  if(end.char == "/"){
-
-    folder.loc <- paste0(output.loc, paste("QTLGE", pop.name, trait.name, Q.eff,
-                                           VCOV, sep = "_"))
-
-  } else {
-
-    folder.loc <- paste0(output.loc, "/", paste("QTLGE", pop.name, trait.name,
-                                                Q.eff, VCOV, sep = "_"))
-
-  }
+  folder.loc <- file.path(output.loc, paste("QTLGE", pop.name, trait.name, Q.eff,
+                                            VCOV, sep = "_"))
 
   dir.create(folder.loc)
 
@@ -279,12 +212,12 @@ mppGE_proc <- function(pop.name = "MPP", trait.name = "trait1", trait,
   }
 
   SIM <- mppGE_SIM(trait = trait, mppData = mppData, Q.eff = Q.eff,
-                   par.clu = par.clu, VCOV = VCOV, plot.gen.eff = plot.gen.eff,
+                   VCOV = VCOV, plot.gen.eff = plot.gen.eff,
                    parallel = parallel, cluster = cluster)
 
   # save SIM results in output location
 
-  write.table(SIM, file = paste0(folder.loc, "/", "SIM.txt"), quote = FALSE,
+  write.table(SIM, file = file.path(folder.loc, "SIM.txt"), quote = FALSE,
               sep = "\t", row.names = FALSE)
 
   # cofactors selection
@@ -313,7 +246,7 @@ mppGE_proc <- function(pop.name = "MPP", trait.name = "trait1", trait,
   }
 
   CIM <- mppGE_CIM(trait = trait, mppData = mppData, Q.eff = Q.eff,
-                   par.clu = par.clu, VCOV = VCOV, cofactors = cofactors,
+                   VCOV = VCOV, cofactors = cofactors,
                    window = window, plot.gen.eff = plot.gen.eff,
                    parallel = parallel, cluster = cluster)
 
@@ -346,9 +279,9 @@ mppGE_proc <- function(pop.name = "MPP", trait.name = "trait1", trait,
         }
 
         CIM <- mppGE_CIM(trait = trait, mppData = mppData, Q.eff = Q.eff,
-                       par.clu = par.clu, VCOV = VCOV, cofactors = cofactors,
-                       window = window, plot.gen.eff = plot.gen.eff,
-                       parallel = parallel, cluster = cluster)
+                         VCOV = VCOV, cofactors = cofactors,
+                         window = window, plot.gen.eff = plot.gen.eff,
+                         parallel = parallel, cluster = cluster)
 
       }
 
@@ -358,12 +291,12 @@ mppGE_proc <- function(pop.name = "MPP", trait.name = "trait1", trait,
 
   # save the list of cofactors
 
-  write.table(cofactors[, 1:5], file = paste0(folder.loc, "/", "cofactors.txt"),
+  write.table(cofactors[, 1:5], file = file.path(folder.loc, "cofactors.txt"),
               quote = FALSE, sep = "\t", row.names = FALSE)
 
   # save CIM results
 
-  write.table(CIM, file = paste0(folder.loc, "/", "CIM.txt"), quote = FALSE,
+  write.table(CIM, file = file.path(folder.loc, "CIM.txt"), quote = FALSE,
               sep = "\t", row.names = FALSE)
 
   # select QTL candidates
@@ -374,6 +307,15 @@ mppGE_proc <- function(pop.name = "MPP", trait.name = "trait1", trait,
 
     message("No QTL position detected based on the (last) CIM profile.")
     return(NULL)
+
+  }
+
+  # save the list of QTLs
+
+  if(!is.null(QTL)){
+
+    write.table(QTL[, 1:5], file = file.path(folder.loc, "QTL.txt"),
+                quote = FALSE, sep = "\t", row.names = FALSE)
 
   }
 
@@ -399,26 +341,24 @@ mppGE_proc <- function(pop.name = "MPP", trait.name = "trait1", trait,
 
   if(Q.eff == "biall"){t_plot <- "h"} else {t_plot <- "l"}
 
+  pdf(file.path(folder.loc, "QTL_profile.pdf"), height = 10, width = 16)
 
+  print(plot(x = CIM, QTL = cofactors, type = t_plot, main = main.cim,
+             threshold = thre.QTL, text.size = text.size))
 
-    pdf(paste0(folder.loc, "/", "QTL_profile.pdf"), height = 10, width = 16)
+  dev.off()
 
-    print(plot_QTLprof(Qprof = CIM, QTL = cofactors, type = t_plot, main = main.cim,
-                       threshold = thre.QTL, text.size = text.size))
+  if (plot.gen.eff) {
+
+    pdf(file.path(folder.loc, "gen_eff.pdf"), height = 10, width = 16)
+
+    print(plot_genEffects_GE(mppData = mppData, nEnv = length(trait),
+                             EnvNames = EnvNames, Qprof = CIM, Q.eff = Q.eff,
+                             QTL = QTL, main = main.Qeff, text.size = text.size))
 
     dev.off()
 
-    if (plot.gen.eff) {
-
-      pdf(paste0(folder.loc, "/", "gen_eff.pdf"), height = 10, width = 16)
-
-      print(plot_genEffects_GE(mppData = mppData, nEnv = dim(trait)[2],
-                               EnvNames = EnvNames, Qprof = CIM, Q.eff = Q.eff,
-                               QTL = QTL, main = main.Qeff, text.size = text.size))
-
-      dev.off()
-
-    }
+  }
 
 
   ### 9.4: Return R object
@@ -429,4 +369,4 @@ mppGE_proc <- function(pop.name = "MPP", trait.name = "trait1", trait,
 
   return(results)
 
-  }
+}

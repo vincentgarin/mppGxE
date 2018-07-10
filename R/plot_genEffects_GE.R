@@ -54,7 +54,6 @@ plot_genEffects_GE <- function(mppData, nEnv, EnvNames, Qprof, Q.eff, QTL = NULL
 
   }
 
-
   n.eff <- dim(Qprof)[2] - 5
 
   if(n.eff == 0) {
@@ -63,6 +62,27 @@ plot_genEffects_GE <- function(mppData, nEnv, EnvNames, Qprof, Q.eff, QTL = NULL
          It was probably not obtained using plot.gen.eff = TRUE")
 
   }
+
+  # change environment order
+
+  EnvNames <- rev(EnvNames)
+
+  EnvPval <- vector(mode = "list", length = nEnv)
+
+  pval <- Qprof[, 6:dim(Qprof)[2]]
+
+  index <- split(1:dim(pval)[2], factor(sort(rank(1:dim(pval)[2])%%nEnv)))
+
+  rev_id <- nEnv:1
+
+  for(i in 1:nEnv){
+
+    EnvPval[[i]] <- pval[, index[[rev_id[i]]]]
+
+  }
+
+  pval <- do.call(what = cbind, EnvPval)
+  Qprof <- cbind(Qprof[, 1:5], pval)
 
   # 2. order columns within connected parts
   #########################################
@@ -189,6 +209,7 @@ plot_genEffects_GE <- function(mppData, nEnv, EnvNames, Qprof, Q.eff, QTL = NULL
   y_env <- max(as.numeric(y))/nEnv
   y_env <- y_env * 1:nEnv
   y_env <- y_env[1:(nEnv-1)] + 0.5
+
 
   # 3. plot
   #########
