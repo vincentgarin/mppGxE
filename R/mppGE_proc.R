@@ -310,9 +310,17 @@ mppGE_proc <- function(pop.name = "MPP", trait.name = "trait1", mppData, trait,
 
   }
 
+  # 5. Backward elimination
+  #########################
+
+  Q_back <- back_elim_GE(mppData = mppData, trait = trait, Q.eff = Q.eff,
+                      VCOV = VCOV, QTL = QTL, alpha = alpha)
+
   # save the list of QTLs
 
-  if(!is.null(QTL)){
+  if(!is.null(QTL_back)){
+
+    QTL <- QTL[QTL[, 1] %in% Q_back[, 1], ]
 
     write.table(QTL[, 1:5], file = file.path(folder.loc, "QTL.txt"),
                 quote = FALSE, sep = "\t", row.names = FALSE)
@@ -320,7 +328,7 @@ mppGE_proc <- function(pop.name = "MPP", trait.name = "trait1", mppData, trait,
   }
 
 
-  # 9. Results processing
+  # 6. Results processing
   #######################
 
   if(verbose){

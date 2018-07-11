@@ -71,7 +71,7 @@
 #'
 
 
-mppGE_CIM <- function(trait, mppData, Q.eff = "cr", VCOV = "ID",
+mppGE_CIM <- function(mppData, trait, Q.eff = "cr", VCOV = "ID",
                       cofactors = NULL,  window = 20, plot.gen.eff = FALSE,
                       parallel = FALSE, cluster = NULL)
 {
