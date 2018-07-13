@@ -14,6 +14,9 @@
 #' \item{Composite interval mapping (CIM) with selected cofactors
 #' (\code{\link{mppGE_CIM}}).}
 #'
+#' \item{Backward elimination on the list of QTLs
+#' (\code{\link{back_elim_GE}}).}
+#'
 #' }
 #'
 #'
@@ -64,6 +67,9 @@
 #'
 #' @param win.QTL \code{Numeric} value in centi-Morgan representing the minimum
 #' distance between two selected QTLs. Default = 20.
+#'
+#' @param alpha \code{Numeric} value indicating the level of significance for
+#' the backward elimination. Default = 0.01.
 #'
 #' @param text.size \code{Numeric} value specifying the size of graph axis text
 #' elements. Default = 18.
@@ -158,7 +164,7 @@ mppGE_proc <- function(pop.name = "MPP", trait.name = "trait1", mppData, trait,
                        EnvNames = NULL,  Q.eff = "cr", VCOV = "ID",
                        plot.gen.eff = FALSE, thre.cof = 4,
                        win.cof = 50, N.cim = 1, window = 20, thre.QTL = 4,
-                       win.QTL = 20, text.size = 18, parallel = FALSE,
+                       win.QTL = 20, alpha = 0.01, text.size = 18, parallel = FALSE,
                        cluster = NULL, verbose = TRUE, output.loc = NULL) {
 
 

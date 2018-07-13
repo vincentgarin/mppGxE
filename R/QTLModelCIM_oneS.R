@@ -41,7 +41,7 @@ QTLModelCIM_oneS <- function(x, plot_data, mppData, trait, nEnv, EnvNames,
 
   # Form a unique dataset with cofactors and QTL to distribute it on the data
 
-  QTLdat <- data.frame(genotype = mppData$geno.id, cof.mat, QTLenv,
+  QTLdat <- data.frame(genotype = rep(mppData$geno.id, nEnv), cof.mat, QTLenv,
                        stringsAsFactors = FALSE)
 
   # form the dataset

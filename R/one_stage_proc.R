@@ -14,6 +14,9 @@
 #' \item{Composite interval mapping (CIM) with selected cofactors
 #' (\code{\link{CIM_one_stage}}).}
 #'
+#' \item{Backward elimination on the list of QTLs
+#' (\code{\link{back_elim_oneS}}).}
+#'
 #' }
 #'
 #' @param pop.name \code{Character} name of the studied population.
@@ -32,7 +35,7 @@
 #' @param trait \code{Character} expression for the trait.
 #'
 #' @param EnvNames \code{character} expression indicating the environment or trait
-#' labels. By default it is labeled Env_1, 2, 3, etc.
+#' labels.
 #'
 #' @param Q.eff \code{Character} expression indicating the assumption concerning
 #' the QTL effect: 1) "cr" for cross-specific effects; 2) "par" parental
@@ -68,6 +71,9 @@
 #'
 #' @param win.QTL \code{Numeric} value in centi-Morgan representing the minimum
 #' distance between two selected QTLs. Default = 20.
+#'
+#' @param alpha \code{Numeric} value indicating the level of significance for
+#' the backward elimination. Default = 0.01.
 #'
 #' @param text.size \code{Numeric} value specifying the size of graph axis text
 #' elements. Default = 18.
@@ -167,7 +173,7 @@ one_stage_proc <- function(pop.name = "MPP", trait.name = "trait1", plot_data,
                        mppData, trait, EnvNames = NULL,  Q.eff = "cr",
                        VCOV = "DG", plot.gen.eff = FALSE, thre.cof = 4,
                        win.cof = 50, N.cim = 1, window = 20, thre.QTL = 4,
-                       win.QTL = 20, text.size = 18, verbose = TRUE,
+                       win.QTL = 20, alpha = 0.01, text.size = 18, verbose = TRUE,
                        output.loc = NULL) {
 
 
@@ -320,9 +326,17 @@ one_stage_proc <- function(pop.name = "MPP", trait.name = "trait1", plot_data,
 
   }
 
+  # 5. Backward elimination
+  #########################
+
+  Q_back <- back_elim_oneS(plot_data = plot_data, mppData = mppData, trait = trait,
+                           Q.eff = Q.eff, VCOV = VCOV, QTL = QTL, alpha = alpha)
+
   # save the list of QTLs
 
-  if(!is.null(QTL)){
+  if(!is.null(QTL_back)){
+
+    QTL <- QTL[QTL[, 1] %in% Q_back[, 1], ]
 
     write.table(QTL[, 1:5], file = file.path(folder.loc, "QTL.txt"),
                 quote = FALSE, sep = "\t", row.names = FALSE)
@@ -330,7 +344,7 @@ one_stage_proc <- function(pop.name = "MPP", trait.name = "trait1", plot_data,
   }
 
 
-  # 9. Results processing
+  # 6. Results processing
   #######################
 
   if(verbose){
