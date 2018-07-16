@@ -324,7 +324,7 @@ mppGE_proc <- function(pop.name = "MPP", trait.name = "trait1", mppData, trait,
 
   # save the list of QTLs
 
-  if(!is.null(QTL_back)){
+  if(!is.null(Q_back)){
 
     QTL <- QTL[QTL[, 1] %in% Q_back[, 1], ]
 
