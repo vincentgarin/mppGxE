@@ -1,20 +1,18 @@
-##################
-# back_elim_oneS #
-##################
+####################
+# QTL_effects_oneS #
+####################
 
-#' Backward elimination of one stage MPP GxE analysis
+#' MPP GxE one stage QTL genetic effects
 #'
-#' Perform a backward elimination on a list of QTL using a one stage MPP GxE
-#' model.
+#' Compute MPP GxE one stage QTL genetic effects
 #'
 #' @param plot_data \code{data.frame} containing plot data with the following
 #' columns: genotype indicator, cross, environment, experimental design
 #' covariate (e.g. replicate, block, etc.), and the traits.
 #'
-#' @param mppData Object of class \code{mppData} contaning the genotypic
-#' information with genotype list corresponding to the one of \code{plot_data}.
+#' @param mppData An object of class \code{mppData}.
 #'
-#' @param trait \code{Character} expression for the trait.
+#' @param trait \code{Character vector} specifying which traits should be used.
 #'
 #' @param Q.eff \code{Character} expression indicating the assumption concerning
 #' the QTL effects: 1) "cr" for cross-specific; 2) "par" for parental; 3) "anc"
@@ -30,15 +28,22 @@
 #' selected marker positions obtained with the function QTL_select() or
 #' vector of \code{character} marker positions names. Default = NULL.
 #'
-#' @param alpha \code{Numeric} value indicating the level of significance for
-#' the backward elimination. Default = 0.01.
-#'
 #' @return Return:
 #'
-#' \item{QTL }{\code{Data.frame} of class \code{QTLlist} with five columns :
-#' 1) QTL marker names; 2) chromosomes;
-#' 3) interger position indicators on the chromosome;
-#' 4) positions in centi-Morgan; and 5) -log10(p-values).}
+#' \item{Qeff}{\code{List} of \code{data.frame} (one per QTL) containing the
+#' following information:
+#'
+#' \enumerate{
+#'
+#' \item{QTL genetic effects per cross or parent.}
+#' \item{Standard error of the QTL effects.}
+#' \item{Test statistics of the effects (t-test or Wald statistic).}
+#' \item{P-value of the test statistics.}
+#' \item{Significance of the QTL effects.}
+#'
+#' }
+#'
+#' }
 #'
 #' @author Vincent Garin
 #'
@@ -49,12 +54,9 @@
 #' @export
 #'
 
-# arguments
-
-# functions
-
-# source('F:/mppGxE/package/mppGxE/R/formula_backward_GE.R')
-# source('F:/mppGxE/package/mppGxE/R/QTLModelBack_oneS.R')
+# source('F:/mppGxE/package/mppGxE/R/QTLModelQeff_oneS.R')
+# source('F:/mppGxE/package/mppGxE/R/Qeff_res_processing_GE.R')
+# source('F:/mppGxE/package/mppGxE/R/sign.star.R')
 #
 # setwd("F:/Data_mppR/EUNAM_Flint")
 #
@@ -74,27 +76,21 @@
 # plot_data <- pheno[pheno$env %in% c("KWS", "CIAM"), ]
 # load('./data/mpp_data/mppDataGE_toy.RData')
 #
-# trait = "PH"
-# Q.eff = "par"
-# VCOV = "CS"
-# alpha = 0.01
-#
 # SIM <- SIM_one_stage(plot_data = plot_data, mppData = mppData,
 #                      trait = "PH", Q.eff = "par", VCOV = "CS",
 #                      plot.gen.eff = TRUE)
 #
 # QTL <- QTL_select(SIM, threshold = 5, window = 1000)
-
-
-
-# CIM <- CIM_one_stage(plot_data = plot_data, mppData = mppData, cofactors = QTL,
-#                      trait = "PH", Q.eff = "par", VCOV = "CS",
-#                      plot.gen.eff = TRUE)
 #
-# plot(CIM)
+# plot_data = plot_data
+# mppData = mppData
+# trait = "PH"
+# Q.eff = "biall"
+# VCOV = "CS"
+# QTL = QTL
 
-back_elim_oneS <- function(plot_data, mppData, trait, Q.eff = "cr", VCOV = "DG",
-                           QTL = NULL, alpha = 0.01){
+QTL_effects_oneS <- function(plot_data, mppData, trait, Q.eff = "cr", VCOV = "DG",
+                           QTL = NULL){
 
   if(is.null(QTL)){stop("No 'QTL' have been provided.")}
 
@@ -128,10 +124,40 @@ back_elim_oneS <- function(plot_data, mppData, trait, Q.eff = "cr", VCOV = "DG",
   nGeno <- length(mppData$geno.id)
 
   Q.list0 <- lapply(X = Q.pos, FUN = inc_mat_QTL, mppData = mppData,
-                   Q.eff = Q.eff, order.MAF = TRUE)
+                    Q.eff = Q.eff, order.MAF = TRUE)
+
+  Q.names <- function(x, Q.list, nEnv){
+    rep(paste0("Q", x, attr(Q.list[[x]], "dimnames")[[2]]), nEnv)
+  }
+
+  names.QTL <- unlist(lapply(X = 1:nQTL, FUN = Q.names, Q.list = Q.list0,
+                             nEnv = nEnv))
+
+  if(Q.eff == "anc"){
+
+    n_al <- unlist(lapply(X = Q.list0, FUN = function(x) dim(x)[2]))
+
+    e_lab <- paste0("E", 1:nEnv)
+
+    Env.names <- lapply(X = n_al, FUN = function(x, e_lab) rep(e_lab, each = x),
+                        e_lab = e_lab)
+
+    Env.names <- unlist(Env.names)
+
+  } else {
+
+    n_al <- NULL
+
+    Env.names <- rep(rep(paste0("E", 1:nEnv), each = dim(Q.list0[[1]])[2]), nQTL)
+
+  }
+
+  names.QTL <- paste(names.QTL, Env.names, sep = "_")
+
+
 
   Q.list0 <- lapply(X = Q.list0, FUN =  function(x, nEnv) diag(nEnv) %x% x,
-                   nEnv = nEnv)
+                    nEnv = nEnv)
 
   # expand each QTL to match the genotype information of the plot data
 
@@ -146,7 +172,7 @@ back_elim_oneS <- function(plot_data, mppData, trait, Q.eff = "cr", VCOV = "DG",
   for(i in 1:nQTL){
 
     QTLdat_i <- data.frame(genotype = rep(mppData$geno.id, nEnv), Q.list0[[i]],
-                         stringsAsFactors = FALSE)
+                           stringsAsFactors = FALSE)
     Q_i <- c()
 
     for(j in 1:nEnv){
@@ -189,64 +215,22 @@ back_elim_oneS <- function(plot_data, mppData, trait, Q.eff = "cr", VCOV = "DG",
 
   plot_data <- plot_data[ref_i$id, ]
 
+  # model computation
 
-  # Compute the model
-
-  ind <- TRUE
-
-  while(ind) {
-
-    ### 3.1 elaboration of model formulas
-
-    model.formulas <- formula_backward_GE(Q.names = names(Q.list), VCOV = VCOV)
-
-    ### 3.2 computation of the models
-
-    pvals <- lapply(X = model.formulas, FUN = QTLModelBack_oneS,
-                    plot_data = plot_data, mppData = mppData,
-                    trait = trait, nEnv = nEnv, Q.list = Q.list, VCOV = VCOV)
-
-    pvals <- unlist(pvals)
+  model <- QTLModelQeff_oneS(plot_data = plot_data, mppData = mppData,
+                             trait = trait, Q.list = Q.list,
+                             VCOV = VCOV, names.QTL = names.QTL)
 
 
-    ### 3.4 test the p-values
+  # process the results
 
 
-    if(sum(pvals > alpha) > 0) {
+  Qeff <- Qeff_res_processing_GE(model = model, mppData = mppData,
+                                 Q.eff = Q.eff, VCOV = VCOV,
+                                 names.QTL = names.QTL, nQTL = nQTL,
+                                 n_al = n_al, nEnv = nEnv)
 
-      # remove the QTL position from the list
+  return(Qeff)
 
-      Q.list <- Q.list[!(pvals==max(pvals))]
-
-      # test if there is no more positions
-
-      if(length(Q.list) == 0){ind <- FALSE}
-
-    } else {
-
-      # stop the procedure
-
-      ind <- FALSE
-
-    }
-
-  }
-
-  QTL <- QTL[as.numeric(substr(names(Q.list), 2, nchar(names(Q.list)))), ,
-             drop = FALSE]
-
-  if(dim(QTL)[1] == 0){
-
-    QTL <- NULL
-
-    return(QTL)
-
-  } else{
-
-    class(QTL) <- c("QTLlist", "data.frame")
-
-    return(QTL)
-
-  }
 
 }
