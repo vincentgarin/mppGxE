@@ -187,7 +187,7 @@ one_stage_proc <- function(pop.name = "MPP", trait.name = "trait1", plot_data,
 
   if(is.null(EnvNames)){
 
-    EnvNames <- paste0("Env_", 1:dim(trait)[2])
+    EnvNames <- unique(plot_data$env)
 
   }
 
@@ -334,7 +334,7 @@ one_stage_proc <- function(pop.name = "MPP", trait.name = "trait1", plot_data,
 
   # save the list of QTLs
 
-  if(!is.null(QTL_back)){
+  if(!is.null(Q_back)){
 
     QTL <- QTL[QTL[, 1] %in% Q_back[, 1], ]
 
