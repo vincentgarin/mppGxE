@@ -5,16 +5,27 @@
 # Compute the predicted R2 from detected QTL for MPP GxE validation data.
 
 QTL_pred_R2_GE <- function(mppData.ts, mppData.vs, trait = NULL,
-                           Q.eff = "cr", VCOV = "ID", QTL = NULL,
-                           her = 1) {
+                           cv.ref = NULL, nEnv, Q.eff = "cr", VCOV = "ID",
+                           QTL = NULL, her = 1) {
 
   if(is.character(QTL)){ n.QTL <- length(QTL) } else { n.QTL <- dim(QTL)[1] }
 
   # trait values
 
-  nEnv <- length(trait)
+  if(is.null(cv.ref)){
 
-  t_val <- c(mppData.vs$pheno[, trait])
+    nEnv <- length(trait)
+
+    t_val <- c(mppData.vs$pheno[, trait])
+
+  } else {
+
+    t_val <- c(mppData.vs$pheno[, cv.ref])
+    t_val <- rep(t_val, nEnv)
+
+  }
+
+
 
 
   # 2. obtain the genetic effects (Betas)

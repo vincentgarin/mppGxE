@@ -16,6 +16,10 @@
 #'
 #' @param trait \code{Character vector} specifying which traits should be used.
 #'
+#' @param cv.ref \code{Numerical} or \code{character} indicator to specify which
+#' trait of the \code{mppData} object should be used to check the prediction
+#' in the CV process. By default use 'trait'.
+#'
 #' @param Rep \code{Numeric} value representing the number of repetition of the
 #' k-fold procedure. Default = 5.
 #'
@@ -130,11 +134,11 @@
 
 
 mppGE_CV <- function(pop.name = "MPP", trait.name = "trait1", mppData, trait,
-                     Rep = 5, k = 3, EnvNames = NULL,  Q.eff = "cr", VCOV = "ID",
-                     thre.cof = 4, win.cof = 50, N.cim = 1, window = 20,
-                     thre.QTL = 4, win.QTL = 20, alpha = 0.01,
-                     parallel = FALSE, cluster = NULL, verbose = TRUE,
-                     output.loc = NULL) {
+                     cv.ref = NULL, Rep = 5, k = 3, EnvNames = NULL,
+                     Q.eff = "cr", VCOV = "ID", thre.cof = 4, win.cof = 50,
+                     N.cim = 1, window = 20, thre.QTL = 4, win.QTL = 20,
+                     alpha = 0.01, parallel = FALSE, cluster = NULL,
+                     verbose = TRUE, output.loc = NULL) {
 
 
   # 1. Check the validity of the parameters that have been introduced
@@ -228,43 +232,44 @@ mppGE_CV <- function(pop.name = "MPP", trait.name = "trait1", mppData, trait,
                           N.cim = N.cim, window = window, thre.QTL = thre.QTL,
                           win.QTL = win.QTL, alpha = alpha, parallel = parallel,
                           cluster = cluster, verbose = FALSE,
-                        output.loc = tempdir())
+                          output.loc = tempdir())
 
-        if (!is.null(CV_ij$QTL)) {
+      if (!is.null(CV_ij$QTL)) {
 
-          QTL <- CV_ij$QTL
+        QTL <- CV_ij$QTL
 
-          ### 4.3 compute the CV statistics (N.QTL, p.ts. etc.)
+        ### 4.3 compute the CV statistics (N.QTL, p.ts. etc.)
 
-          # a) N.QTL
+        # a) N.QTL
 
-          N.QTL[ind.res] <- dim(QTL)[1]
+        N.QTL[ind.res] <- dim(QTL)[1]
 
-          # b) QTL positions
+        # b) QTL positions
 
-          QTL.names <- QTL[, 1]
+        QTL.names <- QTL[, 1]
 
-          QTL.positions <- QTL.positions + (is.element(mk.list, QTL.names) * 1)
+        QTL.positions <- QTL.positions + (is.element(mk.list, QTL.names) * 1)
 
-          # store the profiles (could be done later)
+        # store the profiles (could be done later)
 
-          # compute predicted R squared
-          ##############################
+        # compute predicted R squared
+        ##############################
 
-          R2.vs <- QTL_pred_R2_GE(mppData.ts = mppData.ts,
-                                  mppData.vs = mppData.vs, trait = trait,
-                                  Q.eff = Q.eff, VCOV = VCOV, QTL = QTL)
-
-
-          # global results
-          ################
-
-          # non adjusted
-
-          p.vs[ind.res, ] <- R2.vs
+        R2.vs <- QTL_pred_R2_GE(mppData.ts = mppData.ts,
+                                mppData.vs = mppData.vs, trait = trait,
+                                cv.ref = cv.ref, nEnv = nEnv, Q.eff = Q.eff,
+                                VCOV = VCOV, QTL = QTL)
 
 
-        }
+        # global results
+        ################
+
+        # non adjusted
+
+        p.vs[ind.res, ] <- R2.vs
+
+
+      }
 
 
       ind.res <- ind.res + 1
