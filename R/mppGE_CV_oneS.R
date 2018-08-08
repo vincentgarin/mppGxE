@@ -20,6 +20,10 @@
 #'
 #' @param trait \code{Character vector} specifying which traits should be used.
 #'
+#' @param cv.ref \code{Numerical} or \code{character} indicator to specify which
+#' trait of the \code{mppData} object should be used to check the prediction
+#' in the CV process.
+#'
 #' @param Rep \code{Numeric} value representing the number of repetition of the
 #' k-fold procedure. Default = 5.
 #'
@@ -140,10 +144,10 @@
 
 
 mppGE_CV_oneS <- function(pop.name = "MPP", trait.name = "trait1", plot_data,
-                     mppData, trait, Rep = 5, k = 3, EnvNames = NULL,
-                     Q.eff = "cr", VCOV = "DG", thre.cof = 4, win.cof = 50,
-                     N.cim = 1, window = 20, thre.QTL = 4, win.QTL = 20,
-                     alpha = 0.01, verbose = TRUE, output.loc = NULL) {
+                          mppData, trait, cv.ref, Rep = 5, k = 3, EnvNames = NULL,
+                          Q.eff = "cr", VCOV = "DG", thre.cof = 4, win.cof = 50,
+                          N.cim = 1, window = 20, thre.QTL = 4, win.QTL = 20,
+                          alpha = 0.01, verbose = TRUE, output.loc = NULL) {
 
 
   # 1. Check the validity of the parameters that have been introduced
@@ -237,7 +241,7 @@ mppGE_CV_oneS <- function(pop.name = "MPP", trait.name = "trait1", plot_data,
                               thre.cof = thre.cof, win.cof = win.cof,
                               N.cim = N.cim, window = window, thre.QTL = thre.QTL,
                               win.QTL = win.QTL, alpha = alpha, verbose = FALSE,
-                          output.loc = tempdir())
+                              output.loc = tempdir())
 
       if (!is.null(CV_ij$QTL)) {
 
@@ -262,8 +266,9 @@ mppGE_CV_oneS <- function(pop.name = "MPP", trait.name = "trait1", plot_data,
 
         R2.vs <- QTL_pred_R2_GE_oneS(plot_data = plot_data,
                                      mppData.ts = mppData.ts,
-                                mppData.vs = mppData.vs, trait = trait,
-                                Q.eff = Q.eff, VCOV = VCOV, QTL = QTL)
+                                     mppData.vs = mppData.vs, trait = trait,
+                                     cv.ref = cv.ref, nEnv = nEnv,
+                                     Q.eff = Q.eff, VCOV = VCOV, QTL = QTL)
 
 
         # global results

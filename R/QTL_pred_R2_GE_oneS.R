@@ -3,20 +3,20 @@
 #######################
 
 QTL_pred_R2_GE_oneS <- function(plot_data, mppData.ts, mppData.vs,
-                                trait = NULL, Q.eff = "cr", VCOV = "ID",
-                                QTL = NULL, her = 1) {
+                                trait = NULL, cv.ref, nEnv, Q.eff = "cr",
+                                VCOV = "ID", QTL = NULL, her = 1) {
 
   if(is.character(QTL)){ n.QTL <- length(QTL) } else { n.QTL <- dim(QTL)[1] }
 
-  # Remove the genotype of plot data that do not have genotypic information
-
-  plot_data.vs <- plot_data[plot_data$genotype %in% mppData.vs$geno.id, ]
-
   # Determine the environments
 
-  EnvNames <- unique(plot_data.vs$env)
+  EnvNames <- unique(plot_data$env)
 
-  nEnv <- length(EnvNames)
+  # form the reference trait values (we assume that the user give differ
+  # reference for the particular data analysis)
+
+  t_val <- c(mppData.vs$pheno[, cv.ref])
+  t_val <- rep(t_val, nEnv)
 
 
   # 2. obtain the genetic effects (Betas)
@@ -37,7 +37,8 @@ QTL_pred_R2_GE_oneS <- function(plot_data, mppData.ts, mppData.vs,
   # 3. obtain the QTL incidence matrices of the positions (X.vs)
   ##############################################################
 
-  # form the list of QTLs
+  ######## add the same code as for M3 because no need anymore to project
+  ######## at the plot level.
 
   if(is.character(QTL)){
 
@@ -51,24 +52,21 @@ QTL_pred_R2_GE_oneS <- function(plot_data, mppData.ts, mppData.vs,
 
   }
 
-  #########
-
   nQTL <- length(Q.pos)
-  nGeno <- length(mppData.vs$geno.id)
 
-  Q.list0 <- lapply(X = Q.pos, FUN = inc_mat_QTL, mppData = mppData.vs,
-                    Q.eff = Q.eff, order.MAF = TRUE)
+  Q.list <- lapply(X = Q.pos, FUN = inc_mat_QTL, mppData = mppData.vs,
+                   Q.eff = Q.eff, order.MAF = TRUE)
 
   Q.names <- function(x, Q.list, nEnv){
     rep(paste0("Q", x, attr(Q.list[[x]], "dimnames")[[2]]), nEnv)
   }
 
-  names.QTL <- unlist(lapply(X = 1:nQTL, FUN = Q.names, Q.list = Q.list0,
+  names.QTL <- unlist(lapply(X = 1:nQTL, FUN = Q.names, Q.list = Q.list,
                              nEnv = nEnv))
 
   if(Q.eff == "anc"){
 
-    n_al <- unlist(lapply(X = Q.list0, FUN = function(x) dim(x)[2]))
+    n_al <- unlist(lapply(X = Q.list, FUN = function(x) dim(x)[2]))
 
     e_lab <- paste0("E", 1:nEnv)
 
@@ -81,73 +79,19 @@ QTL_pred_R2_GE_oneS <- function(plot_data, mppData.ts, mppData.vs,
 
     n_al <- NULL
 
-    Env.names <- rep(rep(paste0("E", 1:nEnv), each = dim(Q.list0[[1]])[2]), nQTL)
+    Env.names <- rep(rep(paste0("E", 1:nEnv), each = dim(Q.list[[1]])[2]), nQTL)
 
   }
 
   names.QTL <- paste(names.QTL, Env.names, sep = "_")
 
-
-  Q.list0 <- lapply(X = Q.list0, FUN =  function(x, nEnv) diag(nEnv) %x% x,
-                    nEnv = nEnv)
-
-  # expand each QTL to match the genotype information of the plot data
-
-  ref_geno <- plot_data.vs[, c("genotype", "env")]
-
-  Q.list <- vector(mode = "list", length = nQTL)
-
-  nObs <- nGeno * nEnv
-
-  ind_row <- split(1:nObs, factor(sort(rank(1:nObs%%nEnv))))
-
-  for(i in 1:nQTL){
-
-    QTLdat_i <- data.frame(genotype = rep(mppData.vs$geno.id, nEnv),
-                           Q.list0[[i]], stringsAsFactors = FALSE)
-    Q_i <- c()
-
-    for(j in 1:nEnv){
-
-      gen_j <- ref_geno[ref_geno$env == EnvNames[j], ]
-      Q_data_ij <- QTLdat_i[ind_row[[j]], ]
-      data_j <- merge(gen_j, Q_data_ij, by = c("genotype"))
-
-      Q_i <- rbind(Q_i, data_j)
-
-    }
-
-    Q.list[[i]] <- Q_i[, -c(1, 2)]
-
-  }
+  Q.list <- lapply(X = Q.list, FUN =  function(x, nEnv) diag(nEnv) %x% x,
+                   nEnv = nEnv)
 
   names(Q.list) <- paste0("Q", 1:length(Q.list))
-  rm(Q.list0)
 
-  # numeric indicator to match the column of the plot data with the QTL
-  # matrices (This part should be made more fluid).
-
-  ref_geno2 <- data.frame(plot_data.vs[, c("genotype", "env")],
-                          id = 1:dim(plot_data.vs)[1])
-
-  ref_i <- c()
-
-  QTLdat_i <- data.frame(genotype = rep(mppData.vs$geno.id, nEnv),
-                         stringsAsFactors = FALSE)
-
-  for(j in 1:nEnv){
-
-    ref_ij <- ref_geno2[ref_geno2$env == EnvNames[j], ]
-    Q_data_ij <- QTLdat_i[ind_row[[j]], , drop = FALSE]
-    ref_ij <- merge(ref_ij, Q_data_ij, by = c("genotype"))
-
-    ref_i <- rbind(ref_i, ref_ij)
-
-  }
-
-  plot_data.vs <- plot_data.vs[ref_i$id, ]
-
-  # form X.QTL.vs
+  # 4. Predicted R squared computation cor(y.vs, X.vs * B.ts)^2
+  ##############################################################
 
   X.vs <- as.matrix(do.call(cbind, Q.list))
   colnames(X.vs) <- names.QTL
@@ -158,10 +102,9 @@ QTL_pred_R2_GE_oneS <- function(plot_data, mppData.ts, mppData.vs,
 
   # use only complete case informations
 
-  dataset <- cbind(plot_data.vs[, trait], X.vs)
-  cross.ind <- plot_data.vs$cross
-  Env_ind <- plot_data.vs$env
-  Env_ind_id <- unique(Env_ind)
+  dataset <- cbind(t_val, X.vs)
+  cross.ind <- rep(mppData.vs$cross.ind, nEnv)
+  Env_ind <- rep((paste0("E", 1:nEnv)), each = length(mppData.vs$geno.id))
   index <- complete.cases(dataset)
 
   y.vs <- dataset[index, 1, drop = FALSE]
@@ -189,7 +132,7 @@ QTL_pred_R2_GE_oneS <- function(plot_data, mppData.ts, mppData.vs,
 
   for(i in 1:nEnv){
 
-    dataset_i <- dataset[dataset$Env_ind == Env_ind_id[i], ]
+    dataset_i <- dataset[dataset$Env_ind == paste0("E", i), ]
 
     cr_ind_i <- dataset_i$cross.ind
 
@@ -205,6 +148,5 @@ QTL_pred_R2_GE_oneS <- function(plot_data, mppData.ts, mppData.vs,
   # R2_av: averaged pred R2 over cross within environments
 
   return(R2_av)
-
 
 }
