@@ -15,8 +15,18 @@ QTL_pred_R2_GE_oneS <- function(plot_data, mppData.ts, mppData.vs,
   # form the reference trait values (we assume that the user give differ
   # reference for the particular data analysis)
 
-  t_val <- c(mppData.vs$pheno[, cv.ref])
-  t_val <- rep(t_val, nEnv)
+  if(length(cv.ref) > 1){
+
+    t_val <- c(mppData.vs$pheno[, cv.ref])
+
+  } else {
+
+    t_val <- c(mppData.vs$pheno[, cv.ref])
+    t_val <- rep(t_val, nEnv)
+
+  }
+
+
 
 
   # 2. obtain the genetic effects (Betas)

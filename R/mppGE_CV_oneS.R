@@ -22,7 +22,8 @@
 #'
 #' @param cv.ref \code{Numerical} or \code{character} indicator to specify which
 #' trait of the \code{mppData} object should be used to check the prediction
-#' in the CV process.
+#' in the CV process. Possibility to specify a vector to predict different
+#' within environment genotypic vector values.
 #'
 #' @param Rep \code{Numeric} value representing the number of repetition of the
 #' k-fold procedure. Default = 5.
