@@ -39,24 +39,24 @@ QTLModelQeff_oneS <- function(plot_data, mppData, trait, Q.list,
 
     if(VCOV == "CS"){
 
-      formula.random <- "~ genotype + Rep:Block"
+      formula.random <- "~ genotype + env:Rep + env:Rep:Block"
       formula.rcov <- "~ units"
 
     } else if (VCOV == "DG"){
 
-      formula.random <- "~ Rep:Block"
+      formula.random <- "~ env:Rep + env:Rep:Block"
       formula.rcov <- "~ at(env):units"
 
 
     } else if (VCOV == "UCH"){
 
-      formula.random <- "~ genotype + Rep:Block"
+      formula.random <- "~ genotype + env:Rep + env:Rep:Block"
       formula.rcov <- "~ at(env):units"
 
 
     } else if (VCOV == "UN"){
 
-      formula.random <- "~ Rep:Block"
+      formula.random <- "~ env:Rep + env:Rep:Block"
       formula.rcov <- "~ us(env):genotype"
 
       # make sure that each genotype appear in each environment
