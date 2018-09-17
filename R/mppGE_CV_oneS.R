@@ -186,6 +186,16 @@ mppGE_CV_oneS <- function(pop.name = "MPP", trait.name = "trait1", plot_data,
   N.QTL <- rep(0, (k*Rep))
   p.vs <- matrix(0, nrow = (k*Rep), ncol = nEnv)
 
+  p.vs.cr <- vector(mode = 'list', length = length(cv.ref))
+
+  for(i in 1:nEnv){
+
+    p.vs.cr[[i]] <- matrix(0, mppData$n.cr, (k*Rep))
+    rownames(p.vs.cr[[i]]) <- unique(mppData$cross.ind)
+    colnames(p.vs.cr[[i]]) <- paste0('rep', 1:(k*Rep))
+
+  }
+
   ind.res <- 1 # index to feed the results later
 
   # individual QTL position results
@@ -277,7 +287,13 @@ mppGE_CV_oneS <- function(pop.name = "MPP", trait.name = "trait1", plot_data,
 
         # non adjusted
 
-        p.vs[ind.res, ] <- R2.vs
+        p.vs[ind.res, ] <- R2.vs$R2_av
+
+        for(w in 1:nEnv){
+
+          p.vs.cr[[w]][, ind.res] <- R2.vs$R2_cr[[w]][unique(mppData$cross.ind)]
+
+        }
 
 
       }
@@ -302,11 +318,13 @@ mppGE_CV_oneS <- function(pop.name = "MPP", trait.name = "trait1", plot_data,
   write.table(x = p_vs, file = file.path(folder.loc, "p_vs.txt"), quote = FALSE,
               sep = "\t", row.names = FALSE)
 
+  save(p.vs.cr, file = file.path(folder.loc, 'pvs_cr.RData'))
+
   write.table(x = QTL, file = file.path(folder.loc, "QTL.txt"), quote = FALSE,
               sep = "\t", row.names = FALSE)
 
 
-  results <- list(p_vs = p_vs, QTL = QTL)
+  results <- list(p_vs = p_vs, p.vs.cr = p.vs.cr, QTL = QTL)
 
   return(results)
 

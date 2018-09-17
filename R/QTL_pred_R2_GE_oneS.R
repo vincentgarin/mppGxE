@@ -139,6 +139,7 @@ QTL_pred_R2_GE_oneS <- function(plot_data, mppData.ts, mppData.vs,
   # iterate over env
 
   R2_av <- rep(0, nEnv)
+  R2_cr <- vector(mode = 'list', length = nEnv)
 
   for(i in 1:nEnv){
 
@@ -150,6 +151,7 @@ QTL_pred_R2_GE_oneS <- function(plot_data, mppData.ts, mppData.vs,
                           f = factor(cr_ind_i, levels = unique(cr_ind_i)))
 
     R2.cr_i <- unlist(lapply(X = dataset.cr_i, FUN =  with.cross.cor))
+    R2_cr[[i]] <- R2.cr_i
 
     R2_av[i] <- mean(R2.cr_i)
 
@@ -157,6 +159,6 @@ QTL_pred_R2_GE_oneS <- function(plot_data, mppData.ts, mppData.vs,
 
   # R2_av: averaged pred R2 over cross within environments
 
-  return(R2_av)
+  return(list(R2_av = R2_av, R2_cr = R2_cr))
 
 }
