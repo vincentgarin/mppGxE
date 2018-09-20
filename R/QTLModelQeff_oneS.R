@@ -6,7 +6,7 @@
 # stage MPP GxE analysis
 
 QTLModelQeff_oneS <- function(plot_data, mppData, trait, Q.list,
-                              VCOV, names.QTL){
+                              VCOV, exp_des_form, names.QTL){
 
 
   if(VCOV == "ID"){ # linear model
@@ -39,24 +39,24 @@ QTLModelQeff_oneS <- function(plot_data, mppData, trait, Q.list,
 
     if(VCOV == "CS"){
 
-      formula.random <- "~ genotype + env:Rep + env:Rep:Block"
+      formula.random <- paste0('~ genotype + ', exp_des_form)
       formula.rcov <- "~ units"
 
     } else if (VCOV == "DG"){
 
-      formula.random <- "~ env:Rep + env:Rep:Block"
+      formula.random <- paste0('~ ', exp_des_form)
       formula.rcov <- "~ at(env):units"
 
 
     } else if (VCOV == "UCH"){
 
-      formula.random <- "~ genotype + env:Rep + env:Rep:Block"
+      formula.random <- paste0('~ genotype + ', exp_des_form)
       formula.rcov <- "~ at(env):units"
 
 
     } else if (VCOV == "UN"){
 
-      formula.random <- "~ env:Rep + env:Rep:Block"
+      formula.random <- paste0('~ ', exp_des_form)
       formula.rcov <- "~ us(env):genotype"
 
       # make sure that each genotype appear in each environment

@@ -5,7 +5,8 @@
 # function to compute single position one stage QTL model with cofactors (CIM)
 
 QTLModelCIM_oneS <- function(x, plot_data, mppData, trait, nEnv, EnvNames,
-                             Q.eff, VCOV, cof.list, cof.part, plot.gen.eff){
+                             Q.eff, VCOV, exp_des_form, cof.list, cof.part,
+                             plot.gen.eff){
 
   # process the QTL incidence matrix
 
@@ -73,24 +74,24 @@ QTLModelCIM_oneS <- function(x, plot_data, mppData, trait, nEnv, EnvNames,
 
   if(VCOV == "CS"){
 
-    formula.random <- "~ genotype + env:Rep + env:Rep:Block"
+    formula.random <- paste0('~ genotype + ', exp_des_form)
     formula.rcov <- "~ units"
 
   } else if (VCOV == "DG"){
 
-    formula.random <- "~ env:Rep + env:Rep:Block"
+    formula.random <- paste0('~ ', exp_des_form)
     formula.rcov <- "~ at(env):units"
 
 
   } else if (VCOV == "UCH"){
 
-    formula.random <- "~ genotype + env:Rep + env:Rep:Block"
+    formula.random <- paste0('~ genotype + ', exp_des_form)
     formula.rcov <- "~ at(env):units"
 
 
   } else if (VCOV == "UN"){
 
-    formula.random <- "~ env:Rep + env:Rep:Block"
+    formula.random <- paste0('~ ', exp_des_form)
     formula.rcov <- "~ us(env):genotype"
 
     # make sure that each genotype appear in each environment

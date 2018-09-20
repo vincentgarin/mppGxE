@@ -12,13 +12,18 @@
 #' @param trait.name \code{Character} name of the studied trait.
 #' Default = "trait1".
 #'
-#' @param plot_data \code{data.frame} containing plot data with the following
-#' columns: genotype indicator, cross, environment, experimental design
-#' covariate (e.g. replicate, block, etc.), and the traits.
+#' @param plot_data \code{data.frame} containing the plot data with the following
+#' columns: the trait(s), 'genotype' (genotype indicator), 'cross'
+#' (cross indicator), 'env' (environment indicator), and all other experimental
+#' design covariates (e.g. replicate, blocks, etc.). The column names of the
+#' data.frame must be identical to the one specified ('genotype', 'cross',
+#' 'env'). The names of the experimental design covariates must be the same as
+#' the one used in 'exp_des_form'.
 #'
 #' @param mppData An object of class \code{mppData}.
 #'
-#' @param trait \code{Character vector} specifying which traits should be used.
+#' @param trait \code{Character} expression for the trait matching the trait
+#' column in 'plot_data' argument.
 #'
 #' @param cv.ref \code{Numerical} or \code{character} indicator to specify which
 #' trait of the \code{mppData} object should be used to check the prediction
@@ -44,6 +49,11 @@
 #' environmental (residual) variance, "UCH" for uniform covariance with
 #' heterogeneous environmental variance, and "UN" for unstructured.
 #' Default = "DG".
+#'
+#' @param exp_des_form \code{Character} expression for the random experimental
+#' design effects in asreml-R format. For example,
+#' 'env:replicate + env:replicate:block'. The column variables names used in
+#' 'exp_des_form' should strictly match the names used in 'plot_data'.
 #'
 #' @param thre.cof \code{Numeric} value representing the -log10(p-value)
 #' threshold above which a position can be peaked as a cofactor. Default = 4.
@@ -146,9 +156,10 @@
 
 mppGE_CV_oneS <- function(pop.name = "MPP", trait.name = "trait1", plot_data,
                           mppData, trait, cv.ref, Rep = 5, k = 3, EnvNames = NULL,
-                          Q.eff = "cr", VCOV = "DG", thre.cof = 4, win.cof = 50,
-                          N.cim = 1, window = 20, thre.QTL = 4, win.QTL = 20,
-                          alpha = 0.01, verbose = TRUE, output.loc = NULL) {
+                          Q.eff = "cr", VCOV = "DG", exp_des_form, thre.cof = 4,
+                          win.cof = 50, N.cim = 1, window = 20, thre.QTL = 4,
+                          win.QTL = 20, alpha = 0.01, verbose = TRUE,
+                          output.loc = NULL) {
 
 
   # 1. Check the validity of the parameters that have been introduced
@@ -248,7 +259,8 @@ mppGE_CV_oneS <- function(pop.name = "MPP", trait.name = "trait1", plot_data,
       CV_ij <- one_stage_proc(pop.name = paste0("run", ind.res),
                               mppData = mppData.ts, plot_data = plot_data,
                               trait = trait, EnvNames = EnvNames, Q.eff = Q.eff,
-                              VCOV = VCOV, plot.gen.eff = FALSE,
+                              VCOV = VCOV, exp_des_form = exp_des_form,
+                              plot.gen.eff = FALSE,
                               thre.cof = thre.cof, win.cof = win.cof,
                               N.cim = N.cim, window = window, thre.QTL = thre.QTL,
                               win.QTL = win.QTL, alpha = alpha, verbose = FALSE,
@@ -279,7 +291,8 @@ mppGE_CV_oneS <- function(pop.name = "MPP", trait.name = "trait1", plot_data,
                                      mppData.ts = mppData.ts,
                                      mppData.vs = mppData.vs, trait = trait,
                                      cv.ref = cv.ref, nEnv = nEnv,
-                                     Q.eff = Q.eff, VCOV = VCOV, QTL = QTL)
+                                     Q.eff = Q.eff, VCOV = VCOV,
+                                     exp_des_form = exp_des_form, QTL = QTL)
 
 
         # global results

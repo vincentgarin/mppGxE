@@ -6,13 +6,18 @@
 #'
 #' Compute MPP GxE one stage QTL genetic effects
 #'
-#' @param plot_data \code{data.frame} containing plot data with the following
-#' columns: genotype indicator, cross, environment, experimental design
-#' covariate (e.g. replicate, block, etc.), and the traits.
+#' @param plot_data \code{data.frame} containing the plot data with the following
+#' columns: the trait(s), 'genotype' (genotype indicator), 'cross'
+#' (cross indicator), 'env' (environment indicator), and all other experimental
+#' design covariates (e.g. replicate, blocks, etc.). The column names of the
+#' data.frame must be identical to the one specified ('genotype', 'cross',
+#' 'env'). The names of the experimental design covariates must be the same as
+#' the one used in 'exp_des_form'.
 #'
 #' @param mppData An object of class \code{mppData}.
 #'
-#' @param trait \code{Character vector} specifying which traits should be used.
+#' @param trait \code{Character} expression for the trait matching the trait
+#' column in 'plot_data' argument.
 #'
 #' @param Q.eff \code{Character} expression indicating the assumption concerning
 #' the QTL effects: 1) "cr" for cross-specific; 2) "par" for parental; 3) "anc"
@@ -23,6 +28,11 @@
 #' environmental (residual) variance, "UCH" for uniform covariance with
 #' heterogeneous environmental variance, and "UN" for unstructured.
 #' Default = "DG".
+#'
+#' @param exp_des_form \code{Character} expression for the random experimental
+#' design effects in asreml-R format. For example,
+#' 'env:replicate + env:replicate:block'. The column variables names used in
+#' 'exp_des_form' should strictly match the names used in 'plot_data'.
 #'
 #' @param QTL Object of class \code{QTLlist} representing a list of
 #' selected marker positions obtained with the function QTL_select() or
@@ -90,7 +100,7 @@
 # QTL = QTL
 
 QTL_effects_oneS <- function(plot_data, mppData, trait, Q.eff = "cr", VCOV = "DG",
-                           QTL = NULL){
+                             exp_des_form, QTL = NULL){
 
   if(is.null(QTL)){stop("No 'QTL' have been provided.")}
 
@@ -219,7 +229,8 @@ QTL_effects_oneS <- function(plot_data, mppData, trait, Q.eff = "cr", VCOV = "DG
 
   model <- QTLModelQeff_oneS(plot_data = plot_data, mppData = mppData,
                              trait = trait, Q.list = Q.list,
-                             VCOV = VCOV, names.QTL = names.QTL)
+                             VCOV = VCOV, exp_des_form = exp_des_form,
+                             names.QTL = names.QTL)
 
 
   # process the results

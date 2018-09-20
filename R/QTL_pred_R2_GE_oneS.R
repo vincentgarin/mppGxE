@@ -4,7 +4,8 @@
 
 QTL_pred_R2_GE_oneS <- function(plot_data, mppData.ts, mppData.vs,
                                 trait = NULL, cv.ref, nEnv, Q.eff = "cr",
-                                VCOV = "ID", QTL = NULL, her = 1) {
+                                VCOV = "ID", exp_des_form, QTL = NULL,
+                                her = 1) {
 
   if(is.character(QTL)){ n.QTL <- length(QTL) } else { n.QTL <- dim(QTL)[1] }
 
@@ -34,7 +35,8 @@ QTL_pred_R2_GE_oneS <- function(plot_data, mppData.ts, mppData.vs,
 
   effects <- QTL_effects_oneS(plot_data = plot_data,
                               mppData = mppData.ts, trait = trait,
-                              QTL = QTL, Q.eff = Q.eff, VCOV = VCOV)
+                              QTL = QTL, Q.eff = Q.eff, VCOV = VCOV,
+                              exp_des_form = exp_des_form)
 
 
   Qeff_names <- lapply(X = effects, FUN = function(x) rownames(x))

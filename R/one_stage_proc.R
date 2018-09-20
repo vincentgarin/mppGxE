@@ -25,14 +25,19 @@
 #' @param trait.name \code{Character} name of the studied trait.
 #' Default = "trait1".
 #'
-#' @param plot_data \code{data.frame} containing plot data with the following
-#' columns: genotype indicator, cross, environment, experimental design
-#' covariate (e.g. replicate, block, etc.), and the traits.
+#' @param plot_data \code{data.frame} containing the plot data with the following
+#' columns: the trait(s), 'genotype' (genotype indicator), 'cross'
+#' (cross indicator), 'env' (environment indicator), and all other experimental
+#' design covariates (e.g. replicate, blocks, etc.). The column names of the
+#' data.frame must be identical to the one specified ('genotype', 'cross',
+#' 'env'). The names of the experimental design covariates must be the same as
+#' the one used in 'exp_des_form'.
 #'
 #' @param mppData Object of class \code{mppData} contaning the genotypic
 #' information with genotype list corresponding to the one of \code{plot_data}.
 #'
-#' @param trait \code{Character} expression for the trait.
+#' @param trait \code{Character} expression for the trait matching the trait
+#' column in 'plot_data' argument.
 #'
 #' @param EnvNames \code{character} expression indicating the environment or trait
 #' labels.
@@ -47,6 +52,11 @@
 #' environmental (residual) variance, "UCH" for uniform covariance with
 #' heterogeneous environmental variance, and "UN" for unstructured.
 #' Default = "DG".
+#'
+#' @param exp_des_form \code{Character} expression for the random experimental
+#' design effects in asreml-R format. For example,
+#' 'env:replicate + env:replicate:block'. The column variables names used in
+#' 'exp_des_form' should strictly match the names used in 'plot_data'.
 #'
 #' @param plot.gen.eff \code{Logical} value. If \code{plot.gen.eff = TRUE},
 #' the function will save the decomposed genetic effects per cross/parent.
@@ -171,10 +181,10 @@
 
 one_stage_proc <- function(pop.name = "MPP", trait.name = "trait1", plot_data,
                        mppData, trait, EnvNames = NULL,  Q.eff = "cr",
-                       VCOV = "DG", plot.gen.eff = FALSE, thre.cof = 4,
-                       win.cof = 50, N.cim = 1, window = 20, thre.QTL = 4,
-                       win.QTL = 20, alpha = 0.01, text.size = 18, verbose = TRUE,
-                       output.loc = NULL) {
+                       VCOV = "DG", exp_des_form, plot.gen.eff = FALSE,
+                       thre.cof = 4, win.cof = 50, N.cim = 1, window = 20,
+                       thre.QTL = 4, win.QTL = 20, alpha = 0.01, text.size = 18,
+                       verbose = TRUE, output.loc = NULL) {
 
 
   # 1. Check the validity of the parameters that have been introduced
@@ -228,6 +238,7 @@ one_stage_proc <- function(pop.name = "MPP", trait.name = "trait1", plot_data,
 
   SIM <- SIM_one_stage(plot_data = plot_data, mppData = mppData,
                        trait = trait, Q.eff = Q.eff, VCOV = VCOV,
+                       exp_des_form = exp_des_form,
                        plot.gen.eff = plot.gen.eff)
 
   # save SIM results in output location
@@ -262,6 +273,7 @@ one_stage_proc <- function(pop.name = "MPP", trait.name = "trait1", plot_data,
 
   CIM <- CIM_one_stage(plot_data = plot_data, mppData = mppData,
                        trait = trait, Q.eff = Q.eff, VCOV = VCOV,
+                       exp_des_form = exp_des_form,
                        cofactors = cofactors, window = window,
                        plot.gen.eff = plot.gen.eff)
 
@@ -296,6 +308,7 @@ one_stage_proc <- function(pop.name = "MPP", trait.name = "trait1", plot_data,
 
         CIM <- CIM_one_stage(plot_data = plot_data, mppData = mppData,
                              trait = trait, Q.eff = Q.eff, VCOV = VCOV,
+                             exp_des_form = exp_des_form,
                              cofactors = cofactors, window = window,
                              plot.gen.eff = plot.gen.eff)
 
@@ -330,7 +343,8 @@ one_stage_proc <- function(pop.name = "MPP", trait.name = "trait1", plot_data,
   #########################
 
   Q_back <- back_elim_oneS(plot_data = plot_data, mppData = mppData, trait = trait,
-                           Q.eff = Q.eff, VCOV = VCOV, QTL = QTL, alpha = alpha)
+                           Q.eff = Q.eff, VCOV = VCOV, exp_des_form = exp_des_form,
+                           QTL = QTL, alpha = alpha)
 
   # save the list of QTLs
 
