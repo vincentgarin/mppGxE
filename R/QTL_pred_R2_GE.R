@@ -6,7 +6,7 @@
 
 QTL_pred_R2_GE <- function(mppData.ts, mppData.vs, trait = NULL,
                            cv.ref = NULL, nEnv, Q.eff = "cr", VCOV = "ID",
-                           QTL = NULL, her = 1) {
+                           QTL = NULL, her = 1, workspace = 8e6) {
 
   if(is.character(QTL)){ n.QTL <- length(QTL) } else { n.QTL <- dim(QTL)[1] }
 
@@ -32,7 +32,8 @@ QTL_pred_R2_GE <- function(mppData.ts, mppData.vs, trait = NULL,
   #######################################
 
   effects <- QTL_effects_GE(mppData = mppData.ts, trait = trait,
-                            QTL = QTL, Q.eff = Q.eff, VCOV = VCOV)
+                            QTL = QTL, Q.eff = Q.eff, VCOV = VCOV,
+                            workspace = workspace)
 
   Qeff_names <- lapply(X = effects, FUN = function(x) rownames(x))
   Qeff_names <- unlist(Qeff_names)

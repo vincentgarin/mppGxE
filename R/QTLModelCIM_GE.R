@@ -5,7 +5,7 @@
 # function to compute a single position MPP GxE QTL CIM model
 
 QTLModelCIM_GE <- function(x, mppData, nEnv, TraitEnv, Q.eff, VCOV, cof.list,
-                           cof.part, plot.gen.eff){
+                           cof.part, plot.gen.eff, workspace){
 
   # 1. formation of the QTL incidence matrix
   ###########################################
@@ -61,6 +61,9 @@ QTLModelCIM_GE <- function(x, mppData, nEnv, TraitEnv, Q.eff, VCOV, cof.list,
 
     colnames(dataset) <- c(paste0("cof", 1:cof.el), paste0("Q",1:QTL.el),
                            "trait", "env", "genotype", "cross")
+
+    dataset$cross_env <- factor(paste0(as.character(dataset$cross),
+                                       as.character(dataset$env)))
 
     # model fixed term (QTL) formula
 
@@ -131,38 +134,28 @@ QTLModelCIM_GE <- function(x, mppData, nEnv, TraitEnv, Q.eff, VCOV, cof.list,
 
     ### 2.2 HRT REML or cross-specific variance residual terms
 
-  } else if (VCOV == "CS"){
+  } else if (VCOV == 'CSRT'){
+
+    formula.rcov <- "~ at(cross_env):units"
+
+  } else if (VCOV == "CS_CSRT"){
 
     formula.random <- "~ genotype"
-    formula.rcov <- "~ units"
-
-  } else if (VCOV == "DG"){
-
-    formula.rcov <- "~ at(env):units"
-
-
-  } else if (VCOV == "UCH"){
-
-    formula.random <- "~ genotype"
-    formula.rcov <- "~ at(env):units"
-
-
-  } else if (VCOV == "UN"){
-
-    formula.rcov <- "~ us(env):genotype"
+    formula.rcov <- "~ at(cross_env):units"
 
   }
 
   if(VCOV != "ID"){ # compute the mixed model
 
-    if(VCOV %in% c("DG", "UN")){
+    if(VCOV %in% c('CSRT')){
 
       model <- tryCatch(expr = asreml(fixed = as.formula(formula.fix),
                                       rcov = as.formula(formula.rcov),
                                       group = list(cof=1:cof.el),
                                       data = dataset, trace = FALSE,
                                       na.method.Y = "include",
-                                      na.method.X = "omit", keep.order = TRUE),
+                                      na.method.X = "omit", keep.order = TRUE,
+                                      workspace = workspace),
                         error = function(e) NULL)
 
     } else {
@@ -173,7 +166,8 @@ QTLModelCIM_GE <- function(x, mppData, nEnv, TraitEnv, Q.eff, VCOV, cof.list,
                                       group = list(cof=1:cof.el),
                                       data = dataset, trace = FALSE,
                                       na.method.Y = "include",
-                                      na.method.X = "omit", keep.order = TRUE),
+                                      na.method.X = "omit", keep.order = TRUE,
+                                      workspace = workspace),
                         error = function(e) NULL)
 
     }

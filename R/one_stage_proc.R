@@ -48,10 +48,9 @@
 #' effects. Default = "cr".
 #'
 #' @param VCOV VCOV \code{Character} expression defining the type of variance
-#' covariance structure used. "CS" for compound symmetry, "DG" for heterogeneous
-#' environmental (residual) variance, "UCH" for uniform covariance with
-#' heterogeneous environmental variance, and "UN" for unstructured.
-#' Default = "DG".
+#' covariance structure used. "CSRT" for within environment
+#' cross-specific residual term, "CS_CSRT" for compound symmetry with within
+#' environment cross-specific residual term. Default = "CS_CSRT".
 #'
 #' @param exp_des_form \code{Character} expression for the random experimental
 #' design effects in asreml-R format. For example,
@@ -94,6 +93,9 @@
 #'
 #' @param output.loc Path where a folder will be created to save the results.
 #' Default = NULL.
+#'
+#' @param workspace size of workspace for the REML routines measured in double
+#' precision words (groups of 8 bytes). The default is workspace = 8e6.
 #'
 #'
 #' @return Return:
@@ -181,10 +183,10 @@
 
 one_stage_proc <- function(pop.name = "MPP", trait.name = "trait1", plot_data,
                        mppData, trait, EnvNames = NULL,  Q.eff = "cr",
-                       VCOV = "DG", exp_des_form, plot.gen.eff = FALSE,
+                       VCOV = "CS_CSRT", exp_des_form, plot.gen.eff = FALSE,
                        thre.cof = 4, win.cof = 50, N.cim = 1, window = 20,
                        thre.QTL = 4, win.QTL = 20, alpha = 0.01, text.size = 18,
-                       verbose = TRUE, output.loc = NULL) {
+                       verbose = TRUE, output.loc = NULL, workspace = 8e6) {
 
 
   # 1. Check the validity of the parameters that have been introduced
@@ -218,8 +220,8 @@ one_stage_proc <- function(pop.name = "MPP", trait.name = "trait1", plot_data,
 
   # create a directory to store the results of the QTL analysis
 
-  folder.loc <- file.path(output.loc, paste("oneStageGE", pop.name, trait.name, Q.eff,
-                                            VCOV, sep = "_"))
+  folder.loc <- file.path(output.loc, paste("oneStageGE", pop.name, trait.name,
+                                            Q.eff, VCOV, sep = "_"))
 
   dir.create(folder.loc)
 
@@ -239,7 +241,7 @@ one_stage_proc <- function(pop.name = "MPP", trait.name = "trait1", plot_data,
   SIM <- SIM_one_stage(plot_data = plot_data, mppData = mppData,
                        trait = trait, Q.eff = Q.eff, VCOV = VCOV,
                        exp_des_form = exp_des_form,
-                       plot.gen.eff = plot.gen.eff)
+                       plot.gen.eff = plot.gen.eff, workspace = workspace)
 
   # save SIM results in output location
 
@@ -275,7 +277,7 @@ one_stage_proc <- function(pop.name = "MPP", trait.name = "trait1", plot_data,
                        trait = trait, Q.eff = Q.eff, VCOV = VCOV,
                        exp_des_form = exp_des_form,
                        cofactors = cofactors, window = window,
-                       plot.gen.eff = plot.gen.eff)
+                       plot.gen.eff = plot.gen.eff, workspace = workspace)
 
 
   if (N.cim > 1) {
@@ -310,7 +312,7 @@ one_stage_proc <- function(pop.name = "MPP", trait.name = "trait1", plot_data,
                              trait = trait, Q.eff = Q.eff, VCOV = VCOV,
                              exp_des_form = exp_des_form,
                              cofactors = cofactors, window = window,
-                             plot.gen.eff = plot.gen.eff)
+                             plot.gen.eff = plot.gen.eff, workspace = workspace)
 
       }
 
@@ -344,7 +346,7 @@ one_stage_proc <- function(pop.name = "MPP", trait.name = "trait1", plot_data,
 
   Q_back <- back_elim_oneS(plot_data = plot_data, mppData = mppData, trait = trait,
                            Q.eff = Q.eff, VCOV = VCOV, exp_des_form = exp_des_form,
-                           QTL = QTL, alpha = alpha)
+                           QTL = QTL, alpha = alpha, workspace = workspace)
 
   # save the list of QTLs
 

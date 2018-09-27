@@ -45,10 +45,9 @@
 #' effects. Default = "cr".
 #'
 #' @param VCOV VCOV \code{Character} expression defining the type of variance
-#' covariance structure used. "CS" for compound symmetry, "DG" for heterogeneous
-#' environmental (residual) variance, "UCH" for uniform covariance with
-#' heterogeneous environmental variance, and "UN" for unstructured.
-#' Default = "DG".
+#' covariance structure used. "CSRT" for within environment
+#' cross-specific residual term, "CS_CSRT" for compound symmetry with within
+#' environment cross-specific residual term. Default = "CS_CSRT".
 #'
 #' @param exp_des_form \code{Character} expression for the random experimental
 #' design effects in asreml-R format. For example,
@@ -82,6 +81,9 @@
 #'
 #' @param output.loc Path where a folder will be created to save the results.
 #' Default = NULL.
+#'
+#' @param workspace size of workspace for the REML routines measured in double
+#' precision words (groups of 8 bytes). The default is workspace = 8e6.
 #'
 #'
 #' @return Return:
@@ -156,10 +158,10 @@
 
 mppGE_CV_oneS <- function(pop.name = "MPP", trait.name = "trait1", plot_data,
                           mppData, trait, cv.ref, Rep = 5, k = 3, EnvNames = NULL,
-                          Q.eff = "cr", VCOV = "DG", exp_des_form, thre.cof = 4,
-                          win.cof = 50, N.cim = 1, window = 20, thre.QTL = 4,
-                          win.QTL = 20, alpha = 0.01, verbose = TRUE,
-                          output.loc = NULL) {
+                          Q.eff = "cr", VCOV = "CS_CSRT", exp_des_form,
+                          thre.cof = 4, win.cof = 50, N.cim = 1, window = 20,
+                          thre.QTL = 4, win.QTL = 20, alpha = 0.01, verbose = TRUE,
+                          output.loc = NULL, workspace = 8e6) {
 
 
   # 1. Check the validity of the parameters that have been introduced
@@ -264,7 +266,7 @@ mppGE_CV_oneS <- function(pop.name = "MPP", trait.name = "trait1", plot_data,
                               thre.cof = thre.cof, win.cof = win.cof,
                               N.cim = N.cim, window = window, thre.QTL = thre.QTL,
                               win.QTL = win.QTL, alpha = alpha, verbose = FALSE,
-                              output.loc = tempdir())
+                              output.loc = tempdir(), workspace = workspace)
 
       if (!is.null(CV_ij$QTL)) {
 
@@ -292,7 +294,8 @@ mppGE_CV_oneS <- function(pop.name = "MPP", trait.name = "trait1", plot_data,
                                      mppData.vs = mppData.vs, trait = trait,
                                      cv.ref = cv.ref, nEnv = nEnv,
                                      Q.eff = Q.eff, VCOV = VCOV,
-                                     exp_des_form = exp_des_form, QTL = QTL)
+                                     exp_des_form = exp_des_form, QTL = QTL,
+                                     workspace = workspace)
 
 
         # global results

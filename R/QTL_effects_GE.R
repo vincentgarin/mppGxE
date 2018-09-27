@@ -15,14 +15,17 @@
 #' for ancestral; 4) "biall" for a bi-allelic. Default = "cr".
 #'
 #' @param VCOV VCOV \code{Character} expression defining the type of variance
-#' covariance structure used. "ID" for identity, "CS" for compound symmetry,
-#' "DG" for heterogeneous environmental (residual) variance,
-#' "UCH" for uniform covariance with heterogeneous environmental variance,
-#' and "UN" for unstructured. Default = "ID".
+#' covariance structure used. "ID" for identity, "CSRT" for within environment
+#' cross-specific residual term, "CS_CSRT" for compound symmetry with within
+#' environment cross-specific residual term. Default = "CS_CSRT".
 #'
 #' @param QTL Object of class \code{QTLlist} representing a list of
 #' selected marker positions obtained with the function QTL_select() or
 #' vector of \code{character} marker positions names. Default = NULL.
+#'
+#' @param workspace size of workspace for the REML routines measured in double
+#' precision words (groups of 8 bytes). The default is workspace = 8e6.
+
 #'
 #' @return Return:
 #'
@@ -76,8 +79,8 @@
 # VCOV = "CS"
 # QTL <- QTL_select(SIM)
 
-QTL_effects_GE <- function(mppData, trait, Q.eff = "cr", VCOV = "ID",
-                         QTL = NULL){
+QTL_effects_GE <- function(mppData, trait, Q.eff = "cr", VCOV = "CS_CSRT",
+                         QTL = NULL, workspace = 8e6){
 
   if(is.null(QTL)){stop("No 'QTL' have been provided.")}
 
@@ -142,7 +145,8 @@ QTL_effects_GE <- function(mppData, trait, Q.eff = "cr", VCOV = "ID",
   # Compute the model
 
   model <- QTLModelQeff_GE(mppData = mppData, trait = TraitEnv, nEnv = nEnv,
-                           Q.list = Q.list, VCOV = VCOV, names.QTL = names.QTL)
+                           Q.list = Q.list, VCOV = VCOV, names.QTL = names.QTL,
+                           workspace = workspace)
 
 
   # process the results

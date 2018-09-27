@@ -35,10 +35,9 @@
 #' effects. Default = "cr".
 #'
 #' @param VCOV VCOV \code{Character} expression defining the type of variance
-#' covariance structure used. "ID" for identity, "CS" for compound symmetry,
-#' "DG" for heterogeneous environmental (residual) variance,
-#' "UCH" for uniform covariance with heterogeneous environmental variance,
-#' and "UN" for unstructured. Default = "ID".
+#' covariance structure used. "ID" for identity, "CSRT" for within environment
+#' cross-specific residual term, "CS_CSRT" for compound symmetry with within
+#' environment cross-specific residual term. Default = "CS_CSRT".
 #'
 #' @param thre.cof \code{Numeric} value representing the -log10(p-value)
 #' threshold above which a position can be peaked as a cofactor. Default = 4.
@@ -68,6 +67,9 @@
 #'
 #' @param cluster Cluster object obtained with the function \code{makeCluster()}
 #' from the parallel package. Default = NULL.
+#'
+#' @param workspace size of workspace for the REML routines measured in double
+#' precision words (groups of 8 bytes). The default is workspace = 8e6.
 #'
 #' @param verbose \code{Logical} value indicating if the steps of mpp_proc should
 #' be printed. It will not affect the printing of the other functions called by
@@ -135,10 +137,10 @@
 
 mppGE_CV <- function(pop.name = "MPP", trait.name = "trait1", mppData, trait,
                      cv.ref = NULL, Rep = 5, k = 3, EnvNames = NULL,
-                     Q.eff = "cr", VCOV = "ID", thre.cof = 4, win.cof = 50,
+                     Q.eff = "cr", VCOV = "CS_CSRT", thre.cof = 4, win.cof = 50,
                      N.cim = 1, window = 20, thre.QTL = 4, win.QTL = 20,
                      alpha = 0.01, parallel = FALSE, cluster = NULL,
-                     verbose = TRUE, output.loc = NULL) {
+                     workspace = 8e6, verbose = TRUE, output.loc = NULL) {
 
 
   # 1. Check the validity of the parameters that have been introduced
@@ -242,6 +244,7 @@ mppGE_CV <- function(pop.name = "MPP", trait.name = "trait1", mppData, trait,
                           N.cim = N.cim, window = window, thre.QTL = thre.QTL,
                           win.QTL = win.QTL, alpha = alpha, parallel = parallel,
                           cluster = cluster, verbose = FALSE,
+                          workspace = workspace,
                           output.loc = tempdir())
 
       if (!is.null(CV_ij$QTL)) {
@@ -268,7 +271,8 @@ mppGE_CV <- function(pop.name = "MPP", trait.name = "trait1", mppData, trait,
         R2.vs <- QTL_pred_R2_GE(mppData.ts = mppData.ts,
                                 mppData.vs = mppData.vs, trait = trait,
                                 cv.ref = cv.ref, nEnv = nEnv, Q.eff = Q.eff,
-                                VCOV = VCOV, QTL = QTL)
+                                VCOV = VCOV, QTL = QTL,
+                                workspace = workspace)
 
 
         # global results

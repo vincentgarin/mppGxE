@@ -24,10 +24,9 @@
 #' for ancestral; 4) "biall" for a bi-allelic. Default = "cr".
 #'
 #' @param VCOV VCOV \code{Character} expression defining the type of variance
-#' covariance structure used. "CS" for compound symmetry, "DG" for heterogeneous
-#' environmental (residual) variance, "UCH" for uniform covariance with
-#' heterogeneous environmental variance, and "UN" for unstructured.
-#' Default = "DG".
+#' covariance structure used. "CSRT" for within environment
+#' cross-specific residual term, "CS_CSRT" for compound symmetry with within
+#' environment cross-specific residual term. Default = "CS_CSRT".
 #'
 #' @param exp_des_form \code{Character} expression for the random experimental
 #' design effects in asreml-R format. For example,
@@ -37,6 +36,9 @@
 #' @param QTL Object of class \code{QTLlist} representing a list of
 #' selected marker positions obtained with the function QTL_select() or
 #' vector of \code{character} marker positions names. Default = NULL.
+#'
+#' @param workspace size of workspace for the REML routines measured in double
+#' precision words (groups of 8 bytes). The default is workspace = 8e6.
 #'
 #' @return Return:
 #'
@@ -99,8 +101,9 @@
 # VCOV = "CS"
 # QTL = QTL
 
-QTL_effects_oneS <- function(plot_data, mppData, trait, Q.eff = "cr", VCOV = "DG",
-                             exp_des_form, QTL = NULL){
+QTL_effects_oneS <- function(plot_data, mppData, trait, Q.eff = "cr",
+                             VCOV = "CS_CSRT", exp_des_form, QTL = NULL,
+                             workspace = 8e6){
 
   if(is.null(QTL)){stop("No 'QTL' have been provided.")}
 
@@ -230,7 +233,7 @@ QTL_effects_oneS <- function(plot_data, mppData, trait, Q.eff = "cr", VCOV = "DG
   model <- QTLModelQeff_oneS(plot_data = plot_data, mppData = mppData,
                              trait = trait, Q.list = Q.list,
                              VCOV = VCOV, exp_des_form = exp_des_form,
-                             names.QTL = names.QTL)
+                             names.QTL = names.QTL, workspace = workspace)
 
 
   # process the results

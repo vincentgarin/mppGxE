@@ -2,7 +2,8 @@
 # QTLModelQeff_GE #
 ###################
 
-QTLModelQeff_GE <- function(mppData, trait, nEnv, Q.list, VCOV, names.QTL){
+QTLModelQeff_GE <- function(mppData, trait, nEnv, Q.list, VCOV, names.QTL,
+                            workspace){
 
   nQTL <- length(Q.list)
 
@@ -36,56 +37,41 @@ QTLModelQeff_GE <- function(mppData, trait, nEnv, Q.list, VCOV, names.QTL){
     dataset <- data.frame(QTL = do.call(cbind, Q.list), trait,
                           env = env_ind, genotype = geno_id, cross = cr_ind)
 
+    dataset$cross_env <- factor(paste0(as.character(dataset$cross),
+                                       as.character(dataset$env)))
+
     colnames(dataset)[1:length(names.QTL)] <- names.QTL
 
     # formula
 
     f <- paste("trait ~ -1 + env:cross +", paste(names.QTL, collapse = "+"))
 
-    # random and rcov formulas
+    if (VCOV == 'CSRT'){
 
-    if (VCOV == "CS"){
-
-      formula.random <- "~ genotype"
-      formula.rcov <- "~ units"
-
-    } else if (VCOV == "DG"){
-
-      formula.rcov <- "~ at(env):units"
-
-
-    } else if (VCOV == "UCH"){
-
-      formula.random <- "~ genotype"
-      formula.rcov <- "~ at(env):units"
-
-
-    } else if (VCOV == "UN"){
-
-      formula.rcov <- "~ us(env):genotype"
-
-    }
-
-    # compute the model
-
-    if(VCOV %in% c("DG", "UN")){
+      formula.rcov <- "~ at(cross_env):units"
 
       model <- asreml(fixed = as.formula(f),
                       rcov = as.formula(formula.rcov),
                       data = dataset, trace = FALSE,
                       na.method.Y = "include",
-                      na.method.X = "omit", keep.order = TRUE)
+                      na.method.X = "omit", keep.order = TRUE,
+                      workspace = workspace)
 
-    } else {
+    } else if (VCOV == "CS_CSRT"){
+
+      formula.random <- "~ genotype"
+      formula.rcov <- "~ at(cross_env):units"
 
       model <- asreml(fixed = as.formula(f),
                       random = as.formula(formula.random),
                       rcov = as.formula(formula.rcov),
                       data = dataset, trace = FALSE,
                       na.method.Y = "include",
-                      na.method.X = "omit", keep.order = TRUE)
+                      na.method.X = "omit", keep.order = TRUE,
+                      workspace = workspace)
 
     }
+
 
   }
 

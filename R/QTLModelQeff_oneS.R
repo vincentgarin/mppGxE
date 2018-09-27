@@ -6,7 +6,7 @@
 # stage MPP GxE analysis
 
 QTLModelQeff_oneS <- function(plot_data, mppData, trait, Q.list,
-                              VCOV, exp_des_form, names.QTL){
+                              VCOV, exp_des_form, names.QTL, workspace){
 
 
   if(VCOV == "ID"){ # linear model
@@ -30,6 +30,9 @@ QTLModelQeff_oneS <- function(plot_data, mppData, trait, Q.list,
 
     colnames(dataset)[1:length(names.QTL)] <- names.QTL
 
+    dataset$cross_env <- factor(paste0(as.character(dataset$cross),
+                                       as.character(dataset$env)))
+
     # formula
 
     f <- paste("trait ~ -1 + env:cross +", paste(names.QTL, collapse = "+"))
@@ -37,29 +40,15 @@ QTLModelQeff_oneS <- function(plot_data, mppData, trait, Q.list,
 
     # random and rcov formulas
 
-    if(VCOV == "CS"){
-
-      formula.random <- paste0('~ genotype + ', exp_des_form)
-      formula.rcov <- "~ units"
-
-    } else if (VCOV == "DG"){
+    if (VCOV == 'CSRT'){
 
       formula.random <- paste0('~ ', exp_des_form)
-      formula.rcov <- "~ at(env):units"
+      formula.rcov <- "~ at(cross_env):units"
 
-
-    } else if (VCOV == "UCH"){
+    } else if (VCOV == "CS_CSRT"){
 
       formula.random <- paste0('~ genotype + ', exp_des_form)
-      formula.rcov <- "~ at(env):units"
-
-
-    } else if (VCOV == "UN"){
-
-      formula.random <- paste0('~ ', exp_des_form)
-      formula.rcov <- "~ us(env):genotype"
-
-      # make sure that each genotype appear in each environment
+      formula.rcov <- "~ at(cross_env):units"
 
     }
 
@@ -70,9 +59,8 @@ QTLModelQeff_oneS <- function(plot_data, mppData, trait, Q.list,
                              rcov = as.formula(formula.rcov), data = dataset,
                              trace = FALSE, na.method.Y = "include",
                              na.method.X = "omit",
-                             keep.order = TRUE),
+                             keep.order = TRUE, workspace = workspace),
                       error = function(e) NULL)
-
 
   }
 

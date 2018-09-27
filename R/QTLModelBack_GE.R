@@ -4,7 +4,7 @@
 
 # single model for MPP GxE QTL backward elimination
 
-QTLModelBack_GE <- function(x, mppData, trait, nEnv, Q.list, VCOV){
+QTLModelBack_GE <- function(x, mppData, trait, nEnv, Q.list, VCOV, workspace){
 
 
   if(VCOV == "ID"){ # linear model
@@ -33,6 +33,9 @@ QTLModelBack_GE <- function(x, mppData, trait, nEnv, Q.list, VCOV){
     dataset <- data.frame(QTL = do.call(cbind, Q.list), trait,
                           env = env_ind, genotype = geno_id, cross = cr_ind)
 
+    dataset$cross_env <- factor(paste0(as.character(dataset$cross),
+                                       as.character(dataset$env)))
+
     # form the QTL groups
 
     n.QTL.el <- unlist(lapply(Q.list, function(x) dim(x)[2]))
@@ -44,50 +47,33 @@ QTLModelBack_GE <- function(x, mppData, trait, nEnv, Q.list, VCOV){
 
     # random and rcov formulas
 
-    if (VCOV == "CS"){
+   if (VCOV == 'CSRT'){
 
-      formula.random <- "~ genotype"
-      formula.rcov <- "~ units"
+    formula.rcov <- "~ at(cross_env):units"
 
-    } else if (VCOV == "DG"){
+    model <- asreml(fixed = as.formula(x),
+                    rcov = as.formula(formula.rcov),
+                    group = QTL.seq,
+                    data = dataset, trace = FALSE,
+                    na.method.Y = "include",
+                    na.method.X = "omit", keep.order = TRUE,
+                    workspace = workspace)
 
-      formula.rcov <- "~ at(env):units"
+  } else if (VCOV == "CS_CSRT"){
 
+    formula.random <- "~ genotype"
+    formula.rcov <- "~ at(cross_env):units"
 
-    } else if (VCOV == "UCH"){
+    model <- asreml(fixed = as.formula(x),
+                    random = as.formula(formula.random),
+                    rcov = as.formula(formula.rcov),
+                    group = QTL.seq,
+                    data = dataset, trace = FALSE,
+                    na.method.Y = "include",
+                    na.method.X = "omit", keep.order = TRUE,
+                    workspace = workspace)
 
-      formula.random <- "~ genotype"
-      formula.rcov <- "~ at(env):units"
-
-
-    } else if (VCOV == "UN"){
-
-      formula.rcov <- "~ us(env):genotype"
-
-    }
-
-    # compute the model
-
-    if(VCOV %in% c("DG", "UN")){
-
-      model <- asreml(fixed = as.formula(x),
-                      rcov = as.formula(formula.rcov),
-                      group = QTL.seq,
-                      data = dataset, trace = FALSE,
-                      na.method.Y = "include",
-                      na.method.X = "omit", keep.order = TRUE)
-
-    } else {
-
-      model <- asreml(fixed = as.formula(x),
-                      random = as.formula(formula.random),
-                      rcov = as.formula(formula.rcov),
-                      group = QTL.seq,
-                      data = dataset, trace = FALSE,
-                      na.method.Y = "include",
-                      na.method.X = "omit", keep.order = TRUE)
-
-    }
+  }
 
     w.table <- wald(model)
     res <- w.table[(dim(w.table)[1] - 1), 4]

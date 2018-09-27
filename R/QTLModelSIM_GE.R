@@ -5,7 +5,7 @@
 # function to compute a single position MPP GxE QTL model
 
 QTLModelSIM_GE <- function(x, mppData, nEnv, TraitEnv, Q.eff, VCOV,
-                           plot.gen.eff){
+                           plot.gen.eff, workspace){
 
   # 1. formation of the QTL incidence matrix
   ###########################################
@@ -44,6 +44,9 @@ QTLModelSIM_GE <- function(x, mppData, nEnv, TraitEnv, Q.eff, VCOV,
                           genotype = geno_id, cross = cr_ind, QTLenv)
 
     colnames(dataset)[5:(QTL.el + 4)] <- paste0("Q", 1:QTL.el)
+
+    dataset$cross_env <- factor(paste0(as.character(dataset$cross),
+                                       as.character(dataset$env)))
 
     # model fixed term (QTL) formula
 
@@ -109,37 +112,27 @@ QTLModelSIM_GE <- function(x, mppData, nEnv, TraitEnv, Q.eff, VCOV,
     }
 
 
-  } else if (VCOV == "CS"){
+  } else if (VCOV == 'CSRT'){
+
+    formula.rcov <- "~ at(cross_env):units"
+
+  } else if (VCOV == "CS_CSRT"){
 
     formula.random <- "~ genotype"
-    formula.rcov <- "~ units"
-
-  } else if (VCOV == "DG"){
-
-    formula.rcov <- "~ at(env):units"
-
-
-  } else if (VCOV == "UCH"){
-
-    formula.random <- "~ genotype"
-    formula.rcov <- "~ at(env):units"
-
-
-  } else if (VCOV == "UN"){
-
-    formula.rcov <- "~ us(env):genotype"
+    formula.rcov <- "~ at(cross_env):units"
 
   }
 
   if(VCOV != "ID"){ # compute the mixed model
 
-    if(VCOV %in% c("DG", "UN")){
+    if(VCOV %in% c('CSRT')){
 
       model <- tryCatch(expr = asreml(fixed = as.formula(formula.fix),
                                       rcov = as.formula(formula.rcov),
                                       data = dataset, trace = FALSE,
                                       na.method.Y = "include",
-                                      na.method.X = "omit", keep.order = TRUE),
+                                      na.method.X = "omit", keep.order = TRUE,
+                                      workspace = workspace),
                         error = function(e) NULL)
 
     } else {
@@ -149,7 +142,8 @@ QTLModelSIM_GE <- function(x, mppData, nEnv, TraitEnv, Q.eff, VCOV,
                                       rcov = as.formula(formula.rcov),
                                       data = dataset, trace = FALSE,
                                       na.method.Y = "include",
-                                      na.method.X = "omit", keep.order = TRUE),
+                                      na.method.X = "omit", keep.order = TRUE,
+                                      workspace = workspace),
                         error = function(e) NULL)
 
     }

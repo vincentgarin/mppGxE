@@ -18,10 +18,9 @@
 #' for ancestral; 4) "biall" for a bi-allelic. Default = "cr".
 #'
 #' @param VCOV VCOV \code{Character} expression defining the type of variance
-#' covariance structure used. "ID" for identity, "CS" for compound symmetry,
-#' "DG" for heterogeneous environmental (residual) variance,
-#' "UCH" for uniform covariance with heterogeneous environmental variance,
-#' and "UN" for unstructured. Default = "ID".
+#' covariance structure used. "ID" for identity, "CSRT" for within environment
+#' cross-specific residual term, "CS_CSRT" for compound symmetry with within
+#' environment cross-specific residual term. Default = "CS_CSRT".
 #'
 #' @param cofactors Object of class \code{QTLlist} representing a list of
 #' selected marker positions obtained with the function QTL_select() or
@@ -44,6 +43,9 @@
 #'
 #' @param cluster Cluster object obtained with the function \code{makeCluster()}
 #' from the parallel package. Default = NULL.
+#'
+#' @param workspace size of workspace for the REML routines measured in double
+#' precision words (groups of 8 bytes). The default is workspace = 8e6.
 #'
 #'
 #' @return Return:
@@ -71,9 +73,10 @@
 #'
 
 
-mppGE_CIM <- function(mppData, trait, Q.eff = "cr", VCOV = "ID",
+mppGE_CIM <- function(mppData, trait, Q.eff = "cr", VCOV = "CS_CSRT",
                       cofactors = NULL,  window = 20, plot.gen.eff = FALSE,
-                      parallel = FALSE, cluster = NULL)
+                      parallel = FALSE, cluster = NULL,
+                      workspace = 8e6)
 {
 
   # 1. Check data format and arguments
@@ -147,7 +150,8 @@ mppGE_CIM <- function(mppData, trait, Q.eff = "cr", VCOV = "ID",
     log.pval <- lapply(X = vect.pos, FUN = QTLModelCIM_GE,
                        mppData = mppData, nEnv = nEnv, TraitEnv = TraitEnv,
                        Q.eff = Q.eff, VCOV = VCOV, cof.list = cof.list,
-                       cof.part = cof.part, plot.gen.eff = plot.gen.eff)
+                       cof.part = cof.part, plot.gen.eff = plot.gen.eff,
+                       workspace = workspace)
 
   }
 

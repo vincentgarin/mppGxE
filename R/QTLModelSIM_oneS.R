@@ -5,7 +5,8 @@
 # function to compute single position one stage QTL model
 
 QTLModelSIM_oneS <- function(x, plot_data, mppData, trait, nEnv, EnvNames,
-                             Q.eff, VCOV, exp_des_form, plot.gen.eff){
+                             Q.eff, VCOV, exp_des_form, plot.gen.eff,
+                             workspace){
 
   # process the QTL incidence matrix
 
@@ -42,6 +43,9 @@ QTLModelSIM_oneS <- function(x, plot_data, mppData, trait, nEnv, EnvNames,
 
   }
 
+  dataset$cross_env <- factor(paste0(as.character(dataset$cross),
+                                     as.character(dataset$env)))
+
   # determine mixed model formula
 
   n_cof <- dim(plot_data)[2]
@@ -50,29 +54,15 @@ QTLModelSIM_oneS <- function(x, plot_data, mppData, trait, nEnv, EnvNames,
   formula.QTL <- paste("+", paste0("Q", 1:QTL.el), collapse = " ")
   formula.fix <- paste(trait, " ~ -1 + env:cross", formula.QTL)
 
-  if(VCOV == "CS"){
-
-    formula.random <- paste0('~ genotype + ', exp_des_form)
-    formula.rcov <- "~ units"
-
-  } else if (VCOV == "DG"){
+  if (VCOV == 'CSRT'){
 
     formula.random <- paste0('~ ', exp_des_form)
-    formula.rcov <- "~ at(env):units"
+    formula.rcov <- "~ at(cross_env):units"
 
-
-  } else if (VCOV == "UCH"){
+  } else if (VCOV == "CS_CSRT"){
 
     formula.random <- paste0('~ genotype + ', exp_des_form)
-    formula.rcov <- "~ at(env):units"
-
-
-  } else if (VCOV == "UN"){
-
-    formula.random <- paste0('~ ', exp_des_form)
-    formula.rcov <- "~ us(env):genotype"
-
-    # make sure that each genotype appear in each environment
+    formula.rcov <- "~ at(cross_env):units"
 
   }
 
@@ -83,7 +73,7 @@ QTLModelSIM_oneS <- function(x, plot_data, mppData, trait, nEnv, EnvNames,
                            rcov = as.formula(formula.rcov), data = dataset,
                            trace = FALSE, na.method.Y = "include",
                            na.method.X = "omit",
-                           keep.order = TRUE),
+                           keep.order = TRUE, workspace = workspace),
                     error = function(e) NULL)
 
   # Get the results

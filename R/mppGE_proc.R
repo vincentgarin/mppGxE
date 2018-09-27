@@ -39,10 +39,9 @@
 #' effects. Default = "cr".
 #'
 #' @param VCOV VCOV \code{Character} expression defining the type of variance
-#' covariance structure used. "ID" for identity, "CS" for compound symmetry,
-#' "DG" for heterogeneous environmental (residual) variance,
-#' "UCH" for uniform covariance with heterogeneous environmental variance,
-#' and "UN" for unstructured. Default = "ID".
+#' covariance structure used. "ID" for identity, "CSRT" for within environment
+#' cross-specific residual term, "CS_CSRT" for compound symmetry with within
+#' environment cross-specific residual term. Default = "CS_CSRT".
 #'
 #' @param plot.gen.eff \code{Logical} value. If \code{plot.gen.eff = TRUE},
 #' the function will save the decomposed genetic effects per cross/parent.
@@ -81,6 +80,9 @@
 #'
 #' @param cluster Cluster object obtained with the function \code{makeCluster()}
 #' from the parallel package. Default = NULL.
+#'
+#' @param workspace size of workspace for the REML routines measured in double
+#' precision words (groups of 8 bytes). The default is workspace = 8e6.
 #'
 #' @param verbose \code{Logical} value indicating if the steps of mpp_proc should
 #' be printed. It will not affect the printing of the other functions called by
@@ -161,11 +163,12 @@
 
 
 mppGE_proc <- function(pop.name = "MPP", trait.name = "trait1", mppData, trait,
-                       EnvNames = NULL,  Q.eff = "cr", VCOV = "ID",
+                       EnvNames = NULL,  Q.eff = "cr", VCOV = "CS_CSRT",
                        plot.gen.eff = FALSE, thre.cof = 4,
                        win.cof = 50, N.cim = 1, window = 20, thre.QTL = 4,
                        win.QTL = 20, alpha = 0.01, text.size = 18, parallel = FALSE,
-                       cluster = NULL, verbose = TRUE, output.loc = NULL) {
+                       cluster = NULL, workspace = 8e6, verbose = TRUE,
+                       output.loc = NULL) {
 
 
   # 1. Check the validity of the parameters that have been introduced
@@ -219,7 +222,8 @@ mppGE_proc <- function(pop.name = "MPP", trait.name = "trait1", mppData, trait,
 
   SIM <- mppGE_SIM(trait = trait, mppData = mppData, Q.eff = Q.eff,
                    VCOV = VCOV, plot.gen.eff = plot.gen.eff,
-                   parallel = parallel, cluster = cluster)
+                   parallel = parallel, cluster = cluster,
+                   workspace = workspace)
 
   # save SIM results in output location
 
@@ -254,7 +258,8 @@ mppGE_proc <- function(pop.name = "MPP", trait.name = "trait1", mppData, trait,
   CIM <- mppGE_CIM(trait = trait, mppData = mppData, Q.eff = Q.eff,
                    VCOV = VCOV, cofactors = cofactors,
                    window = window, plot.gen.eff = plot.gen.eff,
-                   parallel = parallel, cluster = cluster)
+                   parallel = parallel, cluster = cluster,
+                   workspace = workspace)
 
 
   if (N.cim > 1) {
@@ -287,7 +292,8 @@ mppGE_proc <- function(pop.name = "MPP", trait.name = "trait1", mppData, trait,
         CIM <- mppGE_CIM(trait = trait, mppData = mppData, Q.eff = Q.eff,
                          VCOV = VCOV, cofactors = cofactors,
                          window = window, plot.gen.eff = plot.gen.eff,
-                         parallel = parallel, cluster = cluster)
+                         parallel = parallel, cluster = cluster,
+                         workspace = workspace)
 
       }
 
@@ -320,7 +326,8 @@ mppGE_proc <- function(pop.name = "MPP", trait.name = "trait1", mppData, trait,
   #########################
 
   Q_back <- back_elim_GE(mppData = mppData, trait = trait, Q.eff = Q.eff,
-                      VCOV = VCOV, QTL = QTL, alpha = alpha)
+                      VCOV = VCOV, QTL = QTL, alpha = alpha,
+                      workspace = workspace)
 
   # save the list of QTLs
 

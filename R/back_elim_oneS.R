@@ -26,10 +26,9 @@
 #' for ancestral; 4) "biall" for a bi-allelic. Default = "cr".
 #'
 #' @param VCOV VCOV \code{Character} expression defining the type of variance
-#' covariance structure used. "CS" for compound symmetry, "DG" for heterogeneous
-#' environmental (residual) variance, "UCH" for uniform covariance with
-#' heterogeneous environmental variance, and "UN" for unstructured.
-#' Default = "DG".
+#' covariance structure used. "CSRT" for within environment
+#' cross-specific residual term, "CS_CSRT" for compound symmetry with within
+#' environment cross-specific residual term. Default = "CS_CSRT".
 #'
 #' @param exp_des_form \code{Character} expression for the random experimental
 #' design effects in asreml-R format. For example,
@@ -42,6 +41,9 @@
 #'
 #' @param alpha \code{Numeric} value indicating the level of significance for
 #' the backward elimination. Default = 0.01.
+#'
+#' @param workspace size of workspace for the REML routines measured in double
+#' precision words (groups of 8 bytes). The default is workspace = 8e6.
 #'
 #' @return Return:
 #'
@@ -103,8 +105,9 @@
 #
 # plot(CIM)
 
-back_elim_oneS <- function(plot_data, mppData, trait, Q.eff = "cr", VCOV = "DG",
-                           exp_des_form, QTL = NULL, alpha = 0.01){
+back_elim_oneS <- function(plot_data, mppData, trait, Q.eff = "cr",
+                           VCOV = "CS_CSRT", exp_des_form, QTL = NULL,
+                           alpha = 0.01, workspace = 8e6){
 
   if(is.null(QTL)){stop("No 'QTL' have been provided.")}
 
@@ -215,7 +218,7 @@ back_elim_oneS <- function(plot_data, mppData, trait, Q.eff = "cr", VCOV = "DG",
     pvals <- lapply(X = model.formulas, FUN = QTLModelBack_oneS,
                     plot_data = plot_data, mppData = mppData,
                     trait = trait, nEnv = nEnv, Q.list = Q.list, VCOV = VCOV,
-                    exp_des_form = exp_des_form)
+                    exp_des_form = exp_des_form, workspace = workspace)
 
     pvals <- unlist(pvals)
 
