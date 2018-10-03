@@ -25,7 +25,7 @@
 #'
 #' @param workspace size of workspace for the REML routines measured in double
 #' precision words (groups of 8 bytes). The default is workspace = 8e6.
-
+#'
 #'
 #' @return Return:
 #'

@@ -102,6 +102,9 @@
 #'
 #' \item{QTL}{\code{Data.frame} with QTL positions.}
 #'
+#' \item{R2}{\code{List} containing R squared statistics of the QTL effects.
+#' For details see \code{\link{QTL_R2}} output section.}
+#'
 #' Some output files are also saved at the specified location
 #' (\code{output.loc}):
 #'
@@ -112,6 +115,9 @@
 #' \item{The list of cofactors (cofactors.txt).}
 #'
 #' \item{The list of QTL (QTL.txt).}
+#'
+#' \item{The QTL R squared statistics (QTL_R2.txt) (for details see
+#' \code{\link{QTL_R2}}).}
 #'
 #' \item{The plot of the CIM profile (QTL_profile.pdf) with dotted vertical
 #' lines representing the cofactors positions. If \code{plot.gen.eff = TRUE},
@@ -340,8 +346,25 @@ mppGE_proc <- function(pop.name = "MPP", trait.name = "trait1", mppData, trait,
 
   }
 
+  # 6. QTL R2
+  ###########
 
-  # 6. Results processing
+  R2 <- QTL_R2_GE(mppData = mppData, trait = trait, Q.eff = Q.eff, VCOV = VCOV,
+                  QTL = QTL[, 1], workspace = workspace)
+
+  # save R2 results
+
+  QTL.R2 <- data.frame(QTL[, 1:5], round(R2[[3]], 2), round(R2[[4]], 2),
+                       round(R2[[5]], 2), round(R2[[6]], 2),
+                       stringsAsFactors = FALSE)
+
+  colnames(QTL.R2)[6:9] <- c("R2.diff", "adj.R2.diff", "R2.sg", "adj.R2.sg")
+
+  write.table(QTL.R2, file = file.path(folder.loc, "QTL_R2.txt"),
+              quote = FALSE, sep = "\t", row.names = FALSE)
+
+
+  # 7. Results processing
   #######################
 
   if(verbose){
@@ -386,7 +409,7 @@ mppGE_proc <- function(pop.name = "MPP", trait.name = "trait1", mppData, trait,
 
 
   results <- list(n.QTL = dim(QTL)[1], cofactors = cofactors[, 1:5],
-                  QTL = QTL[, 1:5])
+                  QTL = QTL[, 1:5], R2 = R2)
 
   return(results)
 
