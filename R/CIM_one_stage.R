@@ -107,11 +107,7 @@ CIM_one_stage <- function(plot_data, mppData, trait, Q.eff = "cr", VCOV = "CS_CS
 
   if(VCOV == "UN"){stop("This VCOV is not available for the moment.")}
 
-  # 1. Remove the genotype of plot data that do not have genotypic information
-
-  plot_data <- plot_data[plot_data$genotype %in% mppData$geno.id, ]
-
-  # 2. Determine the environments
+  # Determine the environments
 
   EnvNames <- unique(plot_data$env)
 
