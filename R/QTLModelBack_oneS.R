@@ -28,6 +28,10 @@ QTLModelBack_oneS <- function(x, plot_data, mppData, trait, nEnv, Q.list, VCOV,
     dataset$cross_env <- factor(paste0(as.character(dataset$cross),
                                        as.character(dataset$env)))
 
+    dataset$genotype[dataset$check == 'check'] <- NA
+
+    dataset <- dataset[order(dataset$cross), ]
+
     # form the QTL groups
 
     n.QTL.el <- unlist(lapply(Q.list, function(x) dim(x)[2]))
@@ -58,7 +62,7 @@ QTLModelBack_oneS <- function(x, plot_data, mppData, trait, nEnv, Q.list, VCOV,
                              rcov = as.formula(formula.rcov), data = dataset,
                              group = QTL.seq,
                              trace = FALSE, na.method.Y = "include",
-                             na.method.X = "omit",
+                             na.method.X = "include",
                              keep.order = TRUE, workspace = workspace),
                       error = function(e) NULL)
 

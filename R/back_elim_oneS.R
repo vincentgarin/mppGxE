@@ -113,10 +113,6 @@ back_elim_oneS <- function(plot_data, mppData, trait, Q.eff = "cr",
 
   if(VCOV == "UN"){stop("This VCOV is not available for the moment.")}
 
-  # Remove the genotype of plot data that do not have genotypic information
-
-  plot_data <- plot_data[plot_data$genotype %in% mppData$geno.id, ]
-
   # Determine the environments
 
   EnvNames <- unique(plot_data$env)
@@ -141,10 +137,10 @@ back_elim_oneS <- function(plot_data, mppData, trait, Q.eff = "cr",
   nGeno <- length(mppData$geno.id)
 
   Q.list0 <- lapply(X = Q.pos, FUN = inc_mat_QTL, mppData = mppData,
-                   Q.eff = Q.eff, order.MAF = TRUE)
+                    Q.eff = Q.eff, order.MAF = TRUE)
 
   Q.list0 <- lapply(X = Q.list0, FUN =  function(x, nEnv) diag(nEnv) %x% x,
-                   nEnv = nEnv)
+                    nEnv = nEnv)
 
   # expand each QTL to match the genotype information of the plot data
 
@@ -159,14 +155,14 @@ back_elim_oneS <- function(plot_data, mppData, trait, Q.eff = "cr",
   for(i in 1:nQTL){
 
     QTLdat_i <- data.frame(genotype = rep(mppData$geno.id, nEnv), Q.list0[[i]],
-                         stringsAsFactors = FALSE)
+                           stringsAsFactors = FALSE)
     Q_i <- c()
 
     for(j in 1:nEnv){
 
       gen_j <- ref_geno[ref_geno$env == EnvNames[j], ]
       Q_data_ij <- QTLdat_i[ind_row[[j]], ]
-      data_j <- merge(gen_j, Q_data_ij, by = c("genotype"))
+      data_j <- merge(gen_j, Q_data_ij, by = c("genotype"), all.x = TRUE)
 
       Q_i <- rbind(Q_i, data_j)
 
@@ -194,7 +190,7 @@ back_elim_oneS <- function(plot_data, mppData, trait, Q.eff = "cr",
 
     ref_ij <- ref_geno2[ref_geno2$env == EnvNames[j], ]
     Q_data_ij <- QTLdat_i[ind_row[[j]], , drop = FALSE]
-    ref_ij <- merge(ref_ij, Q_data_ij, by = c("genotype"))
+    ref_ij <- merge(ref_ij, Q_data_ij, by = c("genotype"), all.x = TRUE)
 
     ref_i <- rbind(ref_i, ref_ij)
 

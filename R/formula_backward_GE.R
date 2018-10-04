@@ -17,7 +17,7 @@ formula_backward_GE <- function(Q.names, VCOV){
 
   } else {
 
-    fbegin <- "trait ~ -1 + env:cross +"
+    fbegin <- "trait ~ -1 + check + env:cross +"
 
   }
 
