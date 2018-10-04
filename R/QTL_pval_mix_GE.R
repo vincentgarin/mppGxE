@@ -8,9 +8,9 @@ QTL_pval_mix_GE <- function(model, nEnv, Q.eff, x, QTL.el, ref.name, par.names,
                             fct) {
 
   if(fct == "SIM"){
-    start.ind <- 2; end.ind <- 1
+    start.ind <- 3; end.ind <- 2
   } else if(fct == "CIM") {
-    start.ind <- 3; end.ind <- 2}
+    start.ind <- 4; end.ind <- 3}
 
   sign <- sign(rev(model$coefficients$fixed[1:QTL.el]))
   pval <- wald(model)[start.ind:(QTL.el + end.ind), 4]

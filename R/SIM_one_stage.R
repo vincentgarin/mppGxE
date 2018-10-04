@@ -6,11 +6,11 @@
 #'
 #' @param plot_data \code{data.frame} containing the plot data with the following
 #' columns: the trait(s), 'genotype' (genotype indicator), 'cross'
-#' (cross indicator), 'env' (environment indicator), and all other experimental
-#' design covariates (e.g. replicate, blocks, etc.). The column names of the
-#' data.frame must be identical to the one specified ('genotype', 'cross',
-#' 'env'). The names of the experimental design covariates must be the same as
-#' the one used in 'exp_des_form'.
+#' (cross indicator), 'env' (environment indicator), 'check' (check indicators),
+#' and all other experimental design covariates (e.g. replicate, blocks, etc.).
+#' The column names of the data.frame must be identical to the one specified
+#' ('genotype', 'cross', env'). The names of the experimental design covariates
+#' must be the same as the one used in 'exp_des_form'.
 #'
 #' @param mppData Object of class \code{mppData} contaning the genotypic
 #' information with genotype list corresponding to the one of \code{plot_data}.
@@ -89,10 +89,6 @@ SIM_one_stage <- function(plot_data, mppData, trait, Q.eff = "cr", VCOV = "CS_CS
                           exp_des_form, plot.gen.eff = FALSE, workspace = 8e6){
 
   if(VCOV == "UN"){stop("This VCOV is not available for the moment.")}
-
-  # 1. Remove the genotype of plot data that do not have genotypic information
-
-  plot_data <- plot_data[plot_data$genotype %in% mppData$geno.id, ]
 
   # 2. Determine the environments
 

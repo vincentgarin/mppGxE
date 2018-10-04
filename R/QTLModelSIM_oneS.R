@@ -37,7 +37,7 @@ QTLModelSIM_oneS <- function(x, plot_data, mppData, trait, nEnv, EnvNames,
 
     data_i <- plot_data[plot_data$env == EnvNames[i], ]
     Q_data_i <- QTLenv[ind_row[[i]], ]
-    data_i <- merge(data_i, Q_data_i, by = c("genotype"))
+    data_i <- merge(data_i, Q_data_i, by = c("genotype"), all.x = TRUE)
 
     dataset <- rbind(dataset, data_i)
 
@@ -46,13 +46,17 @@ QTLModelSIM_oneS <- function(x, plot_data, mppData, trait, nEnv, EnvNames,
   dataset$cross_env <- factor(paste0(as.character(dataset$cross),
                                      as.character(dataset$env)))
 
+  dataset$genotype[dataset$check == 'check'] <- NA
+
+  dataset <- dataset[order(dataset$cross), ]
+
   # determine mixed model formula
 
   n_cof <- dim(plot_data)[2]
   colnames(dataset)[(n_cof + 1):(QTL.el + n_cof)] <- paste0("Q", 1:QTL.el)
 
   formula.QTL <- paste("+", paste0("Q", 1:QTL.el), collapse = " ")
-  formula.fix <- paste(trait, " ~ -1 + env:cross", formula.QTL)
+  formula.fix <- paste(trait, " ~ -1 + check + env:cross ", formula.QTL)
 
   if (VCOV == 'CSRT'){
 
@@ -72,7 +76,7 @@ QTLModelSIM_oneS <- function(x, plot_data, mppData, trait, nEnv, EnvNames,
                            random = as.formula(formula.random),
                            rcov = as.formula(formula.rcov), data = dataset,
                            trace = FALSE, na.method.Y = "include",
-                           na.method.X = "omit",
+                           na.method.X = "include",
                            keep.order = TRUE, workspace = workspace),
                     error = function(e) NULL)
 
@@ -92,7 +96,7 @@ QTLModelSIM_oneS <- function(x, plot_data, mppData, trait, nEnv, EnvNames,
 
   } else {
 
-    W.stat <- sum(wald(model)[2:(QTL.el+1), 3])
+    W.stat <- sum(wald(model)[3:(QTL.el+2), 3])
 
     if(W.stat == 0){
 
@@ -108,7 +112,7 @@ QTLModelSIM_oneS <- function(x, plot_data, mppData, trait, nEnv, EnvNames,
 
     } else {
 
-      df <- sum(wald(model)[2:(QTL.el+1), 1])
+      df <- sum(wald(model)[3:(QTL.el+2), 1])
 
       pval <- pchisq(W.stat, df, lower.tail = FALSE)
 
