@@ -363,20 +363,20 @@ one_stage_proc <- function(pop.name = "MPP", trait.name = "trait1", plot_data,
   ###########
 
 
-  R2 <- QTL_R2_oneS(plot_data = plot_data, mppData = mppData, trait = trait,
-                    Q.eff = Q.eff, VCOV = VCOV, QTL = QTL[, 1],
-                    exp_des_form = exp_des_form, workspace = workspace)
-
-  # save R2 results
-
-  QTL.R2 <- data.frame(QTL[, 1:5], round(R2[[3]], 2), round(R2[[4]], 2),
-                       round(R2[[5]], 2), round(R2[[6]], 2),
-                       stringsAsFactors = FALSE)
-
-  colnames(QTL.R2)[6:9] <- c("R2.diff", "adj.R2.diff", "R2.sg", "adj.R2.sg")
-
-  write.table(QTL.R2, file = file.path(folder.loc, "QTL_R2.txt"),
-              quote = FALSE, sep = "\t", row.names = FALSE)
+  # R2 <- QTL_R2_oneS(plot_data = plot_data, mppData = mppData, trait = trait,
+  #                   Q.eff = Q.eff, VCOV = VCOV, QTL = QTL[, 1],
+  #                   exp_des_form = exp_des_form, workspace = workspace)
+  #
+  # # save R2 results
+  #
+  # QTL.R2 <- data.frame(QTL[, 1:5], round(R2[[3]], 2), round(R2[[4]], 2),
+  #                      round(R2[[5]], 2), round(R2[[6]], 2),
+  #                      stringsAsFactors = FALSE)
+  #
+  # colnames(QTL.R2)[6:9] <- c("R2.diff", "adj.R2.diff", "R2.sg", "adj.R2.sg")
+  #
+  # write.table(QTL.R2, file = file.path(folder.loc, "QTL_R2.txt"),
+  #             quote = FALSE, sep = "\t", row.names = FALSE)
 
 
   # 6. Results processing
