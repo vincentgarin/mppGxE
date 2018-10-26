@@ -5,12 +5,25 @@
 # Function to collect the p-values from MPP GxE analyses
 
 QTL_pval_mix_GE <- function(model, nEnv, Q.eff, x, QTL.el, ref.name, par.names,
-                            fct) {
+                            fct, mod) {
 
-  if(fct == "SIM"){
-    start.ind <- 3; end.ind <- 2
-  } else if(fct == "CIM") {
-    start.ind <- 4; end.ind <- 3}
+  if(mod == 'M3'){
+
+    if(fct == "SIM"){
+      start.ind <- 2; end.ind <- 1
+    } else if(fct == "CIM") {
+      start.ind <- 3; end.ind <- 2}
+
+  } else if (mod == 'M4'){
+
+    if(fct == "SIM"){
+      start.ind <- 3; end.ind <- 2
+    } else if(fct == "CIM") {
+      start.ind <- 4; end.ind <- 3}
+
+  }
+
+
 
   sign <- sign(rev(model$coefficients$fixed[1:QTL.el]))
   pval <- wald(model)[start.ind:(QTL.el + end.ind), 4]

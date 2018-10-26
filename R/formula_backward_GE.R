@@ -4,7 +4,7 @@
 
 # Write the formula for MPP GxE backward elimination
 
-formula_backward_GE <- function(Q.names, VCOV){
+formula_backward_GE <- function(Q.names, VCOV, type){
 
 
   Q.vect <- vector("list", length = length(Q.names))
@@ -17,7 +17,15 @@ formula_backward_GE <- function(Q.names, VCOV){
 
   } else {
 
-    fbegin <- "trait ~ -1 + check + env:cross +"
+    if(type == 'GE'){
+
+      fbegin <- "trait ~ -1 + env:cross +"
+
+    } else if(type == 'oneS'){
+
+      fbegin <- "trait ~ -1 + check + env:cross +"
+
+    }
 
   }
 

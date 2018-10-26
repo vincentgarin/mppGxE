@@ -112,7 +112,8 @@ back_elim_GE <- function(mppData, trait, Q.eff = "cr", VCOV = "CS_CSRT",
 
     ### 3.1 elaboration of model formulas
 
-    model.formulas <- formula_backward_GE(Q.names = names(Q.list), VCOV = VCOV)
+    model.formulas <- formula_backward_GE(Q.names = names(Q.list), VCOV = VCOV,
+                                          type = 'GE')
 
     ### 3.2 computation of the models
 

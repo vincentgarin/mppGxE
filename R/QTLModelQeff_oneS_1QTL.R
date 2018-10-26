@@ -34,6 +34,10 @@ QTLModelQeff_oneS_1QTL <- function(plot_data, mppData, trait, Q.list,
     dataset$cross_env <- factor(paste0(as.character(dataset$cross),
                                        as.character(dataset$env)))
 
+    dataset$genotype[dataset$check != 'genotype'] <- NA
+
+    dataset <- dataset[order(dataset$cross), ]
+
     #########################
 
     nQTL <- length(Q.list)
@@ -52,7 +56,7 @@ QTLModelQeff_oneS_1QTL <- function(plot_data, mppData, trait, Q.list,
 
     # formula
 
-    f <- paste("trait ~ -1 + env:cross + grp(cof) +",
+    f <- paste("trait ~ -1 + check + env:cross + grp(cof) +",
                paste(names.QTL[seq_QTL], collapse = "+"))
 
     ####################################
@@ -78,7 +82,7 @@ QTLModelQeff_oneS_1QTL <- function(plot_data, mppData, trait, Q.list,
                              rcov = as.formula(formula.rcov), data = dataset,
                              group = list(cof = seq_cof),
                              trace = FALSE, na.method.Y = "include",
-                             na.method.X = "omit",
+                             na.method.X = "include",
                              keep.order = TRUE, workspace = workspace),
                       error = function(e) NULL)
 

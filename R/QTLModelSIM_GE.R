@@ -191,7 +191,8 @@ QTLModelSIM_GE <- function(x, mppData, nEnv, TraitEnv, Q.eff, VCOV,
 
           gen.eff  <- QTL_pval_mix_GE(model = model, nEnv = nEnv, Q.eff = Q.eff,
                                       QTL.el = QTL.el, x = x, ref.name = ref.name,
-                                      par.names = mppData$parents, fct = "SIM")
+                                      par.names = mppData$parents, fct = "SIM",
+                                      mod = 'M3')
 
           results  <- c(results, gen.eff)
 

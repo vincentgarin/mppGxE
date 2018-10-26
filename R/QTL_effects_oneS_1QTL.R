@@ -79,10 +79,6 @@ QTL_effects_oneS_1QTL <- function(plot_data, mppData, trait, Q.eff = "cr",
 
   if(VCOV == "UN"){stop("This VCOV is not available for the moment.")}
 
-  # Remove the genotype of plot data that do not have genotypic information
-
-  plot_data <- plot_data[plot_data$genotype %in% mppData$geno.id, ]
-
   # Determine the environments
 
   EnvNames <- unique(plot_data$env)
@@ -164,7 +160,7 @@ QTL_effects_oneS_1QTL <- function(plot_data, mppData, trait, Q.eff = "cr",
 
       gen_j <- ref_geno[ref_geno$env == EnvNames[j], ]
       Q_data_ij <- QTLdat_i[ind_row[[j]], ]
-      data_j <- merge(gen_j, Q_data_ij, by = c("genotype"))
+      data_j <- merge(gen_j, Q_data_ij, by = c("genotype"), all.x = TRUE)
 
       Q_i <- rbind(Q_i, data_j)
 
@@ -192,7 +188,7 @@ QTL_effects_oneS_1QTL <- function(plot_data, mppData, trait, Q.eff = "cr",
 
     ref_ij <- ref_geno2[ref_geno2$env == EnvNames[j], ]
     Q_data_ij <- QTLdat_i[ind_row[[j]], , drop = FALSE]
-    ref_ij <- merge(ref_ij, Q_data_ij, by = c("genotype"))
+    ref_ij <- merge(ref_ij, Q_data_ij, by = c("genotype"), all.x = TRUE)
 
     ref_i <- rbind(ref_i, ref_ij)
 

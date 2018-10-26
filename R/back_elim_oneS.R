@@ -207,7 +207,8 @@ back_elim_oneS <- function(plot_data, mppData, trait, Q.eff = "cr",
 
     ### 3.1 elaboration of model formulas
 
-    model.formulas <- formula_backward_GE(Q.names = names(Q.list), VCOV = VCOV)
+    model.formulas <- formula_backward_GE(Q.names = names(Q.list), VCOV = VCOV,
+                                          type = 'oneS')
 
     ### 3.2 computation of the models
 

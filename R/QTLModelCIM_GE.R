@@ -214,9 +214,9 @@ QTLModelCIM_GE <- function(x, mppData, nEnv, TraitEnv, Q.eff, VCOV, cof.list,
         if(plot.gen.eff){
 
           gen.eff  <- QTL_pval_mix_GE(model = model, nEnv = nEnv, Q.eff = Q.eff,
-                                      QTL.el = QTL.el, x = x,
-                                      ref.name = ref.name,
-                                      par.names = mppData$parents, fct = "CIM")
+                                      QTL.el = QTL.el, x = x, ref.name = ref.name,
+                                      par.names = mppData$parents, fct = "CIM",
+                                      mod = 'M3')
 
           results  <- c(results, gen.eff)
 

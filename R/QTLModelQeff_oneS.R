@@ -33,9 +33,14 @@ QTLModelQeff_oneS <- function(plot_data, mppData, trait, Q.list,
     dataset$cross_env <- factor(paste0(as.character(dataset$cross),
                                        as.character(dataset$env)))
 
+    dataset$genotype[dataset$check != 'genotype'] <- NA
+
+    dataset <- dataset[order(dataset$cross), ]
+
+
     # formula
 
-    f <- paste("trait ~ -1 + env:cross +", paste(names.QTL, collapse = "+"))
+    f <- paste("trait ~ -1 + check + env:cross +", paste(names.QTL, collapse = "+"))
 
 
     # random and rcov formulas
@@ -58,7 +63,7 @@ QTLModelQeff_oneS <- function(plot_data, mppData, trait, Q.list,
                              random = as.formula(formula.random),
                              rcov = as.formula(formula.rcov), data = dataset,
                              trace = FALSE, na.method.Y = "include",
-                             na.method.X = "omit",
+                             na.method.X = "include",
                              keep.order = TRUE, workspace = workspace),
                       error = function(e) NULL)
 

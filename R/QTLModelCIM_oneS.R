@@ -72,7 +72,7 @@ QTLModelCIM_oneS <- function(x, plot_data, mppData, trait, nEnv, EnvNames,
   dataset$cross_env <- factor(paste0(as.character(dataset$cross),
                                      as.character(dataset$env)))
 
-  dataset$genotype[dataset$check == 'check'] <- NA
+  dataset$genotype[dataset$check != 'genotype'] <- NA
 
   dataset <- dataset[order(dataset$cross), ]
 
@@ -147,7 +147,8 @@ QTLModelCIM_oneS <- function(x, plot_data, mppData, trait, nEnv, EnvNames,
 
         gen.eff  <- QTL_pval_mix_GE(model = model, nEnv = nEnv, Q.eff = Q.eff,
                                     QTL.el = QTL.el, x = x, ref.name = ref.name,
-                                    par.names = mppData$parents, fct = "CIM")
+                                    par.names = mppData$parents, fct = "CIM",
+                                    mod = 'M4')
 
         results  <- c(results, gen.eff)
 
