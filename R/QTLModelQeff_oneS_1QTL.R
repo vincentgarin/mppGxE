@@ -36,7 +36,19 @@ QTLModelQeff_oneS_1QTL <- function(plot_data, mppData, trait, Q.list,
 
     dataset$genotype[dataset$check != 'genotype'] <- NA
 
-    dataset <- dataset[order(dataset$cross), ]
+    if(VCOV %in% c('CSRT', 'CS_CSRT')){
+
+      dataset <- dataset[order(dataset$cross), ]
+
+    } else { # AR1xAR1 VCOVs
+
+      dataset <- dataset[order(dataset$env, dataset$col, dataset$row), ]
+
+      dataset$env <- factor(as.character(dataset$env))
+      dataset$col <- factor(as.character(dataset$col))
+      dataset$row <- factor(as.character(dataset$row))
+
+    }
 
     #########################
 
@@ -63,23 +75,15 @@ QTLModelQeff_oneS_1QTL <- function(plot_data, mppData, trait, Q.list,
 
     # random and rcov formulas
 
-    if (VCOV == 'CSRT'){
+    # random and rcov formulas
 
-      formula.random <- paste0('~ ', exp_des_form)
-      formula.rcov <- "~ at(cross_env):units"
-
-    } else if (VCOV == "CS_CSRT"){
-
-      formula.random <- paste0('~ genotype + ', exp_des_form)
-      formula.rcov <- "~ at(cross_env):units"
-
-    }
+    formulas <- mod_formulas_oneS(VCOV = VCOV, exp_des_form = exp_des_form)
 
     # compute the model
 
     model <- tryCatch(asreml(fixed = as.formula(f),
-                             random = as.formula(formula.random),
-                             rcov = as.formula(formula.rcov), data = dataset,
+                             random = as.formula(formulas[1]),
+                             rcov = as.formula(formulas[2]), data = dataset,
                              group = list(cof = seq_cof),
                              trace = FALSE, na.method.Y = "include",
                              na.method.X = "include",

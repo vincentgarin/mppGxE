@@ -48,9 +48,12 @@
 #' effects. Default = "cr".
 #'
 #' @param VCOV VCOV \code{Character} expression defining the type of variance
-#' covariance structure used. "CSRT" for within environment
-#' cross-specific residual term, "CS_CSRT" for compound symmetry with within
-#' environment cross-specific residual term. Default = "CS_CSRT".
+#' covariance structure used: a) "CSRT" for within environment
+#' cross-specific residual term; b) "CS_CSRT" for compound symmetry with within
+#' environment cross-specific residual term; c) "CS_AR1xAR1" for compound
+#' symmetry with AR1xAR1 spatial error structure; d) "CS_CSRT_AR1xAR1" for
+#' compound symmetry with within environment cross-specific residual term and
+#' AR1xAR1 spatial error structure. Default = "CS_CSRT".
 #'
 #' @param exp_des_form \code{Character} expression for the random experimental
 #' design effects in asreml-R format. For example,

@@ -48,7 +48,19 @@ QTLModelSIM_oneS <- function(x, plot_data, mppData, trait, nEnv, EnvNames,
 
   dataset$genotype[dataset$check != 'genotype'] <- NA
 
-  dataset <- dataset[order(dataset$cross), ]
+  if(VCOV %in% c('CSRT', 'CS_CSRT')){
+
+    dataset <- dataset[order(dataset$cross), ]
+
+  } else { # AR1xAR1 VCOVs
+
+    dataset <- dataset[order(dataset$env, dataset$col, dataset$row), ]
+
+    dataset$env <- factor(as.character(dataset$env))
+    dataset$col <- factor(as.character(dataset$col))
+    dataset$row <- factor(as.character(dataset$row))
+
+  }
 
   # determine mixed model formula
 
@@ -58,23 +70,15 @@ QTLModelSIM_oneS <- function(x, plot_data, mppData, trait, nEnv, EnvNames,
   formula.QTL <- paste("+", paste0("Q", 1:QTL.el), collapse = " ")
   formula.fix <- paste(trait, " ~ -1 + check + env:cross ", formula.QTL)
 
-  if (VCOV == 'CSRT'){
+  # random and rcov formulas
 
-    formula.random <- paste0('~ ', exp_des_form)
-    formula.rcov <- "~ at(cross_env):units"
-
-  } else if (VCOV == "CS_CSRT"){
-
-    formula.random <- paste0('~ genotype + ', exp_des_form)
-    formula.rcov <- "~ at(cross_env):units"
-
-  }
+  formulas <- mod_formulas_oneS(VCOV = VCOV, exp_des_form = exp_des_form)
 
   # compute the mixed model
 
   model <- tryCatch(asreml(fixed = as.formula(formula.fix),
-                           random = as.formula(formula.random),
-                           rcov = as.formula(formula.rcov), data = dataset,
+                           random = as.formula(formulas[1]),
+                           rcov = as.formula(formulas[2]), data = dataset,
                            trace = FALSE, na.method.Y = "include",
                            na.method.X = "include",
                            keep.order = TRUE, workspace = workspace),
