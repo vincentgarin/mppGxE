@@ -68,7 +68,7 @@ QTLModelSIM_oneS <- function(x, plot_data, mppData, trait, nEnv, EnvNames,
   colnames(dataset)[(n_cof + 1):(QTL.el + n_cof)] <- paste0("Q", 1:QTL.el)
 
   formula.QTL <- paste("+", paste0("Q", 1:QTL.el), collapse = " ")
-  formula.fix <- paste(trait, " ~ -1 + check + env:cross ", formula.QTL)
+  formula.fix <- paste(trait, " ~ -1 + env:check + env:cross ", formula.QTL)
 
   # random and rcov formulas
 

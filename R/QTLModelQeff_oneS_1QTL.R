@@ -68,7 +68,7 @@ QTLModelQeff_oneS_1QTL <- function(plot_data, mppData, trait, Q.list,
 
     # formula
 
-    f <- paste("trait ~ -1 + check + env:cross + grp(cof) +",
+    f <- paste("trait ~ -1 + env:check + env:cross + grp(cof) +",
                paste(names.QTL[seq_QTL], collapse = "+"))
 
     ####################################

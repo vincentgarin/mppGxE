@@ -23,7 +23,7 @@ formula_backward_GE <- function(Q.names, VCOV, type){
 
     } else if(type == 'oneS'){
 
-      fbegin <- "trait ~ -1 + check + env:cross +"
+      fbegin <- "trait ~ -1 + env:check + env:cross +"
 
     }
 

@@ -91,7 +91,7 @@ QTLModelCIM_oneS <- function(x, plot_data, mppData, trait, nEnv, EnvNames,
   # determine mixed model formula
 
   formula.QTL <- paste("+", paste0("Q", 1:QTL.el), collapse = " ")
-  formula.fix <- paste(trait, "~ -1 + check + env:cross + grp(cof)", formula.QTL)
+  formula.fix <- paste(trait, "~ -1 + env:check + env:cross + grp(cof)", formula.QTL)
 
   # random and rcov formulas
 

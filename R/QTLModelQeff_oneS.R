@@ -52,7 +52,7 @@ QTLModelQeff_oneS <- function(plot_data, mppData, trait, Q.list,
 
     # formula
 
-    f <- paste("trait ~ -1 + check + env:cross +", paste(names.QTL, collapse = "+"))
+    f <- paste("trait ~ -1 + env:check + env:cross +", paste(names.QTL, collapse = "+"))
 
 
     # random and rcov formulas
