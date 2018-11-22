@@ -2,6 +2,7 @@
 
 export(CIM_one_stage)
 export(CV_partition)
+export(QTL_Beta_GE)
 export(QTL_R2_GE)
 export(QTL_R2_oneS)
 export(QTL_effects_GE)

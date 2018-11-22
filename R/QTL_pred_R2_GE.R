@@ -31,16 +31,9 @@ QTL_pred_R2_GE <- function(mppData.ts, mppData.vs, trait = NULL,
   # 2. obtain the genetic effects (Betas)
   #######################################
 
-  effects <- QTL_effects_GE(mppData = mppData.ts, trait = trait,
+  B.ts <- QTL_Beta_GE(mppData = mppData.ts, trait = trait,
                             QTL = QTL, Q.eff = Q.eff, VCOV = VCOV,
                             workspace = workspace)
-
-  Qeff_names <- lapply(X = effects, FUN = function(x) rownames(x))
-  Qeff_names <- unlist(Qeff_names)
-  names(Qeff_names) <- NULL
-
-  B.ts <- lapply(X = seq_along(effects), FUN = function(x, Qeff) Qeff[[x]][, 1],
-                 Qeff = effects)
 
   # 3. obtain the QTL incidence matrices of the positions (X.vs)
   ##############################################################
@@ -105,7 +98,7 @@ QTL_pred_R2_GE <- function(mppData.ts, mppData.vs, trait = NULL,
 
   # order X.vs same order as the gentic predictor B.ts
 
-  X.vs <- X.vs[, Qeff_names]
+  X.vs <- X.vs[, names(B.ts)]
 
   # use only complete case informations
 
@@ -121,7 +114,6 @@ QTL_pred_R2_GE <- function(mppData.ts, mppData.vs, trait = NULL,
 
   # n.cr <- table(factor(cross.ind, levels = unique(cross.ind)))
 
-  B.ts <- unlist(B.ts)
   B.ts[is.na(B.ts)] <- 0
 
   y.vs.hat <- X.vs %*% B.ts
