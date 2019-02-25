@@ -33,19 +33,10 @@ QTL_pred_R2_GE_oneS <- function(plot_data, mppData.ts, mppData.vs,
   # 2. obtain the genetic effects (Betas)
   #######################################
 
-  effects <- QTL_effects_oneS(plot_data = plot_data,
-                              mppData = mppData.ts, trait = trait,
-                              QTL = QTL, Q.eff = Q.eff, VCOV = VCOV,
-                              exp_des_form = exp_des_form,
-                              workspace = workspace)
+  B.ts <- QTL_Beta_oneS(plot_data = plot_data, mppData = mppData.ts,
+                        trait = trait, QTL = QTL, Q.eff = Q.eff, VCOV = VCOV,
+                        exp_des_form = exp_des_form, workspace = workspace)
 
-
-  Qeff_names <- lapply(X = effects, FUN = function(x) rownames(x))
-  Qeff_names <- unlist(Qeff_names)
-  names(Qeff_names) <- NULL
-
-  B.ts <- lapply(X = seq_along(effects), FUN = function(x, Qeff) Qeff[[x]][, 1],
-                 Qeff = effects)
 
   # 3. obtain the QTL incidence matrices of the positions (X.vs)
   ##############################################################
@@ -111,7 +102,7 @@ QTL_pred_R2_GE_oneS <- function(plot_data, mppData.ts, mppData.vs,
 
   # order X.vs same order as the gentic predictor B.ts
 
-  X.vs <- X.vs[, Qeff_names]
+  X.vs <- X.vs[, names(B.ts)]
 
   # use only complete case informations
 
@@ -127,7 +118,6 @@ QTL_pred_R2_GE_oneS <- function(plot_data, mppData.ts, mppData.vs,
 
   # n.cr <- table(factor(cross.ind, levels = unique(cross.ind)))
 
-  B.ts <- unlist(B.ts)
   B.ts[is.na(B.ts)] <- 0
 
   y.vs.hat <- X.vs %*% B.ts

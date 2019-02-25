@@ -197,8 +197,19 @@ mppGE_CV_oneS <- function(pop.name = "MPP", trait.name = "trait1", plot_data,
   nEnv <- length(EnvNames)
 
   N.QTL <- rep(0, (k*Rep))
-  p.vs <- matrix(0, nrow = (k*Rep), ncol = nEnv)
 
+  p.ts <- matrix(0, nrow = (k*Rep), ncol = nEnv)
+  p.ts.cr <- vector(mode = 'list', length = length(cv.ref))
+
+  for(i in 1:nEnv){
+
+    p.ts.cr[[i]] <- matrix(0, mppData$n.cr, (k*Rep))
+    rownames(p.ts.cr[[i]]) <- unique(mppData$cross.ind)
+    colnames(p.ts.cr[[i]]) <- paste0('rep', 1:(k*Rep))
+
+  }
+
+  p.vs <- matrix(0, nrow = (k*Rep), ncol = nEnv)
   p.vs.cr <- vector(mode = 'list', length = length(cv.ref))
 
   for(i in 1:nEnv){
@@ -208,6 +219,7 @@ mppGE_CV_oneS <- function(pop.name = "MPP", trait.name = "trait1", plot_data,
     colnames(p.vs.cr[[i]]) <- paste0('rep', 1:(k*Rep))
 
   }
+
 
   ind.res <- 1 # index to feed the results later
 
@@ -289,6 +301,27 @@ mppGE_CV_oneS <- function(pop.name = "MPP", trait.name = "trait1", plot_data,
         # compute predicted R squared
         ##############################
 
+        # ts ----
+
+        R2_ts <- QTL_pred_R2_GE_oneS(plot_data = plot_data,
+                                     mppData.ts = mppData.ts,
+                                     mppData.vs = mppData.ts, trait = trait,
+                                     cv.ref = cv.ref, nEnv = nEnv,
+                                     Q.eff = Q.eff, VCOV = VCOV,
+                                     exp_des_form = exp_des_form, QTL = QTL,
+                                     workspace = workspace)
+
+
+        p.ts[ind.res, ] <- R2_ts$R2_av
+
+        for(w in 1:nEnv){
+
+          p.ts.cr[[w]][, ind.res] <- R2_ts$R2_cr[[w]][unique(mppData$cross.ind)]
+
+        }
+
+        # vs ----
+
         R2.vs <- QTL_pred_R2_GE_oneS(plot_data = plot_data,
                                      mppData.ts = mppData.ts,
                                      mppData.vs = mppData.vs, trait = trait,
@@ -297,11 +330,6 @@ mppGE_CV_oneS <- function(pop.name = "MPP", trait.name = "trait1", plot_data,
                                      exp_des_form = exp_des_form, QTL = QTL,
                                      workspace = workspace)
 
-
-        # global results
-        ################
-
-        # non adjusted
 
         p.vs[ind.res, ] <- R2.vs$R2_av
 
@@ -322,25 +350,27 @@ mppGE_CV_oneS <- function(pop.name = "MPP", trait.name = "trait1", plot_data,
 
   }  # end ith repetition loop
 
-  p_vs <- cbind(N.QTL, p.vs)
+  CV_res <- data.frame(N.QTL, p.ts, p.vs)
+  CV_res <- round(CV_res, 2)
 
-  colnames(p_vs) <- c("nQTL", EnvNames)
-  rownames(p_vs) <- paste0("CV_run_", 1:(Rep * k))
+  colnames(CV_res) <- c("nQTL", paste0('pts_', EnvNames), paste0('pvs_', EnvNames))
 
   QTL <- data.frame(mk.names = mk.list, nDet = QTL.positions)
 
   # save the results
 
-  write.table(x = p_vs, file = file.path(folder.loc, "p_vs.txt"), quote = FALSE,
+  write.table(x = CV_res, file = file.path(folder.loc, "CV_res.txt"), quote = FALSE,
               sep = "\t", row.names = FALSE)
 
+  save(p.ts.cr, file = file.path(folder.loc, 'pts_cr.RData'))
   save(p.vs.cr, file = file.path(folder.loc, 'pvs_cr.RData'))
 
   write.table(x = QTL, file = file.path(folder.loc, "QTL.txt"), quote = FALSE,
               sep = "\t", row.names = FALSE)
 
 
-  results <- list(p_vs = p_vs, p.vs.cr = p.vs.cr, QTL = QTL)
+  results <- list(p.ts = p.ts, p.vs = p.vs, p.vs.cr = p.vs.cr,
+                  p.ts.cr = p.ts.cr,QTL = QTL)
 
   return(results)
 
