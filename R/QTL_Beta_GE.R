@@ -50,8 +50,6 @@
 #'
 #' # Come later
 #'
-#' @export
-#'
 
 
 QTL_Beta_GE <- function(mppData, trait, Q.eff = "cr", VCOV = "CS_CSRT",

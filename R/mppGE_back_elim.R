@@ -1,5 +1,5 @@
 ################
-# back_elim_GE #
+# mppGE_back_elim #
 ################
 
 #' Backward elimination MPP GxE analysis
@@ -71,7 +71,7 @@
 # VCOV <- "UN"
 # alpha <- 0.01
 
-back_elim_GE <- function(mppData, trait, Q.eff = "cr", VCOV = "CS_CSRT",
+mppGE_back_elim <- function(mppData, trait, Q.eff = "cr", VCOV = "CS_CSRT",
                          QTL = NULL, alpha = 0.01, workspace = 8e6){
 
   if(is.null(QTL)){stop("No 'QTL' have been provided.")}

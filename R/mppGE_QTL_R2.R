@@ -1,5 +1,5 @@
 #############
-# QTL_R2_GE #
+# mppGE_QTL_R2 #
 #############
 
 #' MPP GxE QTL R squared
@@ -71,7 +71,7 @@
 # glb.only = FALSE
 # workspace = 8e6
 
-QTL_R2_GE <- function(mppData, trait, Q.eff = "cr", VCOV = "ID",
+mppGE_QTL_R2 <- function(mppData, trait, Q.eff = "cr", VCOV = "ID",
                            QTL = NULL, glb.only = FALSE, workspace = 8e6){
 
   if(is.null(QTL)){stop("No 'QTL' have been provided.")}

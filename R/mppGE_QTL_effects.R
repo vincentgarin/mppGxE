@@ -1,5 +1,5 @@
 ##################
-# QTL_effects_GE #
+# mppGE_QTL_effects #
 ##################
 
 #' MPP GxE QTL genetic effects
@@ -79,7 +79,7 @@
 # VCOV = "CS"
 # QTL <- QTL_select(SIM)
 
-QTL_effects_GE <- function(mppData, trait, Q.eff = "cr", VCOV = "CS_CSRT",
+mppGE_QTL_effects <- function(mppData, trait, Q.eff = "cr", VCOV = "CS_CSRT",
                          QTL = NULL, workspace = 8e6){
 
   if(is.null(QTL)){stop("No 'QTL' have been provided.")}

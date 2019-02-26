@@ -15,7 +15,7 @@
 #' (\code{\link{mppGE_CIM}}).}
 #'
 #' \item{Backward elimination on the list of QTLs
-#' (\code{\link{back_elim_GE}}).}
+#' (\code{\link{mppGE_back_elim}}).}
 #'
 #' }
 #'
@@ -331,7 +331,7 @@ mppGE_proc <- function(pop.name = "MPP", trait.name = "trait1", mppData, trait,
   # 5. Backward elimination
   #########################
 
-  Q_back <- back_elim_GE(mppData = mppData, trait = trait, Q.eff = Q.eff,
+  Q_back <- mppGE_back_elim(mppData = mppData, trait = trait, Q.eff = Q.eff,
                       VCOV = VCOV, QTL = QTL, alpha = alpha,
                       workspace = workspace)
 
@@ -349,7 +349,7 @@ mppGE_proc <- function(pop.name = "MPP", trait.name = "trait1", mppData, trait,
   # 6. QTL R2
   ###########
 
-  R2 <- QTL_R2_GE(mppData = mppData, trait = trait, Q.eff = Q.eff, VCOV = VCOV,
+  R2 <- mppGE_QTL_R2(mppData = mppData, trait = trait, Q.eff = Q.eff, VCOV = VCOV,
                   QTL = QTL[, 1], workspace = workspace)
 
   # save R2 results

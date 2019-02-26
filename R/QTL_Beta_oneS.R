@@ -67,8 +67,6 @@
 #'
 #' # Come later
 #'
-#' @export
-#'
 
 
 QTL_Beta_oneS <- function(plot_data, mppData, trait, Q.eff = "cr",

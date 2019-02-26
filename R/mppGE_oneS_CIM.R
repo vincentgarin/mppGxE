@@ -1,5 +1,5 @@
 #################
-# CIM_one_stage #
+# mppGE_oneS_CIM #
 #################
 
 #' Perform a MPP GxE one stage CIM analysis
@@ -104,7 +104,7 @@
 #
 # window <- 20
 
-CIM_one_stage <- function(plot_data, mppData, trait, Q.eff = "cr", VCOV = "CS_CSRT",
+mppGE_oneS_CIM <- function(plot_data, mppData, trait, Q.eff = "cr", VCOV = "CS_CSRT",
                           exp_des_form, cofactors = NULL, window = 20,
                           plot.gen.eff = FALSE, workspace = 8e6){
 

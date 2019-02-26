@@ -1,5 +1,5 @@
 ##################
-# one_stage_proc #
+# mppGE_oneS_proc #
 ##################
 
 #' MPP GxE one stage QTL analysis
@@ -9,13 +9,13 @@
 #' \enumerate{
 #'
 #' \item{Simple interval mapping (SIM) to select cofactor
-#' (\code{\link{SIM_one_stage}}).}
+#' (\code{\link{mppGE_oneS_SIM}}).}
 #'
 #' \item{Composite interval mapping (CIM) with selected cofactors
-#' (\code{\link{CIM_one_stage}}).}
+#' (\code{\link{mppGE_oneS_CIM}}).}
 #'
 #' \item{Backward elimination on the list of QTLs
-#' (\code{\link{back_elim_oneS}}).}
+#' (\code{\link{mppGE_oneS_back_elim}}).}
 #'
 #' }
 #'
@@ -184,7 +184,7 @@
 # verbose = TRUE
 # output.loc = "F:/mppGxE/results/toy_example"
 
-one_stage_proc <- function(pop.name = "MPP", trait.name = "trait1", plot_data,
+mppGE_oneS_proc <- function(pop.name = "MPP", trait.name = "trait1", plot_data,
                        mppData, trait, EnvNames = NULL,  Q.eff = "cr",
                        VCOV = "CS_CSRT", exp_des_form, plot.gen.eff = FALSE,
                        thre.cof = 4, win.cof = 50, N.cim = 1, window = 20,
@@ -241,7 +241,7 @@ one_stage_proc <- function(pop.name = "MPP", trait.name = "trait1", plot_data,
 
   }
 
-  SIM <- SIM_one_stage(plot_data = plot_data, mppData = mppData,
+  SIM <- mppGE_oneS_SIM(plot_data = plot_data, mppData = mppData,
                        trait = trait, Q.eff = Q.eff, VCOV = VCOV,
                        exp_des_form = exp_des_form,
                        plot.gen.eff = plot.gen.eff, workspace = workspace)
@@ -276,7 +276,7 @@ one_stage_proc <- function(pop.name = "MPP", trait.name = "trait1", plot_data,
 
   }
 
-  CIM <- CIM_one_stage(plot_data = plot_data, mppData = mppData,
+  CIM <- mppGE_oneS_CIM(plot_data = plot_data, mppData = mppData,
                        trait = trait, Q.eff = Q.eff, VCOV = VCOV,
                        exp_des_form = exp_des_form,
                        cofactors = cofactors, window = window,
@@ -311,7 +311,7 @@ one_stage_proc <- function(pop.name = "MPP", trait.name = "trait1", plot_data,
         }
 
 
-        CIM <- CIM_one_stage(plot_data = plot_data, mppData = mppData,
+        CIM <- mppGE_oneS_CIM(plot_data = plot_data, mppData = mppData,
                              trait = trait, Q.eff = Q.eff, VCOV = VCOV,
                              exp_des_form = exp_des_form,
                              cofactors = cofactors, window = window,
@@ -347,7 +347,7 @@ one_stage_proc <- function(pop.name = "MPP", trait.name = "trait1", plot_data,
   # 5. Backward elimination
   #########################
 
-  Q_back <- back_elim_oneS(plot_data = plot_data, mppData = mppData, trait = trait,
+  Q_back <- mppGE_oneS_back_elim(plot_data = plot_data, mppData = mppData, trait = trait,
                            Q.eff = Q.eff, VCOV = VCOV, exp_des_form = exp_des_form,
                            QTL = QTL, alpha = alpha, workspace = workspace)
 
@@ -366,7 +366,7 @@ one_stage_proc <- function(pop.name = "MPP", trait.name = "trait1", plot_data,
   ###########
 
 
-  # R2 <- QTL_R2_oneS(plot_data = plot_data, mppData = mppData, trait = trait,
+  # R2 <- mppGE_oneS_QTL_R2(plot_data = plot_data, mppData = mppData, trait = trait,
   #                   Q.eff = Q.eff, VCOV = VCOV, QTL = QTL[, 1],
   #                   exp_des_form = exp_des_form, workspace = workspace)
   #

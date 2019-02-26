@@ -1,5 +1,5 @@
 #################
-# mppGE_CV_oneS #
+# mppGE_oneS_CV #
 #################
 
 #' MPP GxE cross-validation one stage analysis
@@ -155,7 +155,7 @@
 # output.loc = "F:/mppGxE/results/toy_example"
 
 
-mppGE_CV_oneS <- function(pop.name = "MPP", trait.name = "trait1", plot_data,
+mppGE_oneS_CV <- function(pop.name = "MPP", trait.name = "trait1", plot_data,
                           mppData, trait, cv.ref, Rep = 5, k = 3, EnvNames = NULL,
                           Q.eff = "cr", VCOV = "CS_CSRT", exp_des_form,
                           thre.cof = 4, win.cof = 50, N.cim = 1, window = 20,
@@ -269,7 +269,7 @@ mppGE_CV_oneS <- function(pop.name = "MPP", trait.name = "trait1", plot_data,
 
       # QTL detection on training set (ts)
 
-      CV_ij <- one_stage_proc(pop.name = paste0("run", ind.res),
+      CV_ij <- mppGE_oneS_proc(pop.name = paste0("run", ind.res),
                               mppData = mppData.ts, plot_data = plot_data,
                               trait = trait, EnvNames = EnvNames, Q.eff = Q.eff,
                               VCOV = VCOV, exp_des_form = exp_des_form,

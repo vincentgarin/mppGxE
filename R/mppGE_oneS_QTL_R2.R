@@ -1,5 +1,5 @@
 ###############
-# QTL_R2_oneS #
+# mppGE_oneS_QTL_R2 #
 ###############
 
 #' MPP GxE one stage QTL R2
@@ -92,7 +92,7 @@
 # QTL <- QTL_select(SIM, threshold = 4, window = 1000)
 
 
-QTL_R2_oneS <- function(plot_data, mppData, trait, Q.eff = "cr", VCOV = "ID",
+mppGE_oneS_QTL_R2 <- function(plot_data, mppData, trait, Q.eff = "cr", VCOV = "ID",
                         exp_des_form, QTL = NULL, glb.only = FALSE,
                         workspace = 8e6){
 

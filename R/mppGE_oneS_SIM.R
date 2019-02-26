@@ -1,5 +1,5 @@
 #################
-# SIM_one_stage #
+# mppGE_oneS_SIM #
 #################
 
 #' Perform a MPP GxE one stage SIM analysis
@@ -88,7 +88,7 @@
 # VCOV = "DG"
 # plot.gen.eff = FALSE
 
-SIM_one_stage <- function(plot_data, mppData, trait, Q.eff = "cr", VCOV = "CS_CSRT",
+mppGE_oneS_SIM <- function(plot_data, mppData, trait, Q.eff = "cr", VCOV = "CS_CSRT",
                           exp_des_form, plot.gen.eff = FALSE, workspace = 8e6){
 
   if(VCOV == "UN"){stop("This VCOV is not available for the moment.")}
