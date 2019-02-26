@@ -127,7 +127,7 @@ QTLModelSIM_GE <- function(x, mppData, nEnv, TraitEnv, Q.eff, VCOV,
 
     if(VCOV %in% c('CSRT')){
 
-      model <- tryCatch(expr = asreml(fixed = as.formula(formula.fix),
+      model <- tryCatch(expr = asreml::asreml(fixed = as.formula(formula.fix),
                                       rcov = as.formula(formula.rcov),
                                       data = dataset, trace = FALSE,
                                       na.method.Y = "include",
@@ -137,7 +137,7 @@ QTLModelSIM_GE <- function(x, mppData, nEnv, TraitEnv, Q.eff, VCOV,
 
     } else {
 
-      model <- tryCatch(expr = asreml(fixed = as.formula(formula.fix),
+      model <- tryCatch(expr = asreml::asreml(fixed = as.formula(formula.fix),
                                       random = as.formula(formula.random),
                                       rcov = as.formula(formula.rcov),
                                       data = dataset, trace = FALSE,
@@ -165,7 +165,7 @@ QTLModelSIM_GE <- function(x, mppData, nEnv, TraitEnv, Q.eff, VCOV,
 
     } else {
 
-      W.stat <- sum(wald(model)[2:(QTL.el+1), 3])
+      W.stat <- sum(asreml::wald(model)[2:(QTL.el+1), 3])
 
       if(W.stat == 0){
 
@@ -181,7 +181,7 @@ QTLModelSIM_GE <- function(x, mppData, nEnv, TraitEnv, Q.eff, VCOV,
 
       } else {
 
-        df <- sum(wald(model)[2:(QTL.el+1), 1])
+        df <- sum(asreml::wald(model)[2:(QTL.el+1), 1])
 
         pval <- pchisq(W.stat, df, lower.tail = FALSE)
 
@@ -189,7 +189,8 @@ QTLModelSIM_GE <- function(x, mppData, nEnv, TraitEnv, Q.eff, VCOV,
 
         if(plot.gen.eff){
 
-          gen.eff  <- QTL_pval_mix_GE(model = model, nEnv = nEnv, Q.eff = Q.eff,
+          gen.eff  <- QTL_pval_mix_GE(mppData = mppData, model = model,
+                                      nEnv = nEnv, Q.eff = Q.eff,
                                       QTL.el = QTL.el, x = x, ref.name = ref.name,
                                       par.names = mppData$parents, fct = "SIM",
                                       mod = 'M3')

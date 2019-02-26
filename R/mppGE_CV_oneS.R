@@ -105,7 +105,6 @@
 #'
 #' @author Vincent Garin
 #'
-#' @seealso
 #'
 #' @examples
 #'

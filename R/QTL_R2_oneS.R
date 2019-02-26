@@ -36,6 +36,9 @@
 #' selected marker positions obtained with the function QTL_select() or
 #' vector of \code{character} marker positions names. Default = NULL.
 #'
+#' @param glb.only \code{Logical} value. if \code{glb.only = TRUE}, the
+#' function only calculate the global R2 for all QTLs. Default = FALSE.
+#'
 #' @param workspace size of workspace for the REML routines measured in double
 #' precision words (groups of 8 bytes). The default is workspace = 8e6.
 #'

@@ -149,7 +149,7 @@ QTLModelCIM_GE <- function(x, mppData, nEnv, TraitEnv, Q.eff, VCOV, cof.list,
 
     if(VCOV %in% c('CSRT')){
 
-      model <- tryCatch(expr = asreml(fixed = as.formula(formula.fix),
+      model <- tryCatch(expr = asreml::asreml(fixed = as.formula(formula.fix),
                                       rcov = as.formula(formula.rcov),
                                       group = list(cof=1:cof.el),
                                       data = dataset, trace = FALSE,
@@ -160,7 +160,7 @@ QTLModelCIM_GE <- function(x, mppData, nEnv, TraitEnv, Q.eff, VCOV, cof.list,
 
     } else {
 
-      model <- tryCatch(expr = asreml(fixed = as.formula(formula.fix),
+      model <- tryCatch(expr = asreml::asreml(fixed = as.formula(formula.fix),
                                       random = as.formula(formula.random),
                                       rcov = as.formula(formula.rcov),
                                       group = list(cof=1:cof.el),
@@ -189,7 +189,7 @@ QTLModelCIM_GE <- function(x, mppData, nEnv, TraitEnv, Q.eff, VCOV, cof.list,
 
     } else {
 
-      W.stat <- sum(wald(model)[3:(QTL.el+2), 3])
+      W.stat <- sum(asreml::wald(model)[3:(QTL.el+2), 3])
 
       if(W.stat == 0){
 
@@ -205,7 +205,7 @@ QTLModelCIM_GE <- function(x, mppData, nEnv, TraitEnv, Q.eff, VCOV, cof.list,
 
       } else {
 
-        df <- sum(wald(model)[3:(QTL.el+2), 1])
+        df <- sum(asreml::wald(model)[3:(QTL.el+2), 1])
 
         pval <- pchisq(W.stat, df, lower.tail = FALSE)
 
@@ -213,7 +213,8 @@ QTLModelCIM_GE <- function(x, mppData, nEnv, TraitEnv, Q.eff, VCOV, cof.list,
 
         if(plot.gen.eff){
 
-          gen.eff  <- QTL_pval_mix_GE(model = model, nEnv = nEnv, Q.eff = Q.eff,
+          gen.eff  <- QTL_pval_mix_GE(mppData = mppData, model = model,
+                                      nEnv = nEnv, Q.eff = Q.eff,
                                       QTL.el = QTL.el, x = x, ref.name = ref.name,
                                       par.names = mppData$parents, fct = "CIM",
                                       mod = 'M3')

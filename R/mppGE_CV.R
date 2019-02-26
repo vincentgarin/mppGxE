@@ -98,8 +98,6 @@
 #'
 #' @author Vincent Garin
 #'
-#' @seealso
-#'
 #' @examples
 #'
 #' # Come later

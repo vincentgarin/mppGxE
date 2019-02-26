@@ -89,10 +89,11 @@ CheckModelGE <- function(mppData = NULL, trait, Q.eff, VCOV, par.clu = NULL,
 
     if (VCOV != "h.err"){
 
-      if(!((exists("asreml")) && (is.function(asreml)))){
+      test <- requireNamespace(package = 'asreml', quietly = TRUE)
 
-        stop(paste("To use this type of VCOV, you must have access to the asreml",
-                   "function from the asreml-R package."))
+      if(!test){
+
+        stop("you must have access to the asreml package to use this type of 'VCOV'")
 
       }
 

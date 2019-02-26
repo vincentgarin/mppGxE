@@ -11,7 +11,7 @@
 #' @param EnvNames \code{character} expression indicating the environment or trait
 #' labels.
 #'
-#' @param Q.prof object obtained with function \code{\link{mppGE_SIM}} or
+#' @param Qprof object obtained with function \code{\link{mppGE_SIM}} or
 #' \code{\link{mppGE_CIM}} using argument \code{plot.gen.effect = TRUE}.
 #'
 #' @param Q.eff on of "cr", "par", "anc" or "biall".

@@ -63,7 +63,7 @@ model_BIC <- function(mppData, trait, VCOV = "ID"){
 
 if(VCOV == "ID"){ # Identity
 
-  model <- asreml(fixed = trait ~ -1 + env:cross, rcov = ~ units,
+  model <- asreml::asreml(fixed = trait ~ -1 + env:cross, rcov = ~ units,
                   data = dataset, trace = FALSE,
                   na.method.Y = "include", na.method.X = "omit")
   nParam <- 1
@@ -71,7 +71,7 @@ if(VCOV == "ID"){ # Identity
 
 } else if (VCOV == "CS"){ # Compound symmetry
 
-  model <- asreml(fixed = trait ~ -1 + env:cross, random = ~ genotype,
+  model <- asreml::asreml(fixed = trait ~ -1 + env:cross, random = ~ genotype,
                   rcov = ~ units, data = dataset, trace = FALSE,
                   na.method.Y = "include", na.method.X = "omit")
   nParam <- 2
@@ -79,7 +79,7 @@ if(VCOV == "ID"){ # Identity
 
 } else if (VCOV == "DG"){ # Diagonal - heter. env. res variance
 
-  model <- asreml(fixed = trait ~ -1 + env:cross, rcov = ~ at(env):units,
+  model <- asreml::asreml(fixed = trait ~ -1 + env:cross, rcov = ~ at(env):units,
                   data = dataset, trace = FALSE, na.method.Y = "include",
                   na.method.X = "omit")
   nParam <- nEnv
@@ -87,7 +87,7 @@ if(VCOV == "ID"){ # Identity
 
 } else if (VCOV == "UCH"){
 
-  model <- asreml(fixed = trait ~ -1 + env:cross, random = ~ genotype,
+  model <- asreml::asreml(fixed = trait ~ -1 + env:cross, random = ~ genotype,
                   rcov = ~ at(env):units, data = dataset, trace = FALSE,
                   na.method.Y = "include", na.method.X = "omit")
   nParam <- nEnv + 1
@@ -96,7 +96,7 @@ if(VCOV == "ID"){ # Identity
 
 } else if (VCOV == "UN"){
 
-  model <- asreml(fixed = trait ~ -1 + env:cross, rcov = ~ us(env):genotype,
+  model <- asreml::asreml(fixed = trait ~ -1 + env:cross, rcov = ~ us(env):genotype,
                   data = dataset, trace = FALSE, na.method.Y = "include",
                   na.method.X = "omit")
   nParam <- (nEnv * (nEnv + 1))/2

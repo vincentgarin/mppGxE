@@ -59,7 +59,7 @@ QTLModelBack_oneS <- function(x, plot_data, mppData, trait, nEnv, Q.list, VCOV,
 
     # compute the model
 
-    model <- tryCatch(asreml(fixed = as.formula(x),
+    model <- tryCatch(asreml::asreml(fixed = as.formula(x),
                              random = as.formula(formulas[1]),
                              rcov = as.formula(formulas[2]), data = dataset,
                              group = QTL.seq,
@@ -70,7 +70,7 @@ QTLModelBack_oneS <- function(x, plot_data, mppData, trait, nEnv, Q.list, VCOV,
 
    if(!is.null(model)){
 
-     w.table <- wald(model)
+     w.table <- asreml::wald(model)
      res <- w.table[(dim(w.table)[1] - 1), 4]
 
    } else {

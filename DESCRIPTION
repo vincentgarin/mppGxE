@@ -1,16 +1,19 @@
 Package: mppGxE
 Type: Package
-Version: 0.1.0
+Version: 1.0.0
 Date: 2018-06-29
 Title: MPP GxE QTL analysis
 Author: Vincent Garin
 Maintainer: Vincent Garin <vincent.garin@wur.nl>
-Description: MPP GxE QTL analysis.
+Description: Analysis of multi-parent populations QTL experiments performed in
+multiple environments.
 License: GPL-3
 Imports:
     ggplot2,
     mppR,
     parallel
+Suggests:
+    asreml
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.0.1

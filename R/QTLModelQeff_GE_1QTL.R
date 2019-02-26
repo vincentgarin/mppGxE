@@ -72,7 +72,7 @@ QTLModelQeff_GE_1QTL <- function(mppData, trait, nEnv, Q.list, VCOV, names.QTL,
 
       formula.rcov <- "~ at(cross_env):units"
 
-      model <- tryCatch(asreml(fixed = as.formula(f),
+      model <- tryCatch(asreml::asreml(fixed = as.formula(f),
                                rcov = as.formula(formula.rcov),
                                data = dataset, trace = FALSE,
                                group = list(cof = seq_cof),
@@ -86,7 +86,7 @@ QTLModelQeff_GE_1QTL <- function(mppData, trait, nEnv, Q.list, VCOV, names.QTL,
       formula.random <- "~ genotype"
       formula.rcov <- "~ at(cross_env):units"
 
-      model <- asreml(fixed = as.formula(f),
+      model <- asreml::asreml(fixed = as.formula(f),
                       random = as.formula(formula.random),
                       rcov = as.formula(formula.rcov),
                       group = list(cof = seq_cof),

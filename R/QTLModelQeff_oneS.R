@@ -61,7 +61,7 @@ QTLModelQeff_oneS <- function(plot_data, mppData, trait, Q.list,
 
     # compute the model
 
-    model <- tryCatch(asreml(fixed = as.formula(f),
+    model <- tryCatch(asreml::asreml(fixed = as.formula(f),
                              random = as.formula(formulas[1]),
                              rcov = as.formula(formulas[2]), data = dataset,
                              trace = FALSE, na.method.Y = "include",

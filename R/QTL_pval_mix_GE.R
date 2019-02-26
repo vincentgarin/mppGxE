@@ -4,7 +4,7 @@
 
 # Function to collect the p-values from MPP GxE analyses
 
-QTL_pval_mix_GE <- function(model, nEnv, Q.eff, x, QTL.el, ref.name, par.names,
+QTL_pval_mix_GE <- function(mppData, model, nEnv, Q.eff, x, QTL.el, ref.name, par.names,
                             fct, mod) {
 
   if(mod == 'M3'){
@@ -26,7 +26,7 @@ QTL_pval_mix_GE <- function(model, nEnv, Q.eff, x, QTL.el, ref.name, par.names,
 
 
   sign <- sign(rev(model$coefficients$fixed[1:QTL.el]))
-  pval <- wald(model)[start.ind:(QTL.el + end.ind), 4]
+  pval <- asreml::wald(model)[start.ind:(QTL.el + end.ind), 4]
   pval <- pval * sign
   pval[pval == 0] <- 1
   names(pval) <- ref.name

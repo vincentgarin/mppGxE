@@ -47,7 +47,7 @@ QTLModelBeta_GE <- function(mppData, trait, nEnv, Q.list, VCOV, names.QTL,
 
   }
 
-  model <- asreml(fixed = as.formula(f),
+  model <- asreml::asreml(fixed = as.formula(f),
                   random = as.formula(formula.random),
                   rcov = as.formula(formula.rcov),
                   group = list(QTLs = 1:length(names.QTL)),

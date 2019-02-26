@@ -76,7 +76,7 @@ QTLModelSIM_oneS <- function(x, plot_data, mppData, trait, nEnv, EnvNames,
 
   # compute the mixed model
 
-  model <- tryCatch(asreml(fixed = as.formula(formula.fix),
+  model <- tryCatch(asreml::asreml(fixed = as.formula(formula.fix),
                            random = as.formula(formulas[1]),
                            rcov = as.formula(formulas[2]), data = dataset,
                            trace = FALSE, na.method.Y = "include",
@@ -100,7 +100,7 @@ QTLModelSIM_oneS <- function(x, plot_data, mppData, trait, nEnv, EnvNames,
 
   } else {
 
-    W.stat <- sum(wald(model)[3:(QTL.el+2), 3])
+    W.stat <- sum(asreml::wald(model)[3:(QTL.el+2), 3])
 
     if(W.stat == 0){
 
@@ -116,7 +116,7 @@ QTLModelSIM_oneS <- function(x, plot_data, mppData, trait, nEnv, EnvNames,
 
     } else {
 
-      df <- sum(wald(model)[3:(QTL.el+2), 1])
+      df <- sum(asreml::wald(model)[3:(QTL.el+2), 1])
 
       pval <- pchisq(W.stat, df, lower.tail = FALSE)
 
@@ -124,7 +124,8 @@ QTLModelSIM_oneS <- function(x, plot_data, mppData, trait, nEnv, EnvNames,
 
       if(plot.gen.eff){
 
-        gen.eff  <- QTL_pval_mix_GE(model = model, nEnv = nEnv, Q.eff = Q.eff,
+        gen.eff  <- QTL_pval_mix_GE(mppData = mppData, model = model,
+                                    nEnv = nEnv, Q.eff = Q.eff,
                                     QTL.el = QTL.el, x = x, ref.name = ref.name,
                                     par.names = mppData$parents, fct = "SIM",
                                     mod = 'M4')

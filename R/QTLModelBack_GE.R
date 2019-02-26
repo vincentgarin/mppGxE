@@ -51,7 +51,7 @@ QTLModelBack_GE <- function(x, mppData, trait, nEnv, Q.list, VCOV, workspace){
 
     formula.rcov <- "~ at(cross_env):units"
 
-    model <- asreml(fixed = as.formula(x),
+    model <- asreml::asreml(fixed = as.formula(x),
                     rcov = as.formula(formula.rcov),
                     group = QTL.seq,
                     data = dataset, trace = FALSE,
@@ -64,7 +64,7 @@ QTLModelBack_GE <- function(x, mppData, trait, nEnv, Q.list, VCOV, workspace){
     formula.random <- "~ genotype"
     formula.rcov <- "~ at(cross_env):units"
 
-    model <- asreml(fixed = as.formula(x),
+    model <- asreml::asreml(fixed = as.formula(x),
                     random = as.formula(formula.random),
                     rcov = as.formula(formula.rcov),
                     group = QTL.seq,
@@ -75,7 +75,7 @@ QTLModelBack_GE <- function(x, mppData, trait, nEnv, Q.list, VCOV, workspace){
 
   }
 
-    w.table <- wald(model)
+    w.table <- asreml::wald(model)
     res <- w.table[(dim(w.table)[1] - 1), 4]
 
   }
