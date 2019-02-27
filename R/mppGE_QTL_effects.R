@@ -82,7 +82,10 @@
 mppGE_QTL_effects <- function(mppData, trait, Q.eff = "cr", VCOV = "CS_CSRT",
                          QTL = NULL, workspace = 8e6){
 
-  if(is.null(QTL)){stop("No 'QTL' have been provided.")}
+  # Check data format and arguments
+
+  check_mod_mppGE(mppData = mppData, trait = trait, Q.eff = Q.eff, VCOV = VCOV,
+                  QTL_ch = TRUE, QTL = QTL)
 
   # form the trait value
 

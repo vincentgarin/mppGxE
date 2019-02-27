@@ -88,10 +88,9 @@ mppGE_CIM <- function(mppData, trait, Q.eff = "cr", VCOV = "CS_CSRT",
   # 1. Check data format and arguments
   ####################################
 
-  # CheckModelGE(mppData = mppData, Q.eff = Q.eff, VCOV = VCOV,
-  #              par.clu = par.clu, plot.gen.eff = plot.gen.eff,
-  #              parallel = parallel, cluster = cluster,
-  #              cofactors = cofactors, fct = "CIM")
+  check_mod_mppGE(mppData = mppData, trait = trait, Q.eff = Q.eff, VCOV = VCOV,
+                  CIM = TRUE, cofactors = cofactors, QTL_ch = FALSE)
+
 
   # 2. Form required elements for the analysis
   ############################################

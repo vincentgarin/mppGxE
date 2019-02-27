@@ -2,71 +2,69 @@
 # QTL_Beta_oneS #
 #################
 
-#' MPP GxE one stage QTL (Beta) genetic effects
-#'
-#' Compute MPP GxE one stage QTL genetic effects (Beta) to be used in
-#' cross-validation.
-#'
-#' @param plot_data \code{data.frame} containing the plot data with the following
-#' columns: the trait(s), 'genotype' (genotype indicator), 'cross'
-#' (cross indicator), 'env' (environment indicator), and all other experimental
-#' design covariates (e.g. replicate, blocks, etc.). The column names of the
-#' data.frame must be identical to the one specified ('genotype', 'cross',
-#' 'env'). The names of the experimental design covariates must be the same as
-#' the one used in 'exp_des_form'.
-#'
-#' @param mppData An object of class \code{mppData}.
-#'
-#' @param trait \code{Character} expression for the trait matching the trait
-#' column in 'plot_data' argument.
-#'
-#' @param Q.eff \code{Character} expression indicating the assumption concerning
-#' the QTL effects: 1) "cr" for cross-specific; 2) "par" for parental; 3) "anc"
-#' for ancestral; 4) "biall" for a bi-allelic. Default = "cr".
-#'
-#' @param VCOV VCOV \code{Character} expression defining the type of variance
-#' covariance structure used: a) "CSRT" for within environment
-#' cross-specific residual term; b) "CS_CSRT" for compound symmetry with within
-#' environment cross-specific residual term; c) "CS_AR1xAR1" for compound
-#' symmetry with AR1xAR1 spatial error structure; d) "CS_CSRT_AR1xAR1" for
-#' compound symmetry with within environment cross-specific residual term and
-#' AR1xAR1 spatial error structure. Default = "CS_CSRT".
-#'
-#' @param exp_des_form \code{Character} expression for the random experimental
-#' design effects in asreml-R format. For example,
-#' 'env:replicate + env:replicate:block'. The column variables names used in
-#' 'exp_des_form' should strictly match the names used in 'plot_data'.
-#'
-#' @param QTL Object of class \code{QTLlist} representing a list of
-#' selected marker positions obtained with the function QTL_select() or
-#' vector of \code{character} marker positions names. Default = NULL.
-#'
-#' @param workspace size of workspace for the REML routines measured in double
-#' precision words (groups of 8 bytes). The default is workspace = 8e6.
-#'
-#' @return Return:
-#'
-#' \item{Qeff}{\code{List} of \code{data.frame} (one per QTL) containing the
-#' following information:
-#'
-#' \enumerate{
-#'
-#' \item{QTL genetic effects per cross or parent.}
-#' \item{Standard error of the QTL effects.}
-#' \item{Test statistics of the effects (t-test or Wald statistic).}
-#' \item{P-value of the test statistics.}
-#' \item{Significance of the QTL effects.}
-#'
-#' }
-#'
-#' }
-#'
-#' @author Vincent Garin
-#'
-#' @examples
-#'
-#' # Come later
-#'
+# MPP GxE one stage QTL (Beta) genetic effects
+#
+# Compute MPP GxE one stage QTL genetic effects (Beta) to be used in
+# cross-validation.
+#
+# @param plot_data \code{data.frame} containing the plot data with the following
+# columns: the trait(s), 'genotype' (genotype indicator), 'check'
+# (check indicator), 'cross' (cross indicator), 'env' (environment indicator),
+# and all other experimental design covariates (e.g. replicate, blocks, etc.).
+# The column names of the data.frame must be identical to the one specified
+# ('genotype', 'check', 'cross', env'). The names of the experimental design
+# covariates must be the same as the one used in 'exp_des_form'. for more
+# details see \code{\link{plot_data}}.
+#
+# @param mppData An object of class \code{mppData}.
+#
+# @param trait \code{Character} expression for the trait matching the trait
+# column in 'plot_data' argument.
+#
+# @param Q.eff \code{Character} expression indicating the assumption concerning
+# the QTL effects: 1) "cr" for cross-specific; 2) "par" for parental; 3) "anc"
+# for ancestral; 4) "biall" for a bi-allelic. Default = "cr".
+#
+# @param VCOV VCOV \code{Character} expression defining the type of variance
+# covariance structure used: a) "CSRT" for within environment
+# cross-specific residual term; b) "CS_CSRT" for compound symmetry with within
+# environment cross-specific residual term. Default = "CS_CSRT".
+#
+# @param exp_des_form \code{Character} expression for the random experimental
+# design effects in asreml-R format. For example,
+# 'env:replicate + env:replicate:block'. The column variables names used in
+# 'exp_des_form' should strictly match the names used in 'plot_data'.
+#
+# @param QTL Object of class \code{QTLlist} representing a list of
+# selected marker positions obtained with the function QTL_select() or
+# vector of \code{character} marker positions names. Default = NULL.
+#
+# @param workspace size of workspace for the REML routines measured in double
+# precision words (groups of 8 bytes). The default is workspace = 8e6.
+#
+# @return Return:
+#
+# \item{Qeff}{\code{List} of \code{data.frame} (one per QTL) containing the
+# following information:
+#
+# \enumerate{
+#
+# \item{QTL genetic effects per cross or parent.}
+# \item{Standard error of the QTL effects.}
+# \item{Test statistics of the effects (t-test or Wald statistic).}
+# \item{P-value of the test statistics.}
+# \item{Significance of the QTL effects.}
+#
+# }
+#
+# }
+#
+# @author Vincent Garin
+#
+# @examples
+#
+# # Come later
+#
 
 
 QTL_Beta_oneS <- function(plot_data, mppData, trait, Q.eff = "cr",

@@ -74,7 +74,10 @@
 mppGE_back_elim <- function(mppData, trait, Q.eff = "cr", VCOV = "CS_CSRT",
                          QTL = NULL, alpha = 0.01, workspace = 8e6){
 
-  if(is.null(QTL)){stop("No 'QTL' have been provided.")}
+  # Check data format and arguments
+
+  check_mod_mppGE(mppData = mppData, trait = trait, Q.eff = Q.eff, VCOV = VCOV,
+                  QTL_ch = TRUE, QTL = QTL)
 
   # form the trait value
 
@@ -110,12 +113,12 @@ mppGE_back_elim <- function(mppData, trait, Q.eff = "cr", VCOV = "CS_CSRT",
 
   while(ind) {
 
-    ### 3.1 elaboration of model formulas
+    ### elaboration of model formulas
 
     model.formulas <- formula_backward_GE(Q.names = names(Q.list), VCOV = VCOV,
                                           type = 'GE')
 
-    ### 3.2 computation of the models
+    ### computation of the models
 
     pvals <- lapply(X = model.formulas, FUN = QTLModelBack_GE, mppData = mppData,
                     trait = TraitEnv, nEnv = nEnv, Q.list = Q.list, VCOV = VCOV,
@@ -125,7 +128,7 @@ mppGE_back_elim <- function(mppData, trait, Q.eff = "cr", VCOV = "CS_CSRT",
     pvals <- unlist(pvals)
 
 
-    ### 3.4 test the p-values
+    ### test the p-values
 
 
     if(sum(pvals > alpha) > 0) {

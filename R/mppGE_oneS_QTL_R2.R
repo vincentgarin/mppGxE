@@ -7,12 +7,13 @@
 #' Compute MPP GxE one stage QTL R2
 #'
 #' @param plot_data \code{data.frame} containing the plot data with the following
-#' columns: the trait(s), 'genotype' (genotype indicator), 'cross'
-#' (cross indicator), 'env' (environment indicator), and all other experimental
-#' design covariates (e.g. replicate, blocks, etc.). The column names of the
-#' data.frame must be identical to the one specified ('genotype', 'cross',
-#' 'env'). The names of the experimental design covariates must be the same as
-#' the one used in 'exp_des_form'.
+#' columns: the trait(s), 'genotype' (genotype indicator), 'check'
+#' (check indicator), 'cross' (cross indicator), 'env' (environment indicator),
+#' and all other experimental design covariates (e.g. replicate, blocks, etc.).
+#' The column names of the data.frame must be identical to the one specified
+#' ('genotype', 'check', 'cross', env'). The names of the experimental design
+#' covariates must be the same as the one used in 'exp_des_form'. for more
+#' details see \code{\link{plot_data}}.
 #'
 #' @param mppData An object of class \code{mppData}.
 #'
@@ -23,7 +24,7 @@
 #' for ancestral; 4) "biall" for a bi-allelic. Default = "cr".
 #'
 #' @param VCOV VCOV \code{Character} expression defining the type of variance
-#' covariance structure used. "ID" for identity, "CSRT" for within environment
+#' covariance structure used. "CSRT" for within environment
 #' cross-specific residual term, "CS_CSRT" for compound symmetry with within
 #' environment cross-specific residual term. Default = "CS_CSRT".
 #'
@@ -92,11 +93,15 @@
 # QTL <- QTL_select(SIM, threshold = 4, window = 1000)
 
 
-mppGE_oneS_QTL_R2 <- function(plot_data, mppData, trait, Q.eff = "cr", VCOV = "ID",
-                        exp_des_form, QTL = NULL, glb.only = FALSE,
-                        workspace = 8e6){
+mppGE_oneS_QTL_R2 <- function(plot_data, mppData, trait, Q.eff = "cr",
+                              VCOV = "CS_CSRT", exp_des_form, QTL = NULL,
+                              glb.only = FALSE, workspace = 8e6){
 
-  if(is.null(QTL)){stop("No 'QTL' have been provided.")}
+  # Check data format and arguments
+
+  check_mod_mppGE(mppData = mppData, trait = trait, Q.eff = Q.eff, VCOV = VCOV,
+                  QTL_ch = TRUE, QTL = QTL, GE = FALSE, plot_data = plot_data,
+                  exp_des_form = exp_des_form)
 
   plot_data <- plot_data[plot_data$genotype %in% mppData$geno.id, ]
 

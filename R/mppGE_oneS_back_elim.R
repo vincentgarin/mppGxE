@@ -8,12 +8,13 @@
 #' model.
 #'
 #' @param plot_data \code{data.frame} containing the plot data with the following
-#' columns: the trait(s), 'genotype' (genotype indicator), 'cross'
-#' (cross indicator), 'env' (environment indicator), and all other experimental
-#' design covariates (e.g. replicate, blocks, etc.). The column names of the
-#' data.frame must be identical to the one specified ('genotype', 'cross',
-#' 'env'). The names of the experimental design covariates must be the same as
-#' the one used in 'exp_des_form'.
+#' columns: the trait(s), 'genotype' (genotype indicator), 'check'
+#' (check indicator), 'cross' (cross indicator), 'env' (environment indicator),
+#' and all other experimental design covariates (e.g. replicate, blocks, etc.).
+#' The column names of the data.frame must be identical to the one specified
+#' ('genotype', 'check', 'cross', env'). The names of the experimental design
+#' covariates must be the same as the one used in 'exp_des_form'. for more
+#' details see \code{\link{plot_data}}.
 #'
 #' @param mppData Object of class \code{mppData} contaning the genotypic
 #' information with genotype list corresponding to the one of \code{plot_data}.
@@ -28,10 +29,7 @@
 #' @param VCOV VCOV \code{Character} expression defining the type of variance
 #' covariance structure used: a) "CSRT" for within environment
 #' cross-specific residual term; b) "CS_CSRT" for compound symmetry with within
-#' environment cross-specific residual term; c) "CS_AR1xAR1" for compound
-#' symmetry with AR1xAR1 spatial error structure; d) "CS_CSRT_AR1xAR1" for
-#' compound symmetry with within environment cross-specific residual term and
-#' AR1xAR1 spatial error structure. Default = "CS_CSRT".
+#' environment cross-specific residual term. Default = "CS_CSRT".
 #'
 #' @param exp_des_form \code{Character} expression for the random experimental
 #' design effects in asreml-R format. For example,
@@ -112,9 +110,11 @@ mppGE_oneS_back_elim <- function(plot_data, mppData, trait, Q.eff = "cr",
                            VCOV = "CS_CSRT", exp_des_form, QTL = NULL,
                            alpha = 0.01, workspace = 8e6){
 
-  if(is.null(QTL)){stop("No 'QTL' have been provided.")}
+  # Check data format and arguments
 
-  if(VCOV == "UN"){stop("This VCOV is not available for the moment.")}
+  check_mod_mppGE(mppData = mppData, trait = trait, Q.eff = Q.eff, VCOV = VCOV,
+                  QTL_ch = TRUE, QTL = QTL, GE = FALSE, plot_data = plot_data,
+                  exp_des_form = exp_des_form)
 
   # Determine the environments
 

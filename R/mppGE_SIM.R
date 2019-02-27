@@ -57,19 +57,17 @@
 #'
 
 
-mppGE_SIM <- function(trait, mppData, Q.eff = "cr", VCOV = "CS_CSRT",
+mppGE_SIM <- function(mppData, trait, Q.eff = "cr", VCOV = "CS_CSRT",
                       plot.gen.eff = FALSE, parallel = FALSE, cluster = NULL,
                       workspace = 8e6) {
 
   # 1. Check data format and arguments
   ####################################
 
-  # CheckModelGE(mppData = mppData, Q.eff = Q.eff, VCOV = VCOV,
-  #              par.clu = par.clu, plot.gen.eff = plot.gen.eff,
-  #              parallel = parallel, cluster = cluster,
-  #              fct = "SIM")
+  check_mod_mppGE(mppData = mppData, trait = trait, Q.eff = Q.eff, VCOV = VCOV,
+                  QTL_ch = FALSE)
 
-  # check trait at least 2 different, correspond to trait names of mppData, etc.
+
 
   # 2. Form required elements for the analysis
   ############################################

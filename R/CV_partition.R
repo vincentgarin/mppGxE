@@ -26,7 +26,6 @@
 #'
 #' @author Vincent Garin
 #'
-#' @seealso \code{\link{mpp_CV}}
 #'
 #' @examples
 #'

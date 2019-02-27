@@ -2,54 +2,54 @@
 # QTL_Beta_GE #
 ###############
 
-#' MPP GxE QTL (Beta) genetic effects
-#'
-#' Compute MPP GxE QTL genetic effects (Beta) to be used in cross-validation.
-#'
-#' @param mppData An object of class \code{mppData}.
-#'
-#' @param trait \code{Character vector} specifying which traits should be used.
-#'
-#' @param Q.eff \code{Character} expression indicating the assumption concerning
-#' the QTL effects: 1) "cr" for cross-specific; 2) "par" for parental; 3) "anc"
-#' for ancestral; 4) "biall" for a bi-allelic. Default = "cr".
-#'
-#' @param VCOV VCOV \code{Character} expression defining the type of variance
-#' covariance structure used. "ID" for identity, "CSRT" for within environment
-#' cross-specific residual term, "CS_CSRT" for compound symmetry with within
-#' environment cross-specific residual term. Default = "CS_CSRT".
-#'
-#' @param QTL Object of class \code{QTLlist} representing a list of
-#' selected marker positions obtained with the function QTL_select() or
-#' vector of \code{character} marker positions names. Default = NULL.
-#'
-#' @param workspace size of workspace for the REML routines measured in double
-#' precision words (groups of 8 bytes). The default is workspace = 8e6.
-#'
-#'
-#' @return Return:
-#'
-#' \item{Qeff}{\code{List} of \code{data.frame} (one per QTL) containing the
-#' following information:
-#'
-#' \enumerate{
-#'
-#' \item{QTL genetic effects per cross or parent.}
-#' \item{Standard error of the QTL effects.}
-#' \item{Test statistics of the effects (t-test or Wald statistic).}
-#' \item{P-value of the test statistics.}
-#' \item{Significance of the QTL effects.}
-#'
-#' }
-#'
-#' }
-#'
-#' @author Vincent Garin
-#'
-#' @examples
-#'
-#' # Come later
-#'
+# MPP GxE QTL (Beta) genetic effects
+#
+# Compute MPP GxE QTL genetic effects (Beta) to be used in cross-validation.
+#
+# @param mppData An object of class \code{mppData}.
+#
+# @param trait \code{Character vector} specifying which traits should be used.
+#
+# @param Q.eff \code{Character} expression indicating the assumption concerning
+# the QTL effects: 1) "cr" for cross-specific; 2) "par" for parental; 3) "anc"
+# for ancestral; 4) "biall" for a bi-allelic. Default = "cr".
+#
+# @param VCOV VCOV \code{Character} expression defining the type of variance
+# covariance structure used. "ID" for identity, "CSRT" for within environment
+# cross-specific residual term, "CS_CSRT" for compound symmetry with within
+# environment cross-specific residual term. Default = "CS_CSRT".
+#
+# @param QTL Object of class \code{QTLlist} representing a list of
+# selected marker positions obtained with the function QTL_select() or
+# vector of \code{character} marker positions names. Default = NULL.
+#
+# @param workspace size of workspace for the REML routines measured in double
+# precision words (groups of 8 bytes). The default is workspace = 8e6.
+#
+#
+# @return Return:
+#
+# \item{Qeff}{\code{List} of \code{data.frame} (one per QTL) containing the
+# following information:
+#
+# \enumerate{
+#
+# \item{QTL genetic effects per cross or parent.}
+# \item{Standard error of the QTL effects.}
+# \item{Test statistics of the effects (t-test or Wald statistic).}
+# \item{P-value of the test statistics.}
+# \item{Significance of the QTL effects.}
+#
+# }
+#
+# }
+#
+# @author Vincent Garin
+#
+# @examples
+#
+# # Come later
+#
 
 
 QTL_Beta_GE <- function(mppData, trait, Q.eff = "cr", VCOV = "CS_CSRT",
