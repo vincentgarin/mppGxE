@@ -139,48 +139,29 @@
 #'
 #' @examples
 #'
-#' # Come later
+#'\dontrun{
+#'
+#' library(asreml)
+#'
+#' data(mppData_GE)
+#' data(plot_data)
+#'
+#' # Specify a location where your results will be saved
+#' my.loc <- tempdir()
+#'
+#' QTL <- mppGE_oneS_proc(pop.name = 'EUNAM', trait.name = 'DMY',
+#'                        plot_data = plot_data, mppData = mppData_GE,
+#'                        trait = 'DMY', EnvNames = c('CIAM', 'TUM'),
+#'                        Q.eff = 'par', exp_des_form = 'env:Rep + env:Rep:Block',
+#'                        plot.gen.eff = TRUE, thre.cof = 3,thre.QTL = 3,
+#'                        verbose = FALSE, output.loc = my.loc)
+#'
+#'}
 #'
 #'
 #' @export
 #'
 
-# setwd("F:/Data_mppR/EUNAM_Flint")
-#
-# pheno <- read.csv("./data/pheno/pheno_red.csv", row.names = 1,
-#                   stringsAsFactors = FALSE)
-# lines_used <- read.csv("./data/pheno/List_lines_Flint_Lehermeier.csv")
-# pheno$Genotype <- as.factor(as.character(pheno$Genotype))
-# pheno$Fam <- as.factor(as.character(pheno$Fam))
-# pheno <- pheno[order(pheno$Fam), ]
-# par_names <- c("D152", "EC49A", "EP44", "EZ5", "F03802", "F2", "F283",
-#                "F64", "UH006", "UH009", "DK105")
-#
-# colnames(pheno)[1] <- "genotype"
-# colnames(pheno)[2] <- "cross"
-# colnames(pheno)[6] <- "env"
-#
-# plot_data <- pheno[pheno$env %in% c("KWS", "CIAM"), ]
-# load('./data/mpp_data/mppDataGE_toy.RData')
-#
-# load('./data/mpp_data/mppDataGE_toy.RData')
-#
-# pop.name = "MPP"
-# trait.name = "trait1"
-# trait = c("PH")
-# EnvNames = c("KWS", "CIAM")
-# Q.eff = "par"
-# VCOV = "DG"
-# plot.gen.eff = TRUE
-# thre.cof = 4
-# win.cof = 50
-# N.cim = 1
-# window = 20
-# thre.QTL = 4
-# win.QTL = 20
-# text.size = 18
-# verbose = TRUE
-# output.loc = "F:/mppGxE/results/toy_example"
 
 mppGE_oneS_proc <- function(pop.name = "MPP", trait.name = "trait1", plot_data,
                        mppData, trait, EnvNames = NULL,  Q.eff = "cr",

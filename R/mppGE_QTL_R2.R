@@ -38,38 +38,18 @@
 #'
 #' @examples
 #'
-#' # Come later
+#' library(asreml)
+#'
+#' data(mppData_GE)
+#'
+#' Qpos <- c("PZE.105068880", "PZE.106098900")
+#'
+#' R2 <- mppGE_QTL_R2(mppData = mppData_GE, trait = c('DMY_CIAM', 'DMY_TUM'),
+#'                    Q.eff = 'par', QTL = Qpos)
 #'
 #' @export
 #'
 
-# # arguments
-#
-# library(mppR)
-# library(asreml)
-# library(mppGxE)
-#
-# source('H:/PhD/R/package/mppR/R/IncMat_cross.R')
-# source('F:/mppGxE/package/mppGxE/R/QTLModelQeff_GE.R')
-# source('F:/mppGxE/package/mppGxE/R/sign.star.R')
-#
-# setwd("F:/Data_mppR/EUNAM_Flint")
-#
-# load('./data/mpp_data/mppDataGE_toy.RData')
-#
-# ### SIM
-#
-# # ID
-#
-# SIM <- mppGE_SIM(trait = c("PH_KWS", "PH_CIAM"), mppData = mppData,
-#                  Q.eff = 'biall', VCOV = 'ID', plot.gen.eff = TRUE)
-#
-# trait <- c("PH_KWS", "PH_CIAM")
-# Q.eff = "par"
-# VCOV = "CS_CSRT"
-# QTL <- QTL_select(SIM)
-# glb.only = FALSE
-# workspace = 8e6
 
 mppGE_QTL_R2 <- function(mppData, trait, Q.eff = "cr", VCOV = "ID",
                            QTL = NULL, glb.only = FALSE, workspace = 8e6){

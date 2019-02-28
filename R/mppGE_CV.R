@@ -100,7 +100,18 @@
 #'
 #' @examples
 #'
-#' # Come later
+#' library(asreml)
+#'
+#' data(mppData_GE)
+#'
+#' # Specify a location where your results will be saved
+#' my.loc <- tempdir()
+#'
+#' QTL <- mppGE_CV(pop.name = 'EUNAM', trait.name = 'DMY', mppData = mppData_GE,
+#'                 trait = c('DMY_CIAM', 'DMY_TUM'), Rep = 1, k = 2,
+#'                 EnvNames = c('CIAM', 'TUM'),  Q.eff = 'par',
+#'                 thre.cof = 3, thre.QTL = 3, verbose = FALSE,
+#'                 output.loc = my.loc)
 #'
 #'
 #' @export

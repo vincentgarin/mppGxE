@@ -138,34 +138,24 @@
 #'
 #' @examples
 #'
-#' # Come later
+#'\dontrun{
 #'
+#' library(asreml)
+#'
+#' data(mppData_GE)
+#'
+#' # Specify a location where your results will be saved
+#' my.loc <- tempdir()
+#'
+#' QTL <- mppGE_proc(pop.name = 'EUNAM', trait.name = 'DMY', mppData = mppData_GE,
+#'                   trait = c('DMY_CIAM', 'DMY_TUM'), EnvNames = c('CIAM', 'TUM'),
+#'                   Q.eff = 'par', plot.gen.eff = TRUE, thre.cof = 3,
+#'                   thre.QTL = 3, verbose = FALSE, output.loc = my.loc)
+#'
+#'}
 #'
 #' @export
 #'
-
-# setwd("F:/Data_mppR/EUNAM_Flint")
-#
-# load('./data/mpp_data/mppDataGE_toy.RData')
-#
-# pop.name = "MPP"
-# trait.name = "trait1"
-# trait = c("PH_KWS", "PH_CIAM")
-# EnvNames = c("KWS", "CIAM")
-# Q.eff = "cr"
-# VCOV = "ID"
-# plot.gen.eff = TRUE
-# thre.cof = 4
-# win.cof = 50
-# N.cim = 1
-# window = 20
-# thre.QTL = 4
-# win.QTL = 20
-# text.size = 18
-# parallel = FALSE
-# cluster = NULL
-# verbose = TRUE
-# output.loc = "F:/mppGxE/results/toy_example"
 
 
 mppGE_proc <- function(pop.name = "MPP", trait.name = "trait1", mppData, trait,

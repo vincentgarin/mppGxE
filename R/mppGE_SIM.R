@@ -51,7 +51,20 @@
 #'
 #' @examples
 #'
-#' # Come later
+#' library(asreml)
+#' library(mppR)
+#'
+#' data(mppData_GE)
+#'
+#' SIM <- mppGE_SIM(mppData = mppData_GE, trait = c('DMY_CIAM', 'DMY_TUM'),
+#'                  Q.eff = 'par', plot.gen.eff = TRUE)
+#'
+#' Qpos <- QTL_select(Qprof = SIM, threshold = 3, window = 50)
+#'
+#' plot(x = SIM, QTL = Qpos)
+#'
+#' plot_genEffects_GE(mppData = mppData_GE, nEnv = 2, EnvNames = c('CIAM', 'TUM'),
+#'                    Qprof = SIM, Q.eff = 'par', QTL = Qpos, text.size = 14)
 #'
 #' @export
 #'

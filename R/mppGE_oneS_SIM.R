@@ -56,35 +56,34 @@
 #'
 #' @examples
 #'
-#' # Come later
+#'\dontrun{
+#'
+#' library(asreml)
+#' library(mppR)
+#'
+#' data(mppData_GE)
+#' data(plot_data)
+#'
+#' # take around 5 min
+#'
+#' SIM <- mppGE_oneS_SIM(plot_data = plot_data, mppData = mppData_GE,
+#'                       trait = 'DMY', Q.eff = 'par',
+#'                       exp_des_form = 'env:Rep + env:Rep:Block',
+#'                       plot.gen.eff = TRUE)
+#'
+#' Qpos <- QTL_select(Qprof = SIM, threshold = 3, window = 50)
+#'
+#' plot(x = SIM, QTL = Qpos)
+#'
+#' plot_genEffects_GE(mppData = mppData_GE, nEnv = 2, EnvNames = c('CIAM', 'TUM'),
+#'                    Qprof = SIM, Q.eff = 'par', QTL = Qpos, text.size = 14)
+#'
+#'}
 #'
 #' @export
 #'
 
-# arguments
 
-# setwd("F:/Data_mppR/EUNAM_Flint")
-#
-# pheno <- read.csv("./data/pheno/pheno_red.csv", row.names = 1,
-#                   stringsAsFactors = FALSE)
-# lines_used <- read.csv("./data/pheno/List_lines_Flint_Lehermeier.csv")
-# pheno$Genotype <- as.factor(as.character(pheno$Genotype))
-# pheno$Fam <- as.factor(as.character(pheno$Fam))
-# pheno <- pheno[order(pheno$Fam), ]
-# par_names <- c("D152", "EC49A", "EP44", "EZ5", "F03802", "F2", "F283",
-#                "F64", "UH006", "UH009", "DK105")
-#
-# colnames(pheno)[1] <- "genotype"
-# colnames(pheno)[2] <- "cross"
-# colnames(pheno)[6] <- "env"
-#
-# plot_data <- pheno[pheno$env %in% c("KWS", "CIAM"), ]
-# load('./data/mpp_data/mppDataGE_toy.RData')
-#
-# trait = "PH"
-# Q.eff = "par"
-# VCOV = "DG"
-# plot.gen.eff = FALSE
 
 mppGE_oneS_SIM <- function(plot_data, mppData, trait, Q.eff = "cr", VCOV = "CS_CSRT",
                           exp_des_form, plot.gen.eff = FALSE, workspace = 8e6){

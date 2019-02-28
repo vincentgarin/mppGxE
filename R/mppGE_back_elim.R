@@ -40,36 +40,18 @@
 #'
 #' @examples
 #'
-#' # Come later
+#' library(asreml)
+#'
+#' data(mppData_GE)
+#'
+#' Qpos <- c("PZE.105068880", "PZE.106098900")
+#'
+#' QTL <- mppGE_back_elim(mppData = mppData_GE, trait = c('DMY_CIAM', 'DMY_TUM'),
+#'                        Q.eff = 'par', QTL = Qpos)
 #'
 #' @export
 #'
 
-# # arguments
-#
-# library(mppR)
-# library(asreml)
-# library(mppGxE)
-#
-# # underlying functions
-#
-# source('H:/PhD/R/package/mppR/R/IncMat_cross.R')
-# source('H:/PhD/R/package/Test_function/QTLModelBack_GE.R')
-# source('H:/PhD/R/package/Test_function/back_formula_GE.R')
-#
-# setwd("F:/Data_mppR/EUNAM_Flint")
-#
-# load('./data/mpp_data/mppDataGE_toy.RData')
-#
-# SIM <- mppGE_SIM(trait = c("PH_KWS", "PH_CIAM"), mppData = mppData,
-#                  Q.eff = 'par', VCOV = 'ID', plot.gen.eff = TRUE)
-#
-# QTL <- QTL_select(SIM, threshold = 5, window = 1000)
-#
-# trait <- c("PH_KWS", "PH_CIAM")
-# Q.eff <- "cr"
-# VCOV <- "UN"
-# alpha <- 0.01
 
 mppGE_back_elim <- function(mppData, trait, Q.eff = "cr", VCOV = "CS_CSRT",
                          QTL = NULL, alpha = 0.01, workspace = 8e6){
