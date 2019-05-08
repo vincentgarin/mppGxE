@@ -1,6 +1,6 @@
-##################
+###################
 # mppGE_oneS_proc #
-##################
+###################
 
 #' MPP GxE one stage QTL analysis
 #'
@@ -85,6 +85,9 @@
 #' @param alpha \code{Numeric} value indicating the level of significance for
 #' the backward elimination. Default = 0.01.
 #'
+#' @param Qeff_est \code{Logical} value specifying if the QTL effects of the
+#' final QTL list should be estimated. Default = TRUE.
+#'
 #' @param text.size \code{Numeric} value specifying the size of graph axis text
 #' elements. Default = 18.
 #'
@@ -167,8 +170,9 @@ mppGE_oneS_proc <- function(pop.name = "MPP", trait.name = "trait1", plot_data,
                        mppData, trait, EnvNames = NULL,  Q.eff = "cr",
                        VCOV = "CS_CSRT", exp_des_form, plot.gen.eff = FALSE,
                        thre.cof = 4, win.cof = 50, N.cim = 1, window = 20,
-                       thre.QTL = 4, win.QTL = 20, alpha = 0.01, text.size = 18,
-                       verbose = TRUE, output.loc = NULL, workspace = 8e6) {
+                       thre.QTL = 4, win.QTL = 20, alpha = 0.01, Qeff_est = TRUE,
+                       text.size = 18, verbose = TRUE, output.loc = NULL,
+                       workspace = 8e6) {
 
 
   # 1. Check the validity of the parameters that have been introduced
@@ -360,9 +364,21 @@ mppGE_oneS_proc <- function(pop.name = "MPP", trait.name = "trait1", plot_data,
   # write.table(QTL.R2, file = file.path(folder.loc, "QTL_R2.txt"),
   #             quote = FALSE, sep = "\t", row.names = FALSE)
 
+  # 7. Compute QTL effects
+  ########################
 
-  # 6. Results processing
-  #######################
+  if(Qeff_est){
+
+    Qeff <- mppGE_oneS_QTL_effects(plot_data = plot_data, mppData = mppData,
+                                   trait = trait, Q.eff = Q.eff, VCOV = VCOV,
+                                   exp_des_form = exp_des_form,
+                                   QTL = QTL, workspace = workspace)
+
+  } else { Qeff <- NULL }
+
+
+  # 8. Plots
+  ##########
 
   if(verbose){
 
@@ -372,10 +388,6 @@ mppGE_oneS_proc <- function(pop.name = "MPP", trait.name = "trait1", plot_data,
     cat("\n")
 
   }
-
-
-  ### 9.2: Plots
-
 
   main.cim <- paste("CIM", pop.name, trait.name, Q.eff, VCOV)
   main.Qeff <- paste("QTL gen. effects", pop.name, trait.name, Q.eff, VCOV)
@@ -401,12 +413,20 @@ mppGE_oneS_proc <- function(pop.name = "MPP", trait.name = "trait1", plot_data,
 
   }
 
+  if(Qeff_est){
+
+    QTL_report_GE(out.file = file.path(folder.loc, "QTL_REPORT.txt"),
+                  main = paste(pop.name, trait.name, Q.eff, VCOV),
+                  QTL.info = QTL[, c(1, 2, 4, 5)], QTL.effects = Qeff)
+
+  }
+
 
   ### 9.4: Return R object
 
 
   results <- list(n.QTL = dim(QTL)[1], cofactors = cofactors[, 1:5],
-                  QTL = QTL[, 1:5])
+                  QTL = QTL[, 1:5], Qeff = Qeff)
 
   return(results)
 

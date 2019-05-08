@@ -70,6 +70,9 @@
 #' @param alpha \code{Numeric} value indicating the level of significance for
 #' the backward elimination. Default = 0.01.
 #'
+#' @param Qeff_est \code{Logical} value specifying if the QTL effects of the
+#' final QTL list should be estimated. Default = TRUE.
+#'
 #' @param text.size \code{Numeric} value specifying the size of graph axis text
 #' elements. Default = 18.
 #'
@@ -162,7 +165,8 @@ mppGE_proc <- function(pop.name = "MPP", trait.name = "trait1", mppData, trait,
                        EnvNames = NULL,  Q.eff = "cr", VCOV = "CS_CSRT",
                        plot.gen.eff = FALSE, thre.cof = 4,
                        win.cof = 50, N.cim = 1, window = 20, thre.QTL = 4,
-                       win.QTL = 20, alpha = 0.01, text.size = 18, parallel = FALSE,
+                       win.QTL = 20, alpha = 0.01, Qeff_est = TRUE,
+                       text.size = 18, parallel = FALSE,
                        cluster = NULL, workspace = 8e6, verbose = TRUE,
                        output.loc = NULL) {
 
@@ -177,7 +181,7 @@ mppGE_proc <- function(pop.name = "MPP", trait.name = "trait1", mppData, trait,
 
   if(is.null(EnvNames)){
 
-    EnvNames <- paste0("Env_", 1:dim(trait)[2])
+    EnvNames <- paste0("Env_", 1:length(trait))
 
   }
 
@@ -322,8 +326,8 @@ mppGE_proc <- function(pop.name = "MPP", trait.name = "trait1", mppData, trait,
   #########################
 
   Q_back <- mppGE_back_elim(mppData = mppData, trait = trait, Q.eff = Q.eff,
-                      VCOV = VCOV, QTL = QTL, alpha = alpha,
-                      workspace = workspace)
+                            VCOV = VCOV, QTL = QTL, alpha = alpha,
+                            workspace = workspace)
 
   # save the list of QTLs
 
@@ -340,7 +344,7 @@ mppGE_proc <- function(pop.name = "MPP", trait.name = "trait1", mppData, trait,
   ###########
 
   R2 <- mppGE_QTL_R2(mppData = mppData, trait = trait, Q.eff = Q.eff, VCOV = VCOV,
-                  QTL = QTL[, 1], workspace = workspace)
+                     QTL = QTL[, 1], workspace = workspace)
 
   # save R2 results
 
@@ -353,9 +357,19 @@ mppGE_proc <- function(pop.name = "MPP", trait.name = "trait1", mppData, trait,
   write.table(QTL.R2, file = file.path(folder.loc, "QTL_R2.txt"),
               quote = FALSE, sep = "\t", row.names = FALSE)
 
+  # 7. Compute QTL effects
+  ########################
 
-  # 7. Results processing
-  #######################
+  if(Qeff_est){
+
+    Qeff <- mppGE_QTL_effects(mppData = mppData, trait = trait, Q.eff = Q.eff,
+                              VCOV = VCOV, QTL = QTL, workspace = workspace)
+
+  } else { Qeff <- NULL }
+
+
+  # 8. Plots
+  ##########
 
   if(verbose){
 
@@ -365,9 +379,6 @@ mppGE_proc <- function(pop.name = "MPP", trait.name = "trait1", mppData, trait,
     cat("\n")
 
   }
-
-
-  ### 9.2: Plots
 
 
   main.cim <- paste("CIM", pop.name, trait.name, Q.eff, VCOV)
@@ -394,12 +405,24 @@ mppGE_proc <- function(pop.name = "MPP", trait.name = "trait1", mppData, trait,
 
   }
 
+  # 9. QTL report
+  ###############
 
-  ### 9.4: Return R object
+  if(Qeff_est){
+
+    QTL_report_GE(out.file = file.path(folder.loc, "QTL_REPORT.txt"),
+                  main = paste(pop.name, trait.name, Q.eff, VCOV),
+                  QTL.info = QTL[, c(1, 2, 4, 5)], QTL.effects = Qeff,
+                  R2 = R2)
+
+  }
+
+
+  ### Return R object
 
 
   results <- list(n.QTL = dim(QTL)[1], cofactors = cofactors[, 1:5],
-                  QTL = QTL[, 1:5], R2 = R2)
+                  QTL = QTL[, 1:5], R2 = R2, Qeff = Qeff)
 
   return(results)
 

@@ -48,7 +48,7 @@
 #'
 #' \enumerate{
 #'
-#' \item{QTL genetic effects per cross or parent.}
+#' \item{QTL genetic effects}
 #' \item{Standard error of the QTL effects.}
 #' \item{Test statistics of the effects (t-test or Wald statistic).}
 #' \item{P-value of the test statistics.}
@@ -69,10 +69,12 @@
 #'
 #' Qpos <- c("PZE.105068880", "PZE.106098900")
 #'
-#' QTL <- mppGE_oneS_QTL_effects(plot_data = plot_data, mppData = mppData_GE,
+#' Qeff <- mppGE_oneS_QTL_effects(plot_data = plot_data, mppData = mppData_GE,
 #'                               trait = 'DMY', Q.eff = 'par',
 #'                               exp_des_form = 'env:Rep + env:Rep:Block',
 #'                               QTL = Qpos)
+#'
+#' Qeff
 #'
 #' @export
 #'
@@ -213,11 +215,11 @@ mppGE_oneS_QTL_effects <- function(plot_data, mppData, trait, Q.eff = "cr",
 
   # process the results
 
-
   Qeff <- Qeff_res_processing_GE(model = model, mppData = mppData,
                                  Q.eff = Q.eff, VCOV = VCOV,
-                                 names.QTL = names.QTL, nQTL = nQTL,
-                                 n_al = n_al, nEnv = nEnv)
+                                 names.QTL = names.QTL, Q.pos = Q.pos,
+                                 nQTL = nQTL, n_al = n_al, nEnv = nEnv)
+
 
   return(Qeff)
 

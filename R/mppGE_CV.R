@@ -100,6 +100,8 @@
 #'
 #' @examples
 #'
+#'\dontrun{
+#'
 #' library(asreml)
 #'
 #' data(mppData_GE)
@@ -113,6 +115,7 @@
 #'                 thre.cof = 3, thre.QTL = 3, verbose = FALSE,
 #'                 output.loc = my.loc)
 #'
+#'}
 #'
 #' @export
 #'
