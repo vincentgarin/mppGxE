@@ -20,20 +20,20 @@ Default = "trait1".}
 
 \item{mppData}{An object of class \code{mppData}.}
 
-\item{trait}{\code{Character vector} specifying which traits should be used.}
+\item{trait}{\code{Character vector} specifying which traits (environments) should be used.}
 
 \item{cv.ref}{\code{Numerical} or \code{character} indicator to specify which
 trait of the \code{mppData} object should be used to check the prediction
 in the CV process. By default use 'trait'.}
 
-\item{Rep}{\code{Numeric} value representing the number of repetition of the
+\item{Rep}{\code{Numeric} value representing the number of repetitions of the
 k-fold procedure. Default = 5.}
 
 \item{k}{\code{Numeric} value representing the number of folds for the within
 cross partition of the population. Default = 3.}
 
-\item{EnvNames}{\code{character} expression indicating the environment or trait
-labels. By default it is labeled Env_1, 2, 3, etc.}
+\item{EnvNames}{\code{Character} expression indicating the environment or trait
+labels. By default: Env_1, 2, 3, etc.}
 
 \item{Q.eff}{\code{Character} expression indicating the assumption concerning
 the QTL effect: 1) "cr" for cross-specific effects; 2) "par" parental
@@ -42,16 +42,16 @@ effects. Default = "cr".}
 
 \item{VCOV}{VCOV \code{Character} expression defining the type of variance
 covariance structure used. "ID" for identity, "CSRT" for within environment
-cross-specific residual term, "CS_CSRT" for compound symmetry with within
-environment cross-specific residual term. Default = "CS_CSRT".}
+cross-specific residual terms, "CS_CSRT" for compound symmetry with within
+environment cross-specific residual terms. Default = "CS_CSRT".}
 
 \item{thre.cof}{\code{Numeric} value representing the -log10(p-value)
-threshold above which a position can be peaked as a cofactor. Default = 4.}
+threshold above which a position can be selected as cofactor. Default = 4.}
 
 \item{win.cof}{\code{Numeric} value in centi-Morgan representing the minimum
 distance between two selected cofactors. Default = 50 cM.}
 
-\item{N.cim}{\code{Numeric} value specifying the number of time the CIM
+\item{N.cim}{\code{Numeric} value specifying the number of times the CIM
 analysis is repeated. Default = 1.}
 
 \item{window}{\code{Numeric} distance (cM) on the left and the right of a
@@ -67,14 +67,14 @@ distance between two selected QTLs. Default = 20.}
 the backward elimination. Default = 0.01.}
 
 \item{parallel}{\code{Logical} value specifying if the function should be
-executed in parallel on multiple cores. To run function in parallel user must
-provide cluster in the \code{cluster} argument. \strong{Parallelization is
+executed in parallel on multiple cores. To run the function in parallel user must
+provide clusters in the \code{cluster} argument. \strong{Parallelization is
 only available for 'ID' model}. Default = FALSE.}
 
 \item{cluster}{Cluster object obtained with the function \code{makeCluster()}
 from the parallel package. Default = NULL.}
 
-\item{workspace}{size of workspace for the REML routines measured in double
+\item{workspace}{Size of workspace for the REML routines measured in double
 precision words (groups of 8 bytes). The default is workspace = 8e6.}
 
 \item{verbose}{\code{Logical} value indicating if the steps of mpp_proc should
@@ -91,18 +91,18 @@ Return:
 
 \item{p_vs}{\code{Matrix} with : 1) the number of detected QTL;
 2) the proportion of predicted genetic variance
-in the VS (p.vs) at the population level (average of within cross prediction)
+in the VS (p.vs) at the population level (average of within cross predictions)
 per environment.}
 
 \item{QTL}{\code{Data.frame} containing: 1) the list of QTL position detected
 at least one time during the entire CV process; 2) the number of times
 the position has been detected}
 
-The results elements return as R object are also saved as text
+The results elements returned as R object are also saved as text
 files at the specified output location (\code{output.loc}).
 }
 \description{
-MPP GxE cross-validation
+MPP GxE cross-validation.
 }
 \examples{
 

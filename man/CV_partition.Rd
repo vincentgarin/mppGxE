@@ -31,8 +31,13 @@ training set.
 }
 \examples{
 
-# come later
+data(mppData_GE)
 
+part <- CV_partition(mppData_GE$cross.ind)
+
+}
+\seealso{
+\code{\link{mppGE_CV}}, \code{\link{mppGE_oneS_CV}}
 }
 \author{
 Vincent Garin

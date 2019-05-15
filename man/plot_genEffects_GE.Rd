@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_genEffects_GE.R
 \name{plot_genEffects_GE}
 \alias{plot_genEffects_GE}
-\title{plot of genome wide genetic effect of multi-environment (trait) QTL scan}
+\title{plot of genome wide QTL allelic effect significance}
 \usage{
 plot_genEffects_GE(mppData, nEnv, EnvNames, Qprof, Q.eff, QTL = NULL,
   main = "QTL genetic effects plot", text.size = 18)
@@ -15,14 +15,15 @@ plot_genEffects_GE(mppData, nEnv, EnvNames, Qprof, Q.eff, QTL = NULL,
 \item{EnvNames}{\code{character} expression indicating the environment or trait
 labels.}
 
-\item{Qprof}{object obtained with function \code{\link{mppGE_SIM}} or
-\code{\link{mppGE_CIM}} using argument \code{plot.gen.effect = TRUE}.}
+\item{Qprof}{object obtained with function \code{\link{mppGE_SIM}},
+\code{\link{mppGE_CIM}}, \code{\link{mppGE_oneS_SIM}} or
+\code{\link{mppGE_oneS_CIM}} using argument \code{plot.gen.effect = TRUE}.}
 
 \item{Q.eff}{on of "cr", "par", "anc" or "biall".}
 
 \item{QTL}{Optional argument. Object of class \code{QTLlist} representing a
 list of selected position obtained with the function \code{\link{QTL_select}}
-or vector of \code{character} marker or in between marker positions names.
+or a vector of \code{character} marker or in between marker positions names.
 These positions will be plotted on the graph. Default = NULL.}
 
 \item{main}{Title of the graph. Default =  "QTL genetic effects plot".}
@@ -31,7 +32,8 @@ These positions will be plotted on the graph. Default = NULL.}
 elements. Default = 18.}
 }
 \description{
-plot of genome wide genetic effect of multi-environment (trait) QTL scan
+Plot of the genome wide significance of the QTL allelic effects in multiple
+environments.
 }
 \examples{
 

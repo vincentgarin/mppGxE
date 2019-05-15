@@ -2,7 +2,10 @@
 # plot_genEffects_GE #
 ######################
 
-#' plot of genome wide genetic effect of multi-environment (trait) QTL scan
+#' plot of genome wide QTL allelic effect significance
+#'
+#' Plot of the genome wide significance of the QTL allelic effects in multiple
+#' environments.
 #'
 #' @param mppData An object of class \code{mppData}.
 #'
@@ -11,14 +14,15 @@
 #' @param EnvNames \code{character} expression indicating the environment or trait
 #' labels.
 #'
-#' @param Qprof object obtained with function \code{\link{mppGE_SIM}} or
-#' \code{\link{mppGE_CIM}} using argument \code{plot.gen.effect = TRUE}.
+#' @param Qprof object obtained with function \code{\link{mppGE_SIM}},
+#' \code{\link{mppGE_CIM}}, \code{\link{mppGE_oneS_SIM}} or
+#' \code{\link{mppGE_oneS_CIM}} using argument \code{plot.gen.effect = TRUE}.
 #'
 #' @param Q.eff on of "cr", "par", "anc" or "biall".
 #'
 #' @param QTL Optional argument. Object of class \code{QTLlist} representing a
 #' list of selected position obtained with the function \code{\link{QTL_select}}
-#' or vector of \code{character} marker or in between marker positions names.
+#' or a vector of \code{character} marker or in between marker positions names.
 #' These positions will be plotted on the graph. Default = NULL.
 #'
 #' @param main Title of the graph. Default =  "QTL genetic effects plot".

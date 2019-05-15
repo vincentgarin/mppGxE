@@ -17,11 +17,11 @@ population (Bauer et al. 2013, Lehermeier et al. 2014, Giraud et al. 2014).
 }
 \details{
 
-Sample data from the maize EU-NAM Flint population. the genotype data were
+Sample data from the maize EU-NAM Flint population. The genotype data were
 obtained from http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE50558.
 The genotypes come from the five following crosses: (UH007 x D152),
 (UH007 x F03802), (UH007 x F2), (UH007 x F283), and (UH007 x Dk105). We selected
-100 markers randomly spread on chromosome five and six. The genetic map was
+100 markers randomly spread on chromosomes five and six. The genetic map was
 downloaded here http://maizegdb.org/data_center/reference?id=9024747.
 
 The phenotypic data represent the within environment adjusted means for dry

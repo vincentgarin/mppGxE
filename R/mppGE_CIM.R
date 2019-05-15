@@ -7,11 +7,9 @@
 #' Compute QTL models along the genome using cofactors representing other
 #' genetic positions for control.
 #'
-#' For more details about the different models, see ...
-#'
 #' @param mppData An object of class \code{mppData}.
 #'
-#' @param trait \code{Character vector} specifying which traits should be used.
+#' @param trait \code{Character vector} specifying which traits (environments) should be used.
 #'
 #' @param Q.eff \code{Character} expression indicating the assumption concerning
 #' the QTL effects: 1) "cr" for cross-specific; 2) "par" for parental; 3) "anc"
@@ -19,32 +17,31 @@
 #'
 #' @param VCOV VCOV \code{Character} expression defining the type of variance
 #' covariance structure used. "ID" for identity, "CSRT" for within environment
-#' cross-specific residual term, "CS_CSRT" for compound symmetry with within
-#' environment cross-specific residual term. Default = "CS_CSRT".
+#' cross-specific residual terms, "CS_CSRT" for compound symmetry with within
+#' environment cross-specific residual terms. Default = "CS_CSRT".
 #'
 #' @param cofactors Object of class \code{QTLlist} representing a list of
 #' selected marker positions obtained with the function QTL_select() or
-#' vector of \code{character} marker positions names.
+#' a vector of \code{character} marker positions names.
 #' Default = NULL.
 #'
 #' @param window \code{Numeric} distance (cM) on the left and the right of a
 #' cofactor position where it is not included in the model. Default = 20.
 #'
 #' @param plot.gen.eff \code{Logical} value. If \code{plot.gen.eff = TRUE},
-#' the function will save the decomposed genetic effects per cross/parent.
-#' These results can be ploted with the function \code{\link{plot_genEffects_GE}}
-#' to visualize a genome-wide decomposition of the genetic effects.
-#' Default value = FALSE.
+#' the function will save the significance of the QTL allelic effects per
+#' cross/parent along the genome. These results can be visualized with the
+#' function \code{\link{plot_genEffects_GE}}. Default value = FALSE.
 #'
 #' @param parallel \code{Logical} value specifying if the function should be
-#' executed in parallel on multiple cores. To run function in parallel user must
-#' provide cluster in the \code{cluster} argument. \strong{Parallelization is
+#' executed in parallel on multiple cores. To run the function in parallel user must
+#' provide clusters in the \code{cluster} argument. \strong{Parallelization is
 #' only available for 'ID' model}. Default = FALSE.
 #'
 #' @param cluster Cluster object obtained with the function \code{makeCluster()}
 #' from the parallel package. Default = NULL.
 #'
-#' @param workspace size of workspace for the REML routines measured in double
+#' @param workspace Size of workspace for the REML routines measured in double
 #' precision words (groups of 8 bytes). The default is workspace = 8e6.
 #'
 #'
@@ -54,7 +51,7 @@
 #' 1) QTL marker or in between position names; 2) chromosomes;
 #' 3) interger position indicators on the chromosome;
 #' 4) positions in centi-Morgan; and 5) -log10(p-val). And if
-#' \code{plot.gen.eff = TRUE}, p-values of the cross or parental QTL effects.}
+#' \code{plot.gen.eff = TRUE}, p-values of the cross or parental QTL allelic effects.}
 #'
 #' @author Vincent Garin
 #'

@@ -10,7 +10,7 @@ mppGE_back_elim(mppData, trait, Q.eff = "cr", VCOV = "CS_CSRT",
 \arguments{
 \item{mppData}{An object of class \code{mppData}.}
 
-\item{trait}{\code{Character vector} specifying which traits should be used.}
+\item{trait}{\code{Character vector} specifying which traits (environments) should be used.}
 
 \item{Q.eff}{\code{Character} expression indicating the assumption concerning
 the QTL effects: 1) "cr" for cross-specific; 2) "par" for parental; 3) "anc"
@@ -18,17 +18,17 @@ for ancestral; 4) "biall" for a bi-allelic. Default = "cr".}
 
 \item{VCOV}{VCOV \code{Character} expression defining the type of variance
 covariance structure used. "ID" for identity, "CSRT" for within environment
-cross-specific residual term, "CS_CSRT" for compound symmetry with within
-environment cross-specific residual term. Default = "CS_CSRT".}
+cross-specific residual terms, "CS_CSRT" for compound symmetry with within
+environment cross-specific residual terms. Default = "CS_CSRT".}
 
 \item{QTL}{Object of class \code{QTLlist} representing a list of
 selected marker positions obtained with the function QTL_select() or
-vector of \code{character} marker positions names. Default = NULL.}
+a vector of \code{character} marker positions names. Default = NULL.}
 
 \item{alpha}{\code{Numeric} value indicating the level of significance for
 the backward elimination. Default = 0.01.}
 
-\item{workspace}{size of workspace for the REML routines measured in double
+\item{workspace}{Size of workspace for the REML routines measured in double
 precision words (groups of 8 bytes). The default is workspace = 8e6.}
 }
 \value{

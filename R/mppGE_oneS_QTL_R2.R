@@ -2,22 +2,23 @@
 # mppGE_oneS_QTL_R2 #
 ###############
 
-#' MPP GxE one stage QTL R2
+#' MPP GxE one stage QTL R2.
 #'
 #' Compute MPP GxE one stage QTL R2
 #'
-#' @param plot_data \code{data.frame} containing the plot data with the following
+#' @param plot_data \code{Data.frame} containing the plot data with the following
 #' columns: the trait(s), 'genotype' (genotype indicator), 'check'
 #' (check indicator), 'cross' (cross indicator), 'env' (environment indicator),
 #' and all other experimental design covariates (e.g. replicate, blocks, etc.).
-#' The column names of the data.frame must be identical to the one specified
-#' ('genotype', 'check', 'cross', env'). The names of the experimental design
-#' covariates must be the same as the one used in 'exp_des_form'. for more
-#' details see \code{\link{plot_data}}.
+#' The column names must be ('genotype', 'check', 'cross', env'). The names of
+#' the experimental design covariates must be the same as the one used in
+#' 'exp_des_form'. For more details see \code{\link{plot_data}}.
 #'
-#' @param mppData An object of class \code{mppData}.
+#' @param mppData Object of class \code{mppData} contaning the the same
+#' genotype identifiers as the one in \code{plot_data} ('genotype').
 #'
-#' @param trait \code{Character vector} specifying which traits should be used.
+#' @param trait \code{Character vector} specifying which traits (environments)
+#' should be used.
 #'
 #' @param Q.eff \code{Character} expression indicating the assumption concerning
 #' the QTL effects: 1) "cr" for cross-specific; 2) "par" for parental; 3) "anc"
@@ -25,22 +26,22 @@
 #'
 #' @param VCOV VCOV \code{Character} expression defining the type of variance
 #' covariance structure used. "CSRT" for within environment
-#' cross-specific residual term, "CS_CSRT" for compound symmetry with within
-#' environment cross-specific residual term. Default = "CS_CSRT".
+#' cross-specific residual terms, "CS_CSRT" for compound symmetry with within
+#' environment cross-specific residual terms. Default = "CS_CSRT".
 #'
 #' @param exp_des_form \code{Character} expression for the random experimental
 #' design effects in asreml-R format. For example,
-#' 'env:replicate + env:replicate:block'. The column variables names used in
-#' 'exp_des_form' should strictly match the names used in 'plot_data'.
+#' 'env:replicate + env:replicate:block'. The variable names used in
+#' 'exp_des_form' should strictly match the column names used in 'plot_data'.
 #'
 #' @param QTL Object of class \code{QTLlist} representing a list of
 #' selected marker positions obtained with the function QTL_select() or
-#' vector of \code{character} marker positions names. Default = NULL.
+#' a vector of \code{character} marker positions names. Default = NULL.
 #'
 #' @param glb.only \code{Logical} value. if \code{glb.only = TRUE}, the
 #' function only calculate the global R2 for all QTLs. Default = FALSE.
 #'
-#' @param workspace size of workspace for the REML routines measured in double
+#' @param workspace Size of workspace for the REML routines measured in double
 #' precision words (groups of 8 bytes). The default is workspace = 8e6.
 #'
 #'

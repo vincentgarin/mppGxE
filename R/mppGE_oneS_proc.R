@@ -4,6 +4,8 @@
 
 #' MPP GxE one stage QTL analysis
 #'
+#' One-stage QTL detection analysis in MPP characterized in multiple environments.
+#'
 #' The procedure is the following:
 #'
 #' \enumerate{
@@ -17,6 +19,9 @@
 #' \item{Backward elimination on the list of QTLs
 #' (\code{\link{mppGE_oneS_back_elim}}).}
 #'
+#' \item{Optional estimation of QTLs additive allelic effect
+#' (\code{\link{mppGE_oneS_QTL_effects}}).}
+#'
 #' }
 #'
 #' @param pop.name \code{Character} name of the studied population.
@@ -25,17 +30,16 @@
 #' @param trait.name \code{Character} name of the studied trait.
 #' Default = "trait1".
 #'
-#' @param plot_data \code{data.frame} containing the plot data with the following
+#' @param plot_data \code{Data.frame} containing the plot data with the following
 #' columns: the trait(s), 'genotype' (genotype indicator), 'check'
 #' (check indicator), 'cross' (cross indicator), 'env' (environment indicator),
 #' and all other experimental design covariates (e.g. replicate, blocks, etc.).
-#' The column names of the data.frame must be identical to the one specified
-#' ('genotype', 'check', 'cross', env'). The names of the experimental design
-#' covariates must be the same as the one used in 'exp_des_form'. for more
-#' details see \code{\link{plot_data}}.
+#' The column names must be ('genotype', 'check', 'cross', env'). The names of
+#' the experimental design covariates must be the same as the one used in
+#' 'exp_des_form'. For more details see \code{\link{plot_data}}.
 #'
-#' @param mppData Object of class \code{mppData} contaning the genotypic
-#' information with genotype list corresponding to the one of \code{plot_data}.
+#' @param mppData Object of class \code{mppData} contaning the the same
+#' genotype identifiers as the one in \code{plot_data} ('genotype').
 #'
 #' @param trait \code{Character} expression for the trait matching the trait
 #' column in 'plot_data' argument.
@@ -50,27 +54,26 @@
 #'
 #' @param VCOV VCOV \code{Character} expression defining the type of variance
 #' covariance structure used: a) "CSRT" for within environment
-#' cross-specific residual term; b) "CS_CSRT" for compound symmetry with within
-#' environment cross-specific residual term. Default = "CS_CSRT".
+#' cross-specific residual terms; b) "CS_CSRT" for compound symmetry with within
+#' environment cross-specific residual terms. Default = "CS_CSRT".
 #'
 #' @param exp_des_form \code{Character} expression for the random experimental
 #' design effects in asreml-R format. For example,
-#' 'env:replicate + env:replicate:block'. The column variables names used in
-#' 'exp_des_form' should strictly match the names used in 'plot_data'.
+#' 'env:replicate + env:replicate:block'. The variable names used in
+#' 'exp_des_form' should strictly match the column names used in 'plot_data'.
 #'
 #' @param plot.gen.eff \code{Logical} value. If \code{plot.gen.eff = TRUE},
-#' the function will save the decomposed genetic effects per cross/parent.
-#' These results can be ploted with the function \code{\link{plot_genEffects_GE}}
-#' to visualize a genome-wide decomposition of the genetic effects.
-#' Default value = FALSE.
+#' the function will save the significance of the QTL allelic effects per
+#' cross/parent along the genome. These results can be visualized with the
+#' function \code{\link{plot_genEffects_GE}}. Default value = FALSE.
 #'
 #' @param thre.cof \code{Numeric} value representing the -log10(p-value)
-#' threshold above which a position can be peaked as a cofactor. Default = 4.
+#' threshold above which a position can be selected as cofactor. Default = 4.
 #'
 #' @param win.cof \code{Numeric} value in centi-Morgan representing the minimum
 #' distance between two selected cofactors. Default = 50 cM.
 #'
-#' @param N.cim \code{Numeric} value specifying the number of time the CIM
+#' @param N.cim \code{Numeric} value specifying the number of times the CIM
 #' analysis is repeated. Default = 1.
 #'
 #' @param window \code{Numeric} distance (cM) on the left and the right of a
@@ -98,7 +101,7 @@
 #' @param output.loc Path where a folder will be created to save the results.
 #' Default = NULL.
 #'
-#' @param workspace size of workspace for the REML routines measured in double
+#' @param workspace Size of workspace for the REML routines measured in double
 #' precision words (groups of 8 bytes). The default is workspace = 8e6.
 #'
 #'
@@ -136,8 +139,10 @@
 #'
 #' @seealso
 #'
-#' \code{\link{mppGE_CIM}},
-#' \code{\link{mppGE_SIM}},
+#' \code{\link{mppGE_oneS_CIM}},
+#' \code{\link{mppGE_oneS_SIM}},
+#' \code{\link{mppGE_oneS_back_elim}},
+#' \code{\link{mppGE_oneS_QTL_effects}}
 #' \code{\link{plot_genEffects_GE}},
 #'
 #' @examples

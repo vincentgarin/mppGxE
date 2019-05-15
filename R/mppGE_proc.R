@@ -4,6 +4,8 @@
 
 #' MPP GxE QTL analysis
 #'
+#' QTL detection in MPP characterized in multiple environments.
+#'
 #' The procedure is the following:
 #'
 #' \enumerate{
@@ -17,6 +19,9 @@
 #' \item{Backward elimination on the list of QTLs
 #' (\code{\link{mppGE_back_elim}}).}
 #'
+#' \item{Optional estimation of QTLs additive allelic effect
+#' (\code{\link{mppGE_QTL_effects}}).}
+#'
 #' }
 #'
 #'
@@ -28,10 +33,10 @@
 #'
 #' @param mppData An object of class \code{mppData}.
 #'
-#' @param trait \code{Character vector} specifying which traits should be used.
+#' @param trait \code{Character vector} specifying which traits (environments) should be used.
 #'
 #' @param EnvNames \code{character} expression indicating the environment or trait
-#' labels. By default it is labeled Env_1, 2, 3, etc.
+#' labels. By default: Env_1, 2, 3, etc.
 #'
 #' @param Q.eff \code{Character} expression indicating the assumption concerning
 #' the QTL effect: 1) "cr" for cross-specific effects; 2) "par" parental
@@ -40,22 +45,21 @@
 #'
 #' @param VCOV VCOV \code{Character} expression defining the type of variance
 #' covariance structure used. "ID" for identity, "CSRT" for within environment
-#' cross-specific residual term, "CS_CSRT" for compound symmetry with within
-#' environment cross-specific residual term. Default = "CS_CSRT".
+#' cross-specific residual terms, "CS_CSRT" for compound symmetry with within
+#' environment cross-specific residual terms. Default = "CS_CSRT".
 #'
 #' @param plot.gen.eff \code{Logical} value. If \code{plot.gen.eff = TRUE},
-#' the function will save the decomposed genetic effects per cross/parent.
-#' These results can be ploted with the function \code{\link{plot_genEffects_GE}}
-#' to visualize a genome-wide decomposition of the genetic effects.
-#' Default value = FALSE.
+#' the function will save the significance of the QTL allelic effects per
+#' cross/parent along the genome. These results can be visualized with the
+#' function \code{\link{plot_genEffects_GE}}. Default value = FALSE.
 #'
 #' @param thre.cof \code{Numeric} value representing the -log10(p-value)
-#' threshold above which a position can be peaked as a cofactor. Default = 4.
+#' threshold above which a position can be selected as cofactor. Default = 4.
 #'
 #' @param win.cof \code{Numeric} value in centi-Morgan representing the minimum
 #' distance between two selected cofactors. Default = 50 cM.
 #'
-#' @param N.cim \code{Numeric} value specifying the number of time the CIM
+#' @param N.cim \code{Numeric} value specifying the number of times the CIM
 #' analysis is repeated. Default = 1.
 #'
 #' @param window \code{Numeric} distance (cM) on the left and the right of a
@@ -77,14 +81,14 @@
 #' elements. Default = 18.
 #'
 #' @param parallel \code{Logical} value specifying if the function should be
-#' executed in parallel on multiple cores. To run function in parallel user must
-#' provide cluster in the \code{cluster} argument. \strong{Parallelization is
+#' executed in parallel on multiple cores. To run the function in parallel user must
+#' provide clusters in the \code{cluster} argument. \strong{Parallelization is
 #' only available for 'ID' model}. Default = FALSE.
 #'
 #' @param cluster Cluster object obtained with the function \code{makeCluster()}
 #' from the parallel package. Default = NULL.
 #'
-#' @param workspace size of workspace for the REML routines measured in double
+#' @param workspace Size of workspace for the REML routines measured in double
 #' precision words (groups of 8 bytes). The default is workspace = 8e6.
 #'
 #' @param verbose \code{Logical} value indicating if the steps of mpp_proc should
@@ -137,7 +141,9 @@
 #'
 #' \code{\link{mppGE_CIM}},
 #' \code{\link{mppGE_SIM}},
-#' \code{\link{plot_genEffects_GE}},
+#' \code{\link{mppGE_back_elim}},
+#' \code{\link{mppGE_QTL_effects}},
+#' \code{\link{plot_genEffects_GE}}
 #'
 #' @examples
 #'

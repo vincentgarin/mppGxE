@@ -17,9 +17,10 @@
 }
 \details{
 
-Sample plot data from the maize EU-NAM Flint population for two environments: La Coruna (CIAM) and Roggenstein (TUM). The 'genotype' column represents the genotype identifiers. The 'check' column is composed of genotype identifier for the genotypes present in the \code{\link{mppData_GE}} object. These genotypes are the one that have marker information that will be used for the QTL detection. These genotypes come from 5 selected crosses. The rest of the check column is composed of genotypes identifiers that are replicated in at least one environment. These genotypes will be used as fixed checks in the one stage analysis QTL detection. The 'cross' column contains the cross indicators. The 'env' column contains the environment indicators. The last columns contain the phenotypic values values. The raw plot data were obtained here: http://www.genetics.org/content/198/1/3/suppl/DC1
+Sample plot data from the maize EU-NAM Flint population for two environments: La Coruna (CIAM) and Roggenstein (TUM). The 'genotype' column represents the genotype identifiers. The 'check' column is composed of genotype identifiers for the genotypes present in the \code{\link{mppData_GE}} object. These genotypes are the one that have marker information that will be used for the QTL detection. These genotypes come from 5 selected crosses: (UH007 x D152),
+(UH007 x F03802), (UH007 x F2), (UH007 x F283), and (UH007 x Dk105). The rest of the check column is composed of genotype identifiers that are replicated in at least one environment. The 'cross' column contains the cross indicators. The 'env' column contains the environment indicators. The last columns contain the phenotypic values values. The raw plot data were obtained here: http://www.genetics.org/content/198/1/3/suppl/DC1
 
-The \code{plot_data} argument is generally composed with the following columns: 'genotype', 'check', 'cross', 'env', experimental design variables, traits.
+The \code{plot_data} argument is composed with the following columns: 'genotype', 'check', 'cross', 'env', experimental design variables, traits.
 
 The 'genotype' column contains the genotype (genotype + checks) identifiers.
 

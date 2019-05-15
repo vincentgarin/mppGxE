@@ -2,19 +2,20 @@
 # mppGE_oneS_SIM #
 #################
 
-#' Perform a MPP GxE one stage SIM analysis
+#' MPP GxE one stage SIM analysis
 #'
-#' @param plot_data \code{data.frame} containing the plot data with the following
+#' Perform a MPP GxE one stage SIM analysis.
+#'
+#' @param plot_data \code{Data.frame} containing the plot data with the following
 #' columns: the trait(s), 'genotype' (genotype indicator), 'check'
 #' (check indicator), 'cross' (cross indicator), 'env' (environment indicator),
 #' and all other experimental design covariates (e.g. replicate, blocks, etc.).
-#' The column names of the data.frame must be identical to the one specified
-#' ('genotype', 'check', 'cross', env'). The names of the experimental design
-#' covariates must be the same as the one used in 'exp_des_form'. for more
-#' details see \code{\link{plot_data}}.
+#' The column names must be ('genotype', 'check', 'cross', env'). The names of
+#' the experimental design covariates must be the same as the one used in
+#' 'exp_des_form'. For more details see \code{\link{plot_data}}.
 #'
-#' @param mppData Object of class \code{mppData} contaning the genotypic
-#' information with genotype list corresponding to the one of \code{plot_data}.
+#' @param mppData Object of class \code{mppData} contaning the the same
+#' genotype identifiers as the one in \code{plot_data} ('genotype').
 #'
 #' @param trait \code{Character} expression for the trait matching the trait
 #' column in 'plot_data' argument.
@@ -25,21 +26,20 @@
 #'
 #' @param VCOV VCOV \code{Character} expression defining the type of variance
 #' covariance structure used: a) "CSRT" for within environment
-#' cross-specific residual term; b) "CS_CSRT" for compound symmetry with within
-#' environment cross-specific residual term. Default = "CS_CSRT".
+#' cross-specific residual terms; b) "CS_CSRT" for compound symmetry with within
+#' environment cross-specific residual terms. Default = "CS_CSRT".
 #'
 #' @param exp_des_form \code{Character} expression for the random experimental
 #' design effects in asreml-R format. For example,
-#' 'env:replicate + env:replicate:block'. The column variables names used in
-#' 'exp_des_form' should strictly match the names used in 'plot_data'.
+#' 'env:replicate + env:replicate:block'. The variable names used in
+#' 'exp_des_form' should strictly match the column names used in 'plot_data'.
 #'
 #' @param plot.gen.eff \code{Logical} value. If \code{plot.gen.eff = TRUE},
-#' the function will save the decomposed genetic effects per cross/parent.
-#' These results can be ploted with the function \code{\link{plot_genEffects_GE}}
-#' to visualize a genome-wide decomposition of the genetic effects.
-#' Default value = FALSE.
+#' the function will save the significance of the QTL allelic effects per
+#' cross/parent along the genome. These results can be visualized with the
+#' function \code{\link{plot_genEffects_GE}}. Default value = FALSE.
 #'
-#' @param workspace size of workspace for the REML routines measured in double
+#' @param workspace Size of workspace for the REML routines measured in double
 #' precision words (groups of 8 bytes). The default is workspace = 8e6.
 #'
 #' @return Return:
@@ -48,7 +48,7 @@
 #' 1) QTL marker or in between position names; 2) chromosomes;
 #' 3) interger position indicators on the chromosome;
 #' 4) positions in centi-Morgan; and 5) -log10(p-val). And if
-#' \code{plot.gen.eff = TRUE}, p-values of the cross or parental QTL effects.}
+#' \code{plot.gen.eff = TRUE}, p-values of the cross or parental QTL allelic effects.}
 #'
 #' @author Vincent Garin
 #'

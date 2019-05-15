@@ -2,13 +2,13 @@
 # mppGE_QTL_R2 #
 #############
 
-#' MPP GxE QTL R squared
+#' MPP GxE QTL R2
 #'
-#' Compute MPP GxE QTL R squared
+#' Compute MPP GxE QTL R2.
 #'
 #' @param mppData An object of class \code{mppData}.
 #'
-#' @param trait \code{Character vector} specifying which traits should be used.
+#' @param trait \code{Character vector} specifying which traits (environments) should be used.
 #'
 #' @param Q.eff \code{Character} expression indicating the assumption concerning
 #' the QTL effects: 1) "cr" for cross-specific; 2) "par" for parental; 3) "anc"
@@ -16,17 +16,17 @@
 #'
 #' @param VCOV VCOV \code{Character} expression defining the type of variance
 #' covariance structure used. "ID" for identity, "CSRT" for within environment
-#' cross-specific residual term, "CS_CSRT" for compound symmetry with within
-#' environment cross-specific residual term. Default = "CS_CSRT".
+#' cross-specific residual terms, "CS_CSRT" for compound symmetry with within
+#' environment cross-specific residual terms. Default = "CS_CSRT".
 #'
 #' @param QTL Object of class \code{QTLlist} representing a list of
 #' selected marker positions obtained with the function QTL_select() or
-#' vector of \code{character} marker positions names. Default = NULL.
+#' a vector of \code{character} marker positions names. Default = NULL.
 #'
 #' @param glb.only \code{Logical} value. If glb.only = TRUE, only the global and
 #' global adjusted R squared will be returned. Default = FALSE.
 #'
-#' @param workspace size of workspace for the REML routines measured in double
+#' @param workspace Size of workspace for the REML routines measured in double
 #' precision words (groups of 8 bytes). The default is workspace = 8e6.
 #'
 #'

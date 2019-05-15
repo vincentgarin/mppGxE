@@ -4,7 +4,7 @@ Version: 1.0.0
 Date: 2018-06-29
 Title: MPP GxE QTL analysis
 Author: Vincent Garin
-Maintainer: Vincent Garin <vincent.garin@wur.nl>
+Maintainer: Vincent Garin <vincent.garin6@gmail.com>
 Description: Analysis of multi-parent populations QTL experiments performed in multiple environments.
 License: GPL-3
 Imports:

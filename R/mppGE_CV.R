@@ -4,7 +4,7 @@
 
 #' MPP GxE cross-validation
 #'
-#' MPP GxE cross-validation
+#' MPP GxE cross-validation.
 #'
 #' @param pop.name \code{Character} name of the studied population.
 #' Default = "MPP".
@@ -14,20 +14,20 @@
 #'
 #' @param mppData An object of class \code{mppData}.
 #'
-#' @param trait \code{Character vector} specifying which traits should be used.
+#' @param trait \code{Character vector} specifying which traits (environments) should be used.
 #'
 #' @param cv.ref \code{Numerical} or \code{character} indicator to specify which
 #' trait of the \code{mppData} object should be used to check the prediction
 #' in the CV process. By default use 'trait'.
 #'
-#' @param Rep \code{Numeric} value representing the number of repetition of the
+#' @param Rep \code{Numeric} value representing the number of repetitions of the
 #' k-fold procedure. Default = 5.
 #'
 #' @param k \code{Numeric} value representing the number of folds for the within
 #' cross partition of the population. Default = 3.
 #'
-#' @param EnvNames \code{character} expression indicating the environment or trait
-#' labels. By default it is labeled Env_1, 2, 3, etc.
+#' @param EnvNames \code{Character} expression indicating the environment or trait
+#' labels. By default: Env_1, 2, 3, etc.
 #'
 #' @param Q.eff \code{Character} expression indicating the assumption concerning
 #' the QTL effect: 1) "cr" for cross-specific effects; 2) "par" parental
@@ -36,16 +36,16 @@
 #'
 #' @param VCOV VCOV \code{Character} expression defining the type of variance
 #' covariance structure used. "ID" for identity, "CSRT" for within environment
-#' cross-specific residual term, "CS_CSRT" for compound symmetry with within
-#' environment cross-specific residual term. Default = "CS_CSRT".
+#' cross-specific residual terms, "CS_CSRT" for compound symmetry with within
+#' environment cross-specific residual terms. Default = "CS_CSRT".
 #'
 #' @param thre.cof \code{Numeric} value representing the -log10(p-value)
-#' threshold above which a position can be peaked as a cofactor. Default = 4.
+#' threshold above which a position can be selected as cofactor. Default = 4.
 #'
 #' @param win.cof \code{Numeric} value in centi-Morgan representing the minimum
 #' distance between two selected cofactors. Default = 50 cM.
 #'
-#' @param N.cim \code{Numeric} value specifying the number of time the CIM
+#' @param N.cim \code{Numeric} value specifying the number of times the CIM
 #' analysis is repeated. Default = 1.
 #'
 #' @param window \code{Numeric} distance (cM) on the left and the right of a
@@ -61,14 +61,14 @@
 #' the backward elimination. Default = 0.01.
 #'
 #' @param parallel \code{Logical} value specifying if the function should be
-#' executed in parallel on multiple cores. To run function in parallel user must
-#' provide cluster in the \code{cluster} argument. \strong{Parallelization is
+#' executed in parallel on multiple cores. To run the function in parallel user must
+#' provide clusters in the \code{cluster} argument. \strong{Parallelization is
 #' only available for 'ID' model}. Default = FALSE.
 #'
 #' @param cluster Cluster object obtained with the function \code{makeCluster()}
 #' from the parallel package. Default = NULL.
 #'
-#' @param workspace size of workspace for the REML routines measured in double
+#' @param workspace Size of workspace for the REML routines measured in double
 #' precision words (groups of 8 bytes). The default is workspace = 8e6.
 #'
 #' @param verbose \code{Logical} value indicating if the steps of mpp_proc should
@@ -85,14 +85,14 @@
 #'
 #' \item{p_vs}{\code{Matrix} with : 1) the number of detected QTL;
 #' 2) the proportion of predicted genetic variance
-#' in the VS (p.vs) at the population level (average of within cross prediction)
+#' in the VS (p.vs) at the population level (average of within cross predictions)
 #' per environment.}
 #'
 #' \item{QTL}{\code{Data.frame} containing: 1) the list of QTL position detected
 #' at least one time during the entire CV process; 2) the number of times
 #' the position has been detected}
 #'
-#' The results elements return as R object are also saved as text
+#' The results elements returned as R object are also saved as text
 #' files at the specified output location (\code{output.loc}).
 #'
 #'
@@ -119,32 +119,6 @@
 #'
 #' @export
 #'
-
-# setwd("F:/Data_mppR/EUNAM_Flint")
-#
-# load('./data/mpp_data/mppDataGE_toy.RData')
-#
-# pop.name = "MPP"
-# trait.name = "trait1"
-# trait = c("PH_KWS", "PH_CIAM")
-# Rep = 1
-# k = 3
-# EnvNames = c("KWS", "CIAM")
-# Q.eff = "par"
-# VCOV = "ID"
-# plot.gen.eff = TRUE
-# thre.cof = 4
-# win.cof = 50
-# N.cim = 1
-# window = 20
-# thre.QTL = 4
-# win.QTL = 20
-# alpha = 0.01
-# text.size = 18
-# parallel = FALSE
-# cluster = NULL
-# verbose = TRUE
-# output.loc = "F:/mppGxE/results/toy_example"
 
 
 mppGE_CV <- function(pop.name = "MPP", trait.name = "trait1", mppData, trait,

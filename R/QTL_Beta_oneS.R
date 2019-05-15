@@ -27,19 +27,19 @@
 #
 # @param VCOV VCOV \code{Character} expression defining the type of variance
 # covariance structure used: a) "CSRT" for within environment
-# cross-specific residual term; b) "CS_CSRT" for compound symmetry with within
-# environment cross-specific residual term. Default = "CS_CSRT".
+# cross-specific residual terms; b) "CS_CSRT" for compound symmetry with within
+# environment cross-specific residual terms. Default = "CS_CSRT".
 #
 # @param exp_des_form \code{Character} expression for the random experimental
 # design effects in asreml-R format. For example,
-# 'env:replicate + env:replicate:block'. The column variables names used in
-# 'exp_des_form' should strictly match the names used in 'plot_data'.
+# 'env:replicate + env:replicate:block'. The variable names used in
+# 'exp_des_form' should strictly match the column names used in 'plot_data'.
 #
 # @param QTL Object of class \code{QTLlist} representing a list of
 # selected marker positions obtained with the function QTL_select() or
-# vector of \code{character} marker positions names. Default = NULL.
+# a vector of \code{character} marker positions names. Default = NULL.
 #
-# @param workspace size of workspace for the REML routines measured in double
+# @param workspace Size of workspace for the REML routines measured in double
 # precision words (groups of 8 bytes). The default is workspace = 8e6.
 #
 # @return Return:
