@@ -4,8 +4,9 @@
 \alias{mppGE_oneS_QTL_R2}
 \title{MPP GxE one stage QTL R2.}
 \usage{
-mppGE_oneS_QTL_R2(plot_data, mppData, trait, Q.eff = "cr", VCOV = "CS_CSRT",
-  exp_des_form, QTL = NULL, glb.only = FALSE, workspace = 8e+06)
+mppGE_oneS_QTL_R2(plot_data, mppData, trait, Q.eff = "cr",
+  VCOV = "CS_CSRT", exp_des_form, QTL = NULL, glb.only = FALSE,
+  workspace = 8e+06)
 }
 \arguments{
 \item{plot_data}{\code{Data.frame} containing the plot data with the following

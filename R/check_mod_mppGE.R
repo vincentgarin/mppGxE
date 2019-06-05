@@ -204,9 +204,18 @@ check_mod_mppGE <- function(mppData, trait, Q.eff, VCOV, CIM=FALSE,
 
     # test if the plot data contain at least one value for each genotypes
 
-    if(!all(mppData$geno.id %in% unique(plot_data$genotype))){
+    test_geno <- !all(mppData$geno.id %in% unique(plot_data$genotype))
 
-      stop("some genotype from the mppData object do not have phenotypic value in plot_data")
+    if(test_geno){
+
+      prob_geno <- mppData$geno.id[!(mppData$geno.id %in% unique(plot_data$genotype))]
+
+      message <- paste('The following genotypes:', paste(prob_geno, collapse = ', '),
+                       'are present in the mppData object but do not have a value',
+                       'in plot_data. Add a value for these genotypes in plot_data',
+                       'or remove them from the mppData object.')
+
+      stop(message)
 
     }
 

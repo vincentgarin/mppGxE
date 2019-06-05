@@ -4,8 +4,9 @@
 \alias{mppGE_oneS_SIM}
 \title{MPP GxE one stage SIM analysis}
 \usage{
-mppGE_oneS_SIM(plot_data, mppData, trait, Q.eff = "cr", VCOV = "CS_CSRT",
-  exp_des_form, plot.gen.eff = FALSE, workspace = 8e+06)
+mppGE_oneS_SIM(plot_data, mppData, trait, Q.eff = "cr",
+  VCOV = "CS_CSRT", exp_des_form, plot.gen.eff = FALSE,
+  workspace = 8e+06)
 }
 \arguments{
 \item{plot_data}{\code{Data.frame} containing the plot data with the following

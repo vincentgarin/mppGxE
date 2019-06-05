@@ -17,8 +17,8 @@ The column names must be ('genotype', 'check', 'cross', env'). The names of
 the experimental design covariates must be the same as the one used in
 'exp_des_form'. For more details see \code{\link{plot_data}}.}
 
-\item{mppData}{Object of class \code{mppData} contaning the genotypic
-information with genotype list corresponding to the one of \code{plot_data}.}
+\item{mppData}{Object of class \code{mppData} contaning the the same
+genotype identifiers as the one in \code{plot_data} ('genotype').}
 
 \item{trait}{\code{Character} expression for the trait matching the trait
 column in 'plot_data' argument.}
@@ -46,9 +46,6 @@ the backward elimination. Default = 0.01.}
 
 \item{workspace}{Size of workspace for the REML routines measured in double
 precision words (groups of 8 bytes). The default is workspace = 8e6.}
-
-\item{mppData}{Object of class \code{mppData} contaning the the same
-genotype identifiers as the one in \code{plot_data} ('genotype').}
 }
 \value{
 Return:

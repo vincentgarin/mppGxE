@@ -8,8 +8,8 @@ mppGE_CV(pop.name = "MPP", trait.name = "trait1", mppData, trait,
   cv.ref = NULL, Rep = 5, k = 3, EnvNames = NULL, Q.eff = "cr",
   VCOV = "CS_CSRT", thre.cof = 4, win.cof = 50, N.cim = 1,
   window = 20, thre.QTL = 4, win.QTL = 20, alpha = 0.01,
-  parallel = FALSE, cluster = NULL, workspace = 8e+06, verbose = TRUE,
-  output.loc = NULL)
+  parallel = FALSE, cluster = NULL, workspace = 8e+06,
+  verbose = TRUE, output.loc = NULL)
 }
 \arguments{
 \item{pop.name}{\code{Character} name of the studied population.

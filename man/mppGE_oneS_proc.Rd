@@ -4,12 +4,12 @@
 \alias{mppGE_oneS_proc}
 \title{MPP GxE one stage QTL analysis}
 \usage{
-mppGE_oneS_proc(pop.name = "MPP", trait.name = "trait1", plot_data, mppData,
-  trait, EnvNames = NULL, Q.eff = "cr", VCOV = "CS_CSRT", exp_des_form,
-  plot.gen.eff = FALSE, thre.cof = 4, win.cof = 50, N.cim = 1,
-  window = 20, thre.QTL = 4, win.QTL = 20, alpha = 0.01,
-  Qeff_est = TRUE, text.size = 18, verbose = TRUE, output.loc = NULL,
-  workspace = 8e+06)
+mppGE_oneS_proc(pop.name = "MPP", trait.name = "trait1", plot_data,
+  mppData, trait, EnvNames = NULL, Q.eff = "cr", VCOV = "CS_CSRT",
+  exp_des_form, plot.gen.eff = FALSE, thre.cof = 4, win.cof = 50,
+  N.cim = 1, window = 20, thre.QTL = 4, win.QTL = 20,
+  alpha = 0.01, Qeff_est = TRUE, text.size = 18, verbose = TRUE,
+  output.loc = NULL, workspace = 8e+06)
 }
 \arguments{
 \item{pop.name}{\code{Character} name of the studied population.
