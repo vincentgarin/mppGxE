@@ -4,12 +4,30 @@
 \alias{mppGE_oneS_CV}
 \title{MPP GxE cross-validation one stage analysis}
 \usage{
-mppGE_oneS_CV(pop.name = "MPP", trait.name = "trait1", plot_data,
-  mppData, trait, cv.ref, Rep = 5, k = 3, EnvNames = NULL,
-  Q.eff = "cr", VCOV = "CS_CSRT", exp_des_form, thre.cof = 4,
-  win.cof = 50, N.cim = 1, window = 20, thre.QTL = 4,
-  win.QTL = 20, alpha = 0.01, verbose = TRUE, output.loc = NULL,
-  workspace = 8e+06)
+mppGE_oneS_CV(
+  pop.name = "MPP",
+  trait.name = "trait1",
+  plot_data,
+  mppData,
+  trait,
+  cv.ref,
+  Rep = 5,
+  k = 3,
+  EnvNames = NULL,
+  Q.eff = "cr",
+  VCOV = "CS_CSRT",
+  exp_des_form,
+  thre.cof = 4,
+  win.cof = 50,
+  N.cim = 1,
+  window = 20,
+  thre.QTL = 4,
+  win.QTL = 20,
+  alpha = 0.01,
+  verbose = TRUE,
+  output.loc = NULL,
+  workspace = 8e+06
+)
 }
 \arguments{
 \item{pop.name}{\code{Character} name of the studied population.

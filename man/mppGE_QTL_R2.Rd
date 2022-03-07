@@ -4,8 +4,15 @@
 \alias{mppGE_QTL_R2}
 \title{MPP GxE QTL R2}
 \usage{
-mppGE_QTL_R2(mppData, trait, Q.eff = "cr", VCOV = "ID", QTL = NULL,
-  glb.only = FALSE, workspace = 8e+06)
+mppGE_QTL_R2(
+  mppData,
+  trait,
+  Q.eff = "cr",
+  VCOV = "ID",
+  QTL = NULL,
+  glb.only = FALSE,
+  workspace = 8e+06
+)
 }
 \arguments{
 \item{mppData}{An object of class \code{mppData}.}

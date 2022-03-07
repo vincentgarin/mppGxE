@@ -4,9 +4,18 @@
 \alias{mppGE_CIM}
 \title{MPP GxE composite interval maping}
 \usage{
-mppGE_CIM(mppData, trait, Q.eff = "cr", VCOV = "CS_CSRT",
-  cofactors = NULL, window = 20, plot.gen.eff = FALSE,
-  parallel = FALSE, cluster = NULL, workspace = 8e+06)
+mppGE_CIM(
+  mppData,
+  trait,
+  Q.eff = "cr",
+  VCOV = "CS_CSRT",
+  cofactors = NULL,
+  window = 20,
+  plot.gen.eff = FALSE,
+  parallel = FALSE,
+  cluster = NULL,
+  workspace = 8e+06
+)
 }
 \arguments{
 \item{mppData}{An object of class \code{mppData}.}

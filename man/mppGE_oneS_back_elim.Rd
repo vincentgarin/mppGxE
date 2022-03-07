@@ -4,9 +4,17 @@
 \alias{mppGE_oneS_back_elim}
 \title{Backward elimination of one stage MPP GxE analysis}
 \usage{
-mppGE_oneS_back_elim(plot_data, mppData, trait, Q.eff = "cr",
-  VCOV = "CS_CSRT", exp_des_form, QTL = NULL, alpha = 0.01,
-  workspace = 8e+06)
+mppGE_oneS_back_elim(
+  plot_data,
+  mppData,
+  trait,
+  Q.eff = "cr",
+  VCOV = "CS_CSRT",
+  exp_des_form,
+  QTL = NULL,
+  alpha = 0.01,
+  workspace = 8e+06
+)
 }
 \arguments{
 \item{plot_data}{\code{Data.frame} containing the plot data with the following

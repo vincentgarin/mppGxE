@@ -4,9 +4,17 @@
 \alias{QTL_effects_oneS_1QTL}
 \title{MPP GxE one stage QTL genetic effects for a single QTL}
 \usage{
-QTL_effects_oneS_1QTL(plot_data, mppData, trait, Q.eff = "cr",
-  VCOV = "CS_CSRT", exp_des_form, QTL = NULL, Q_sel,
-  workspace = 8e+06)
+QTL_effects_oneS_1QTL(
+  plot_data,
+  mppData,
+  trait,
+  Q.eff = "cr",
+  VCOV = "CS_CSRT",
+  exp_des_form,
+  QTL = NULL,
+  Q_sel,
+  workspace = 8e+06
+)
 }
 \arguments{
 \item{plot_data}{\code{Data.frame} containing the plot data with the following

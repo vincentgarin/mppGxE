@@ -4,8 +4,15 @@
 \alias{QTL_effects_GE_1QTL}
 \title{MPP GxE QTL genetic effects for a single QTL}
 \usage{
-QTL_effects_GE_1QTL(mppData, trait, Q.eff = "cr", VCOV = "CS_CSRT",
-  QTL = NULL, Q_sel, workspace = 8e+06)
+QTL_effects_GE_1QTL(
+  mppData,
+  trait,
+  Q.eff = "cr",
+  VCOV = "CS_CSRT",
+  QTL = NULL,
+  Q_sel,
+  workspace = 8e+06
+)
 }
 \arguments{
 \item{mppData}{An object of class \code{mppData}.}

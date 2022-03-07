@@ -4,9 +4,16 @@
 \alias{mppGE_SIM}
 \title{MPP GxE Simple Interval Maping}
 \usage{
-mppGE_SIM(mppData, trait, Q.eff = "cr", VCOV = "CS_CSRT",
-  plot.gen.eff = FALSE, parallel = FALSE, cluster = NULL,
-  workspace = 8e+06)
+mppGE_SIM(
+  mppData,
+  trait,
+  Q.eff = "cr",
+  VCOV = "CS_CSRT",
+  plot.gen.eff = FALSE,
+  parallel = FALSE,
+  cluster = NULL,
+  workspace = 8e+06
+)
 }
 \arguments{
 \item{mppData}{An object of class \code{mppData}.}

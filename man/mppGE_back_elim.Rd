@@ -4,8 +4,15 @@
 \alias{mppGE_back_elim}
 \title{Backward elimination MPP GxE analysis}
 \usage{
-mppGE_back_elim(mppData, trait, Q.eff = "cr", VCOV = "CS_CSRT",
-  QTL = NULL, alpha = 0.01, workspace = 8e+06)
+mppGE_back_elim(
+  mppData,
+  trait,
+  Q.eff = "cr",
+  VCOV = "CS_CSRT",
+  QTL = NULL,
+  alpha = 0.01,
+  workspace = 8e+06
+)
 }
 \arguments{
 \item{mppData}{An object of class \code{mppData}.}

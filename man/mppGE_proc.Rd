@@ -4,13 +4,30 @@
 \alias{mppGE_proc}
 \title{MPP GxE QTL analysis}
 \usage{
-mppGE_proc(pop.name = "MPP", trait.name = "trait1", mppData, trait,
-  EnvNames = NULL, Q.eff = "cr", VCOV = "CS_CSRT",
-  plot.gen.eff = FALSE, thre.cof = 4, win.cof = 50, N.cim = 1,
-  window = 20, thre.QTL = 4, win.QTL = 20, alpha = 0.01,
-  Qeff_est = TRUE, text.size = 18, parallel = FALSE,
-  cluster = NULL, workspace = 8e+06, verbose = TRUE,
-  output.loc = NULL)
+mppGE_proc(
+  pop.name = "MPP",
+  trait.name = "trait1",
+  mppData,
+  trait,
+  EnvNames = NULL,
+  Q.eff = "cr",
+  VCOV = "CS_CSRT",
+  plot.gen.eff = FALSE,
+  thre.cof = 4,
+  win.cof = 50,
+  N.cim = 1,
+  window = 20,
+  thre.QTL = 4,
+  win.QTL = 20,
+  alpha = 0.01,
+  Qeff_est = TRUE,
+  text.size = 18,
+  parallel = FALSE,
+  cluster = NULL,
+  workspace = 8e+06,
+  verbose = TRUE,
+  output.loc = NULL
+)
 }
 \arguments{
 \item{pop.name}{\code{Character} name of the studied population.

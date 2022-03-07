@@ -4,8 +4,16 @@
 \alias{plot_genEffects_GE}
 \title{plot of genome wide QTL allelic effect significance}
 \usage{
-plot_genEffects_GE(mppData, nEnv, EnvNames, Qprof, Q.eff, QTL = NULL,
-  main = "QTL genetic effects plot", text.size = 18)
+plot_genEffects_GE(
+  mppData,
+  nEnv,
+  EnvNames,
+  Qprof,
+  Q.eff,
+  QTL = NULL,
+  main = "QTL genetic effects plot",
+  text.size = 18
+)
 }
 \arguments{
 \item{mppData}{An object of class \code{mppData}.}
