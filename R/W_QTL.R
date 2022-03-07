@@ -1,0 +1,100 @@
+#########
+# W_QTL #
+#########
+
+# Function that calculate the approximate Wald statistics and significnance
+# for a multi-allelic QTL position and the same for each QTL alleles.
+
+W_QTL <- function(x, y, Vi, mppData, Q.eff, cross_mat, nEnv, NA_id){
+  
+  # form the QTL effect
+  QTL <- inc_mat_QTL(x = x, mppData = mppData, Q.eff = Q.eff, order.MAF = TRUE)
+  Q_nm <- colnames(QTL)
+  
+  # remove singularities in QTL term
+  # later need to keep which allele it was for geno sign comp
+  if((Q.eff == 'par') || (Q.eff == 'anc')){
+    QTL <- QTL[, -dim(QTL)[2]]
+    Q_nm <- Q_nm[-length(Q_nm)]
+  }
+  
+  QTL <- diag(nEnv) %x% QTL
+  QTL <- QTL[!NA_id, ]
+  df <- dim(QTL)[2]
+  X <- cbind(cross_mat, QTL)
+  
+  V_Beta <- tryCatch(chol2inv(chol(t(X) %*% Vi %*% X)),
+                     error = function(e) NULL)
+  
+  if(!is.null(V_Beta)){
+    
+    Beta <- tryCatch(V_Beta %*% t(X) %*% Vi %*% y,
+                     error = function(e) NULL) 
+    
+    if(!is.null(Beta)){
+      
+      sel_QTL <- -(1:(mppData$n.cr*nEnv))
+      Beta_QTL <- Beta[sel_QTL, 1, drop = FALSE]
+      Eff_sign <- sign(Beta_QTL[, 1])
+      V_QTL <- V_Beta[sel_QTL, sel_QTL]
+      V_QTL_inv <- qr.solve(V_QTL)
+      
+      # global QTL effect
+      W_Q <- t(Beta_QTL) %*% V_QTL_inv %*% Beta_QTL
+      
+      pval <- pchisq(W_Q[1, 1], df, lower.tail = FALSE)
+      l_pval <- -log10(pval)
+      
+      # decomposition of individual QTL alleles
+      W_Qa <- rep(NA, length(Beta_QTL))
+      for(i in 1:length(W_Qa)) W_Qa[i] <- (Beta_QTL[i]^2) * diag(V_QTL_inv)[i]
+      W_Qa <- pchisq(W_Qa, 1, lower.tail = FALSE)
+      W_Qa <- W_Qa * Eff_sign
+      names(W_Qa) <- paste0(rep(Q_nm, nEnv),'_E', rep(1:nEnv, each = length(Q_nm)))
+      
+      # organisation of the results
+      
+      if(Q.eff == 'cr'){
+        
+        # not yet
+        
+      } else if (Q.eff == 'par'){
+        
+        Env_name <- rep(paste0("_E", 1:nEnv), each = mppData$n.par)
+        par.name <- paste0(rep(mppData$parents, nEnv), Env_name)
+        pvals <- W_Qa[par.name]
+        names(pvals) <- par.name
+        
+      } else if (Q.eff == 'anc'){
+        
+        ref.all <- paste0("A.allele", mppData$par.clu[x, ])
+        Env_name <- rep(paste0("_E", 1:nEnv), each = mppData$n.par)
+        ref.all <- paste0(ref.all, Env_name)
+
+        pvals <- W_Qa[ref.all]
+        
+      }
+      
+      return(c(l_pval, pvals))
+      
+    } else {
+      
+      if(Q.eff == "cr"){ return(c(0, rep(1, nEnv * mppData$n.cr)))
+        
+      } else if (Q.eff == "biall") { return(c(0, rep(1, nEnv)))
+        
+      } else { return(c(0, rep(1, nEnv * mppData$n.par))) }
+      
+    }
+    
+  } else {
+    
+    if(Q.eff == "cr"){ return(c(0, rep(1, nEnv * mppData$n.cr)))
+      
+    } else if (Q.eff == "biall") { return(c(0, rep(1, nEnv)))
+      
+    } else { return(c(0, rep(1, nEnv * mppData$n.par))) }
+    
+  }
+  
+}

@@ -18,16 +18,10 @@ color.code <- function(x){
     
     if(x>=0.05){
       col <- 0
-    }else if((0.05>x) & (1e-2<=x)){
-      col <- -1
-    }else if((1e-2>x) & (1e-3<=x)){
-      col <- -2
-    }else if((1e-3>x) & (1e-4<=x)){
-      col <- -3
-    }else if((1e-4>x) & (1e-5<=x)){
-      col <- -4
-    }else if(1e-5>x){
-      col <- -5
+    }else if((0.05>x) & (1e-6<=x)){
+      col <- -(-log10(x))
+    }else if(1e-6>x){
+      col <- -6
     }
     
   }else{
@@ -36,16 +30,10 @@ color.code <- function(x){
     
     if(x>=0.05){
       col <- 0
-    }else if((0.05>x) & (1e-2<=x)){
-      col <- 1
-    }else if((1e-2>x) & (1e-3<=x)){
-      col <- 2
-    }else if((1e-3>x) & (1e-4<=x)){
-      col <- 3
-    }else if((1e-4>x) & (1e-5<=x)){
-      col <- 4
-    }else if(1e-5>x){
-      col <- 5
+    }else if((0.05>x) & (1e-6<=x)){
+      col <- (-log10(x))
+    }else if(1e-6>x){
+      col <- 6
     }
     
   }

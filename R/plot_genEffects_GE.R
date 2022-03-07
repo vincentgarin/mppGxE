@@ -74,6 +74,11 @@ plot_genEffects_GE <- function(mppData, nEnv, EnvNames, Qprof, Q.eff, QTL = NULL
   EnvPval <- vector(mode = "list", length = nEnv)
 
   pval <- Qprof[, 6:dim(Qprof)[2]]
+  
+  # replace NA by 1
+  pval <- as.matrix(pval)
+  pval[is.na(pval)] <- 1
+  pval <- data.frame(pval)
 
   index <- split(1:dim(pval)[2], factor(sort(rank(1:dim(pval)[2])%%nEnv)))
 
@@ -223,7 +228,7 @@ plot_genEffects_GE <- function(mppData, nEnv, EnvNames, Qprof, Q.eff, QTL = NULL
     pl <- ggplot(data, aes(x, y, z = z))
     pl + geom_tile(aes(fill = z, width = w)) +
       facet_wrap(nrow = 1, ~ chr, scales = "free_x") +
-      scale_fill_gradient2(limits = c(-5, 5), low = "red", mid = "white",
+      scale_fill_gradient2(limits = c(-6, 6), low = "red", mid = "white",
                            high = "blue") +
       geom_hline(yintercept= y_env) +
       theme_bw() + xlab("position [cM]") + ylab(y_lab) +
@@ -242,7 +247,7 @@ plot_genEffects_GE <- function(mppData, nEnv, EnvNames, Qprof, Q.eff, QTL = NULL
     pl <- ggplot(data, aes(x, y, z = z))
     pl + geom_tile(aes(fill = z, width = w)) +
       facet_wrap(nrow = 1, ~ chr, scales = "free_x") +
-      scale_fill_gradient2(limits = c(-5, 5), low = "red", mid = "white",
+      scale_fill_gradient2(limits = c(-6, 6), low = "red", mid = "white",
                            high = "blue") +
       geom_hline(yintercept= y_env) +
       geom_vline(aes(xintercept = pos.cM), pos.Q, linetype = "longdash") +

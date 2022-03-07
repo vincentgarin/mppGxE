@@ -12,7 +12,7 @@ is_mppData <- function(x){
 
 check_mod_mppGE <- function(mppData, trait, Q.eff, VCOV, CIM=FALSE,
                             cofactors=NULL, QTL_ch, QTL=NULL, GE=TRUE,
-                            plot_data=NULL, exp_des_form=NULL){
+                            fast = FALSE, plot_data=NULL, exp_des_form=NULL){
 
  # 1. check mppData
  #####
@@ -135,13 +135,28 @@ check_mod_mppGE <- function(mppData, trait, Q.eff, VCOV, CIM=FALSE,
       stop("VCOV must be character")
 
     }
-
-    if (!(VCOV %in% c("ID", "CSRT", "CS_CSRT"))){
-
-      stop("'VCOV' must be ", dQuote("ID"), ', ', dQuote("CSRT"), ' or ',
-           dQuote("CS_CSRT"))
-
+    
+    if(!fast){
+      
+      if (!(VCOV %in% c("ID", "CSRT", "CS_CSRT"))){
+        
+        stop("'VCOV' must be ", dQuote("ID"), ', ', dQuote("CSRT"), ' or ',
+             dQuote("CS_CSRT"))
+        
+      }
+      
+    } else{
+      
+      if (!(VCOV %in% c("CS", "CSE", "CS_CSE", "UN", "UN_K"))){
+        
+        stop("'VCOV' must be one of: ", dQuote("CS"), ', ', dQuote("CSE"),
+             dQuote("CS_CSE"),', ', dQuote("UN"), ' or ', dQuote("UN_K"))
+        
+      }
+      
     }
+
+    
 
     ###########
 
