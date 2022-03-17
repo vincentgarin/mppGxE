@@ -82,11 +82,13 @@
 #'                    Qprof = CIM, Q.eff = 'par', QTL = Qpos, text.size = 14)
 #'
 #' @import ggplot2
-#' @import mppR
-#' @import parallel
-#' @import utils
 #' @import grDevices
 #' @import graphics
+#' @import mppR
+#' @import parallel
+#' @import nlme
+#' @import utils
+#' @importFrom Matrix Matrix t
 #' @importFrom stats anova as.formula coef complete.cases cor df.residual lm
 #' @importFrom stats model.matrix pchisq pt quantile runif vcov
 #'

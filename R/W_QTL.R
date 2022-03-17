@@ -5,14 +5,14 @@
 # Function that calculate the approximate Wald statistics and significnance
 # for a multi-allelic QTL position and the same for each QTL alleles.
 
-W_QTL <- function(x, y, Vi, mppData, Q.eff, cross_mat, nEnv, NA_id){
+W_QTL <- function(x, y, Vi, mppData, Q.eff, cross_mat, cof_mat = NULL,
+                  nEnv, NA_id){
   
   # form the QTL effect
   QTL <- inc_mat_QTL(x = x, mppData = mppData, Q.eff = Q.eff, order.MAF = TRUE)
   Q_nm <- colnames(QTL)
   
   # remove singularities in QTL term
-  # later need to keep which allele it was for geno sign comp
   if((Q.eff == 'par') || (Q.eff == 'anc')){
     QTL <- QTL[, -dim(QTL)[2]]
     Q_nm <- Q_nm[-length(Q_nm)]
@@ -20,29 +20,48 @@ W_QTL <- function(x, y, Vi, mppData, Q.eff, cross_mat, nEnv, NA_id){
   
   QTL <- diag(nEnv) %x% QTL
   QTL <- QTL[!NA_id, ]
-  df <- dim(QTL)[2]
-  X <- cbind(cross_mat, QTL)
+  QTL_nm <- paste0('Q_', Q_nm)
+  QTL_nm <- paste0(rep(QTL_nm, nEnv), rep(paste0('_E', 1:nEnv), each = length(Q_nm)))
+  colnames(QTL) <- QTL_nm
   
-  V_Beta <- tryCatch(chol2inv(chol(t(X) %*% Vi %*% X)),
-                     error = function(e) NULL)
+  if(!is.null(cof_mat)){
+    
+    X <- cbind(cross_mat, cof_mat, QTL)
+    
+  } else {
+    
+    X <- cbind(cross_mat, QTL)
+    
+  }
   
+  # remove singularities
+  m_sg <- lm(y ~ -1 + X)
+  X <- X[, !is.na(coefficients(m_sg))]
+  
+  X <- Matrix(X)
+  XtX <- t(X) %*% Vi %*% X
+  XtX <- as.matrix(XtX)
+  V_Beta <- tryCatch(chol2inv(chol(XtX)), error = function(e) NULL)  
+    
   if(!is.null(V_Beta)){
     
-    Beta <- tryCatch(V_Beta %*% t(X) %*% Vi %*% y,
-                     error = function(e) NULL) 
+  V_Beta <- Matrix(V_Beta)
+  Beta <- tryCatch(as.matrix(V_Beta %*% t(X) %*% Vi %*% y),
+                        error = function(e) NULL)
     
     if(!is.null(Beta)){
       
-      sel_QTL <- -(1:(mppData$n.cr*nEnv))
-      Beta_QTL <- Beta[sel_QTL, 1, drop = FALSE]
+      Q_ind <- grepl(pattern = 'Q_', x = colnames(X))
+      # E ind
+      Beta_QTL <- Beta[Q_ind, 1, drop = FALSE]
       Eff_sign <- sign(Beta_QTL[, 1])
-      V_QTL <- V_Beta[sel_QTL, sel_QTL]
+      V_QTL <- V_Beta[Q_ind, Q_ind]
       V_QTL_inv <- qr.solve(V_QTL)
       
       # global QTL effect
       W_Q <- t(Beta_QTL) %*% V_QTL_inv %*% Beta_QTL
       
-      pval <- pchisq(W_Q[1, 1], df, lower.tail = FALSE)
+      pval <- pchisq(W_Q[1, 1], nrow(Beta_QTL), lower.tail = FALSE)
       l_pval <- -log10(pval)
       
       # decomposition of individual QTL alleles
@@ -50,7 +69,7 @@ W_QTL <- function(x, y, Vi, mppData, Q.eff, cross_mat, nEnv, NA_id){
       for(i in 1:length(W_Qa)) W_Qa[i] <- (Beta_QTL[i]^2) * diag(V_QTL_inv)[i]
       W_Qa <- pchisq(W_Qa, 1, lower.tail = FALSE)
       W_Qa <- W_Qa * Eff_sign
-      names(W_Qa) <- paste0(rep(Q_nm, nEnv),'_E', rep(1:nEnv, each = length(Q_nm)))
+      names(W_Qa) <- colnames(X)[Q_ind]
       
       # organisation of the results
       
@@ -61,16 +80,16 @@ W_QTL <- function(x, y, Vi, mppData, Q.eff, cross_mat, nEnv, NA_id){
       } else if (Q.eff == 'par'){
         
         Env_name <- rep(paste0("_E", 1:nEnv), each = mppData$n.par)
-        par.name <- paste0(rep(mppData$parents, nEnv), Env_name)
+        par.name <- paste0('Q_', rep(mppData$parents, nEnv), Env_name)
         pvals <- W_Qa[par.name]
         names(pvals) <- par.name
         
       } else if (Q.eff == 'anc'){
         
-        ref.all <- paste0("A.allele", mppData$par.clu[x, ])
+        ref.all <- paste0("Q_A.allele", mppData$par.clu[x, ])
         Env_name <- rep(paste0("_E", 1:nEnv), each = mppData$n.par)
         ref.all <- paste0(ref.all, Env_name)
-
+        
         pvals <- W_Qa[ref.all]
         
       }

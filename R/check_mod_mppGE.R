@@ -68,11 +68,42 @@ check_mod_mppGE <- function(mppData, trait, Q.eff, VCOV, CIM=FALSE,
       stop("'cofactors' must either be a character vector or an object of class QTLlist")
 
     }
+    
+    if("QTLlist" %in% class(cofactors)){
+      
+      t_cof <- !(cofactors$mk.names %in% mppData$map$mk.names)
+      
+      if(any(t_cof)){
+        
+        cof_miss <- cofactors$mk.names[t_cof]
+        
+        m_err <- paste("The following cofactors:", paste(cof_miss, collapse = ", "),
+                       "are not present in the map of the mppData object.")
+        
+        stop(m_err)
+        
+      }
+      
+    } else if(is.character(cofactors)){
+      
+      t_cof <- !(cofactors %in% mppData$map$mk.names)
+      
+      if(any(t_cof)){
+        
+        cof_miss <- cofactors[t_cof]
+        
+        m_err <- paste("The following cofactors:", paste(cof_miss, collapse = ", "),
+                       "are not present in the map of the mppData object.")
+        
+        stop(m_err)
+        
+      }
+      
+    }
 
   }
 
-
-
+  
   #######
 
   # 4. check QTL for back_elim, R2 or QTL_effect

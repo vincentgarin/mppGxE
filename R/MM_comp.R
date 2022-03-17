@@ -8,7 +8,8 @@
 
 # y = (Env + cr) + g*e + err
 
-MM_comp <- function(mppData, nEnv, y, VCOV, maxIter = 100, msMaxIter = 100){
+MM_comp <- function(mppData, nEnv, y, cof_mat = NULL, VCOV,
+                    maxIter = 100, msMaxIter = 100){
   
   nGeno <- dim(mppData$pheno)[1]
   env <- rep(paste0('E', 1:nEnv), each = nGeno)
@@ -16,40 +17,67 @@ MM_comp <- function(mppData, nEnv, y, VCOV, maxIter = 100, msMaxIter = 100){
   geno <- rep(rownames(mppData$pheno), nEnv)
   cross_env <- paste0(cross, '_', env)
   
-  d <- data.frame(trait = y, env = env, cross_env = cross_env, geno = geno)
-  d[, 2:4] <- lapply(d[, 2:4], as.factor)
+  if(!is.null(cof_mat)){
+    
+    cof_mat <- diag(nEnv) %x% cof_mat
+    cof_id <- paste0('cof', 1:ncol(cof_mat))
+    colnames(cof_mat) <- cof_id
+    
+    d <- data.frame(trait = y, env = env, cross_env = cross_env, geno = geno)
+    d[, 2:4] <- lapply(d[, 2:4], as.factor)
+    d <- data.frame(d, cof_mat)
+    
+    fix_form <- paste0('trait~-1 + cross_env+', paste(cof_id, collapse = '+'))
+    
+    # remove the variables that produce singularities
+    m_sg <- lm(as.formula(fix_form), data = d)
+    coeff <- coefficients(m_sg)
+    if(any(is.na(coeff))){
+      d <- d[, -which(colnames(d) %in% names(coeff[is.na(coeff)]))]
+    }
+    cof_id <- paste0('cof', 1:(ncol(d) - 4))
+    colnames(d)[5:ncol(d)] <- cof_id
+    
+    fix_form <- paste0('trait~-1 + cross_env+', paste(cof_id, collapse = '+'))
+    
+  } else {
+    
+    d <- data.frame(trait = y, env = env, cross_env = cross_env, geno = geno)
+    d[, 2:4] <- lapply(d[, 2:4], as.factor)
+    fix_form <- 'trait~cross_env'
+    
+  }
   
   ### CS model
   if (VCOV == 'CS'){
     
-    m <- tryCatch(lme(trait ~ cross_env, random = ~ 1 | geno,
-                  control = list(opt = "optim", maxIter = maxIter,
-                             msMaxIter = msMaxIter),
-                  data = d, na.action = na.omit), error = function(x) NULL)
+    m <- tryCatch(lme(as.formula(fix_form), random = ~ 1 | geno,
+                      control = list(opt = "optim", maxIter = maxIter,
+                                     msMaxIter = msMaxIter),
+                      data = d, na.action = na.omit), error = function(x) NULL)
     
-  ### CSE model
+    ### CSE model
   } else if (VCOV == 'CSE'){
     
-    m <- tryCatch(gls(trait ~ cross_env,
-                  weights = varIdent(form = ~ 1 | cross_env),
-                  control = list(opt = "optim", maxIter = maxIter,
-                            msMaxIter = msMaxIter),
-                  data = d, na.action = na.omit), error = function(x) NULL)
-    
-  ### CS + CSE model  
-  } else if (VCOV == 'CS_CSE'){
-    
-    m <- tryCatch(lme(trait ~ cross_env, random = ~ 1 | geno,
+    m <- tryCatch(gls(as.formula(fix_form),
                       weights = varIdent(form = ~ 1 | cross_env),
                       control = list(opt = "optim", maxIter = maxIter,
                                      msMaxIter = msMaxIter),
                       data = d, na.action = na.omit), error = function(x) NULL)
     
-  ### Unstructured model  
-  } else if ((VCOV == 'UN') | (VCOV == 'UN_K')){
+    ### CS + CSE model  
+  } else if (VCOV == 'CS_CSE'){
     
+    m <- tryCatch(lme(as.formula(fix_form), random = ~ 1 | geno,
+                      weights = varIdent(form = ~ 1 | cross_env),
+                      control = list(opt = "optim", maxIter = maxIter,
+                                     msMaxIter = msMaxIter),
+                      data = d, na.action = na.omit), error = function(x) NULL)
     
-    m <- tryCatch(lme(trait ~ cross_env,
+    ### Unstructured model  
+  } else if (VCOV == 'UN'){
+    
+    m <- tryCatch(lme(as.formula(fix_form),
                       random = list(geno = pdSymm(form = ~ -1 + env)),
                       control = list(opt = "optim", maxIter = maxIter,
                                      msMaxIter = msMaxIter),

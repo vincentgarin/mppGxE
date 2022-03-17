@@ -49,7 +49,7 @@
 #' and Nonlinear Mixed Effects Models_. R package version 3.1-152,
 #' <URL: https://CRAN.R-project.org/package=nlme>.
 #'
-#' @seealso \code{\link{plot_genEffects_GE}}
+#' @seealso \code{\link{mppGE_CIM_fast}}
 #'
 #' @examples
 #'
@@ -69,41 +69,6 @@
 #'
 #' @export
 #'
-
-# library(mppR)
-# library(mppGxE)
-# library(nlme)
-# library(scrime)
-
-# source('D:/hard_drive_back_up/mppGxE/package/mppGxE/R/check_mod_mppGE.R')
-# source('D:/hard_drive_back_up/mppGxE/package/mppGxE/R/MM_comp.R')
-# source('D:/hard_drive_back_up/mppGxE/package/mppGxE/R/getVCOV.R')
-# source('D:/hard_drive_back_up/mppGxE/package/mppGxE/R/pair_index.R')
-# source('D:/hard_drive_back_up/mppGxE/package/mppGxE/R/W_QTL.R')
-# source('D:/hard_drive_back_up/mppGxE/package/mppGxE/R/check.inf.R')
-# # source('D:/hard_drive_back_up/mppGxE/package/mppGxE/R/W_stat.R')
-# 
-# data(mppData_GE)
-# mppData = mppData_GE
-# trait = c('DMY_CIAM', 'DMY_TUM')
-# Q.eff = 'par'
-# VCOV = "CS"
-# n.cores = 1
-# maxIter = 100
-# msMaxIter = 100
-
-# # alternative data (Grinkan BC-NAM)
-# 
-# load('D:/hard_drive_back_up/ICRISAT/BCNAM/data/mppData/Grinkan_mppData.RData')
-# # load('D:/hard_drive_back_up/ICRISAT/BCNAM/data/genotype/Grinkan_geno012.RData')
-# # mppData$geno.IBS <- geno012
-# 
-# trait <- c("GR1_GYLD", 'GR2_GYLD', 'GR3_GYLD', 'GR4_GYLD')
-# VCOV <- 'UN'
-# Q.eff <- 'par'
-# n.cores = 1
-# maxIter = 100
-# msMaxIter = 100
 
 mppGE_SIM_fast <- function(mppData, trait, Q.eff = "cr", VCOV = "UN",
                            n.cores = 1, maxIter = 100,

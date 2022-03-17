@@ -70,13 +70,9 @@ getVCOV <- function(mppData, model, VCOV, data, nEnv, NA.rem = TRUE, inv = TRUE)
     
     VCOV <- (Z %*% t(Z) * V_g) + R
     
-  } else if ((VCOV == 'UN') || (VCOV == 'UN_K')){
+  } else if (VCOV == 'UN'){
     
-    # Possibility to change the SM coefficient calculation later
-    # for a weighted version.
-    if(VCOV == 'UN') {K <- diag(nGeno)} else {
-      K <- smc(x = round(mppData$geno.IBS + 1))}
-    
+    K <- diag(nGeno)
     V_env <- getVarCov(model)
     V_env <- V_env[1:nEnv, 1:nEnv]
     
@@ -94,7 +90,10 @@ getVCOV <- function(mppData, model, VCOV, data, nEnv, NA.rem = TRUE, inv = TRUE)
   
   if(inv){
     
-    VCOV <- solve(VCOV)
+    # VCOV <- solve(VCOV)
+    VCOV <- Matrix(VCOV)
+    VCOV <- chol2inv(chol(VCOV))
+    VCOV <- as.matrix(VCOV)
     
   }
   
