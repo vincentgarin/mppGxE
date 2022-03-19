@@ -48,42 +48,8 @@ MM_comp <- function(mppData, nEnv, y, cof_mat = NULL, VCOV,
     
   }
   
-  ### CS model
-  if (VCOV == 'CS'){
-    
-    m <- tryCatch(lme(as.formula(fix_form), random = ~ 1 | geno,
-                      control = list(opt = "optim", maxIter = maxIter,
-                                     msMaxIter = msMaxIter),
-                      data = d, na.action = na.omit), error = function(x) NULL)
-    
-    ### CSE model
-  } else if (VCOV == 'CSE'){
-    
-    m <- tryCatch(gls(as.formula(fix_form),
-                      weights = varIdent(form = ~ 1 | cross_env),
-                      control = list(opt = "optim", maxIter = maxIter,
-                                     msMaxIter = msMaxIter),
-                      data = d, na.action = na.omit), error = function(x) NULL)
-    
-    ### CS + CSE model  
-  } else if (VCOV == 'CS_CSE'){
-    
-    m <- tryCatch(lme(as.formula(fix_form), random = ~ 1 | geno,
-                      weights = varIdent(form = ~ 1 | cross_env),
-                      control = list(opt = "optim", maxIter = maxIter,
-                                     msMaxIter = msMaxIter),
-                      data = d, na.action = na.omit), error = function(x) NULL)
-    
-    ### Unstructured model  
-  } else if (VCOV == 'UN'){
-    
-    m <- tryCatch(lme(as.formula(fix_form),
-                      random = list(geno = pdSymm(form = ~ -1 + env)),
-                      control = list(opt = "optim", maxIter = maxIter,
-                                     msMaxIter = msMaxIter),
-                      data = d, na.action = na.omit), error = function(x) NULL)
-    
-  }
+  m <- lme_comp(fix_form = fix_form, VCOV = VCOV, data = d,
+                maxIter = maxIter, msMaxIter = msMaxIter)
   
   return(list(model = m, data = d))
   

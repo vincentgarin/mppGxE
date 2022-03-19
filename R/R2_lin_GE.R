@@ -43,3 +43,17 @@ R2_lin_GE <- function(mppData, trait, nEnv, QTL){
   return(list(R2 = R2, R2.adj = R2.adj))
 
 }
+
+# functions to compute the R squared or all QTL minus 1 or only 1 QTL
+# position
+
+part.R2.diff.lin <- function(x, Q.list, mppData, trait, nEnv) {
+  R2_lin_GE(mppData = mppData, trait = trait,
+            QTL = do.call(cbind, Q.list[-x]), nEnv = nEnv)
+}
+
+part.R2.sg.lin <- function(x, Q.list, mppData, trait, nEnv) {
+  R2_lin_GE(mppData = mppData, trait = trait,
+            QTL = do.call(cbind, Q.list[x]), nEnv = nEnv)
+}
+

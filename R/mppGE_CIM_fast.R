@@ -234,51 +234,8 @@ mppGE_CIM_fast <- function(mppData, trait, Q.eff = 'cr', VCOV = 'UN',
   
   #### 6. format the results and return ####
   
-  CIM <- data.frame(mppData$map, log.pval)
-  
-  if(Q.eff == "cr"){
-    
-    Env_name <- rep(paste0("_E", 1:nEnv), each = mppData$n.cr)
-    Qeff_names <- paste0(rep(unique(mppData$cross.ind), nEnv), Env_name)
-    
-    colnames(CIM)[5:dim(CIM)[2]] <- c("log10pval", Qeff_names)
-    
-  } else if (Q.eff == "anc") {
-    
-    Env_name <- rep(paste0("_E", 1:nEnv), each = mppData$n.par)
-    Qeff_names <- paste0(rep(mppData$parents, nEnv), Env_name)
-    
-    colnames(CIM)[5:dim(CIM)[2]] <- c("log10pval", Qeff_names)
-    
-  } else { # par and bi-allelic no modif for gen effects names
-    
-    colnames(CIM)[5] <- "log10pval"
-    
-  }
-  
-  class(CIM) <- c("QTLprof", "data.frame")
-  
-  # 5.1: Verify the positions for which model could not be computed
-  
-  if(sum(CIM$log10pval == 0) > 0) {
-    
-    if (sum(CIM$log10pval) == 0){
-      
-      message("The computation of the QTL models failled for all positions.")
-      
-    } else {
-      
-      list.pos <- mppData$map[(CIM$log10pval == 0), 1]
-      
-      text <- paste("The computation of the QTL model failed for the following",
-                    "positions: ", paste(list.pos, collapse = ", "),
-                    ". This could be due to singularities or function issues.")
-      
-      message(text)
-      
-    }
-    
-  }
+  CIM <- Qprof_process(mppData = mppData, Q.eff = Q.eff, log.pval = log.pval,
+                       nEnv = nEnv)
   
   return(CIM)
   

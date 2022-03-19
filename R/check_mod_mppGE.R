@@ -11,7 +11,7 @@ is_mppData <- function(x){
 }
 
 check_mod_mppGE <- function(mppData, trait, Q.eff, VCOV, CIM=FALSE,
-                            cofactors=NULL, QTL_ch, QTL=NULL, GE=TRUE,
+                            cofactors=NULL, QTL_ch=FALSE, QTL=NULL, GE=TRUE,
                             fast = FALSE, plot_data=NULL, exp_des_form=NULL){
 
  # 1. check mppData
@@ -105,24 +105,110 @@ check_mod_mppGE <- function(mppData, trait, Q.eff, VCOV, CIM=FALSE,
 
   
   #######
+  
+  # 4. check QTL
+  ########
+  
+  if(CIM){
+    
+    if(is.null(cofactors)) {
+      
+      stop("'cofactors' is not provided")
+      
+    }
+    
+    if(!(is.character(cofactors) || inherits(cofactors, "QTLlist"))){
+      
+      stop("'cofactors' must either be a character vector or an object of class QTLlist")
+      
+    }
+    
+    if("QTLlist" %in% class(cofactors)){
+      
+      t_cof <- !(cofactors$mk.names %in% mppData$map$mk.names)
+      
+      if(any(t_cof)){
+        
+        cof_miss <- cofactors$mk.names[t_cof]
+        
+        m_err <- paste("The following cofactors:", paste(cof_miss, collapse = ", "),
+                       "are not present in the map of the mppData object.")
+        
+        stop(m_err)
+        
+      }
+      
+    } else if(is.character(cofactors)){
+      
+      t_cof <- !(cofactors %in% mppData$map$mk.names)
+      
+      if(any(t_cof)){
+        
+        cof_miss <- cofactors[t_cof]
+        
+        m_err <- paste("The following cofactors:", paste(cof_miss, collapse = ", "),
+                       "are not present in the map of the mppData object.")
+        
+        stop(m_err)
+        
+      }
+      
+    }
+    
+  }
+  
+  
+  #######
 
-  # 4. check QTL for back_elim, R2 or QTL_effect
+  # 5. check QTL for back_elim, R2 or QTL_effect
   #############
 
   if(QTL_ch){
 
     if(is.null(QTL)) {
-
+      
       stop("'QTL' is not provided")
-
+      
     }
-
+    
     if(!(is.character(QTL) || inherits(QTL, "QTLlist"))){
-
+      
       stop("'QTL' must either be a character vector or an object of class QTLlist")
-
+      
     }
-
+    
+    if("QTLlist" %in% class(QTL)){
+      
+      t_cof <- !(QTL$mk.names %in% mppData$map$mk.names)
+      
+      if(any(t_cof)){
+        
+        cof_miss <- QTL$mk.names[t_cof]
+        
+        m_err <- paste("The following QTL:", paste(cof_miss, collapse = ", "),
+                       "are not present in the map of the mppData object.")
+        
+        stop(m_err)
+        
+      }
+      
+    } else if(is.character(QTL)){
+      
+      t_cof <- !(QTL %in% mppData$map$mk.names)
+      
+      if(any(t_cof)){
+        
+        cof_miss <- QTL[t_cof]
+        
+        m_err <- paste("The following QTL:", paste(cof_miss, collapse = ", "),
+                       "are not present in the map of the mppData object.")
+        
+        stop(m_err)
+        
+      }
+      
+    }
+    
   }
 
   ########

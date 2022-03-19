@@ -42,17 +42,16 @@ W_QTL <- function(x, y, Vi, mppData, Q.eff, cross_mat, cof_mat = NULL,
   XtX <- t(X) %*% Vi %*% X
   XtX <- as.matrix(XtX)
   V_Beta <- tryCatch(chol2inv(chol(XtX)), error = function(e) NULL)  
-    
+  
   if(!is.null(V_Beta)){
     
-  V_Beta <- Matrix(V_Beta)
-  Beta <- tryCatch(as.matrix(V_Beta %*% t(X) %*% Vi %*% y),
-                        error = function(e) NULL)
+    V_Beta <- Matrix(V_Beta)
+    Beta <- tryCatch(as.matrix(V_Beta %*% t(X) %*% Vi %*% y),
+                     error = function(e) NULL)
     
     if(!is.null(Beta)){
       
       Q_ind <- grepl(pattern = 'Q_', x = colnames(X))
-      # E ind
       Beta_QTL <- Beta[Q_ind, 1, drop = FALSE]
       Eff_sign <- sign(Beta_QTL[, 1])
       V_QTL <- V_Beta[Q_ind, Q_ind]
@@ -60,9 +59,24 @@ W_QTL <- function(x, y, Vi, mppData, Q.eff, cross_mat, cof_mat = NULL,
       
       # global QTL effect
       W_Q <- t(Beta_QTL) %*% V_QTL_inv %*% Beta_QTL
-      
       pval <- pchisq(W_Q[1, 1], nrow(Beta_QTL), lower.tail = FALSE)
       l_pval <- -log10(pval)
+      
+      # QTL env effect
+      B_nm <- colnames(X)[Q_ind]
+      E_id <- paste0('E', 1:nEnv)
+      EQ_pval <- rep(NA, nEnv)
+      
+      for(e in 1:nEnv){
+        
+        E_ind <- grepl(pattern = E_id[e], x = B_nm)
+        Beta_QTL_e <- Beta_QTL[E_ind, , drop = FALSE]
+        W_e <- t(Beta_QTL_e) %*% V_QTL_inv[E_ind, E_ind] %*% Beta_QTL_e
+        EQ_pval[e] <- pchisq(W_e[1, 1], nrow(Beta_QTL_e), lower.tail = FALSE)
+        
+      }
+      
+      names(EQ_pval) <- paste0('Q_pval_E', 1:nEnv)
       
       # decomposition of individual QTL alleles
       W_Qa <- rep(NA, length(Beta_QTL))
@@ -94,25 +108,25 @@ W_QTL <- function(x, y, Vi, mppData, Q.eff, cross_mat, cof_mat = NULL,
         
       }
       
-      return(c(l_pval, pvals))
+      return(c(l_pval, EQ_pval, pvals))
       
     } else {
       
-      if(Q.eff == "cr"){ return(c(0, rep(1, nEnv * mppData$n.cr)))
+      if(Q.eff == "cr"){ return(c(0, rep(1, (nEnv + 1) * mppData$n.cr)))
         
       } else if (Q.eff == "biall") { return(c(0, rep(1, nEnv)))
         
-      } else { return(c(0, rep(1, nEnv * mppData$n.par))) }
+      } else { return(c(0, rep(1, (nEnv + 1) * mppData$n.par))) }
       
     }
     
   } else {
     
-    if(Q.eff == "cr"){ return(c(0, rep(1, nEnv * mppData$n.cr)))
+    if(Q.eff == "cr"){ return(c(0, rep(1, (nEnv + 1) * mppData$n.cr)))
       
     } else if (Q.eff == "biall") { return(c(0, rep(1, nEnv)))
       
-    } else { return(c(0, rep(1, nEnv * mppData$n.par))) }
+    } else { return(c(0, rep(1, (nEnv + 1) * mppData$n.par))) }
     
   }
   
