@@ -201,8 +201,9 @@ QTL_effects_GE <- function(mppData, trait, Q.eff = "par", VCOV = "UN",
   W_pval <- pchisq(W_Qa, 1, lower.tail = FALSE)
   W_sign <- sapply(W_pval, sign.star) 
   
-  res_tab <- data.frame(Effect = B_QTL, Std.dev = B_SD, Wald = round(W_Qa, 2),
-                        df = 1, p.val = W_pval, sign = W_sign)
+  res_tab <- data.frame(Effect = round(B_QTL, 3), Std.dev = round(B_SD, 3),
+                        Wald = round(W_Qa, 2), df = 1, p.val = W_pval,
+                        sign = W_sign)
   
   
   #### process the results ####
