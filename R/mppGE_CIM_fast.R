@@ -135,10 +135,10 @@ mppGE_CIM_fast <- function(mppData, trait, Q.eff = 'cr', VCOV = 'UN',
                     FUN = function(x, ind.ref) paste(ind.ref[x], collapse = ""),
                     ind.ref = ind.ref)
   
-  cof.comb[cof.comb == ""] <- "no.cof"
+  cof.comb[cof.comb == ""] <- "c999"
   
   # cofactor combination
-  unique.cof.comb <- unique(cof.comb)
+  unique.cof.comb <- unique(cof.comb[!is.na(cof.comb)])
   n_cof_comb <- length(unique.cof.comb)
   cof_id_list <- strsplit(x = unique.cof.comb, split = 'c')
   cof_id_list <- lapply(X = cof_id_list, function(x) x[-1])
@@ -149,7 +149,9 @@ mppGE_CIM_fast <- function(mppData, trait, Q.eff = 'cr', VCOV = 'UN',
   for(i in 1:n_cof_comb){
     
     cof_i <- as.numeric(cof_id_list[[i]])
-    cof_mat_list[[i]] <- do.call(cbind, cof_list[cof_i])
+    if(cof_i != 999){
+      cof_mat_list[[i]] <- do.call(cbind, cof_list[cof_i])
+    } 
     
   }
   
@@ -196,9 +198,11 @@ mppGE_CIM_fast <- function(mppData, trait, Q.eff = 'cr', VCOV = 'UN',
     
     # form the cofactor matrices
     cof_mat_m <-  cof_mat_list[[sel_cof_comb]]
-    cof_mat_m <- diag(nEnv) %x% cof_mat_m
-    cof_mat_m <- cof_mat_m[!NA_id, ]
-    colnames(cof_mat_m) <- paste0('cof', 1:ncol(cof_mat_m))
+    if(!is.null(cof_mat_m)){
+      cof_mat_m <- diag(nEnv) %x% cof_mat_m
+      cof_mat_m <- cof_mat_m[!NA_id, ]
+      colnames(cof_mat_m) <- paste0('cof', 1:ncol(cof_mat_m))
+    }
     
     #### possibility of PCA reduction
     
