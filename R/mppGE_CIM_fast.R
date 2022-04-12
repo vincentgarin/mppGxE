@@ -138,7 +138,7 @@ mppGE_CIM_fast <- function(mppData, trait, Q.eff = 'cr', VCOV = 'UN',
   cof.comb[cof.comb == ""] <- "c999"
   
   # cofactor combination
-  unique.cof.comb <- unique(cof.comb[!is.na(cof.comb)])
+  unique.cof.comb <- unique(cof.comb)
   n_cof_comb <- length(unique.cof.comb)
   cof_id_list <- strsplit(x = unique.cof.comb, split = 'c')
   cof_id_list <- lapply(X = cof_id_list, function(x) x[-1])
@@ -149,11 +149,13 @@ mppGE_CIM_fast <- function(mppData, trait, Q.eff = 'cr', VCOV = 'UN',
   for(i in 1:n_cof_comb){
     
     cof_i <- as.numeric(cof_id_list[[i]])
-    if(cof_i != 999){
+    if(!(999 %in% cof_i)){
       cof_mat_list[[i]] <- do.call(cbind, cof_list[cof_i])
     } 
     
   }
+  
+  names(cof_mat_list) <- unique.cof.comb
   
   names(cof_mat_list) <- unique.cof.comb
   
@@ -175,9 +177,6 @@ mppGE_CIM_fast <- function(mppData, trait, Q.eff = 'cr', VCOV = 'UN',
   names(VCOV_list) <- unique.cof.comb
   
   ##### 5. Calculate the QTL effects #####
-  
-  if(n.cores > 1){ parallel <- TRUE; cluster <- makeCluster(n.cores)
-  } else { parallel <- FALSE; cluster <- NULL }
   
   nGeno <- dim(mppData$pheno)[1]
   env <- rep(paste0('E', 1:nEnv), each = nGeno)
@@ -206,6 +205,9 @@ mppGE_CIM_fast <- function(mppData, trait, Q.eff = 'cr', VCOV = 'UN',
     
     #### possibility of PCA reduction
     
+    if(n.cores > 1){ parallel <- TRUE; cluster <- makeCluster(n.cores)
+    } else { parallel <- FALSE; cluster <- NULL }
+    
     if (parallel) {
       
       log.pval <- parLapply(cl = cluster, X = vect.pos, fun = W_QTL,
@@ -223,6 +225,8 @@ mppGE_CIM_fast <- function(mppData, trait, Q.eff = 'cr', VCOV = 'UN',
                          cof_mat = cof_mat_m, NA_id = NA_id)
       
     }
+    
+    if(n.cores > 1){stopCluster(cluster)}
     
     log.pval <- t(data.frame(log.pval))
     log.pval[, 1] <- check.inf(x = log.pval[, 1]) # check if there are -/+ Inf value

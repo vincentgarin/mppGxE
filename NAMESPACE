@@ -2,7 +2,7 @@
 
 export(CV_partition)
 export(QTL_R2_GE)
-export(QTL_effects_GE)
+export(QTL_effect_GE)
 export(QTL_effects_GE_1QTL)
 export(QTL_effects_oneS_1QTL)
 export(mppGE_CIM)

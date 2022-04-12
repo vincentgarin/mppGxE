@@ -18,10 +18,10 @@
 #' (\code{\link{mppGE_CIM_fast}}).}
 #'
 #' \item{Estimation of QTLs additive allelic effect
-#' (\code{\link{QTL_effects_GE}}).}
+#' (\code{\link{QTL_effect_GE}}).}
 #' 
 #' \item{Estimation of the global QTLs effect R squared and individual QTL effect
-#' R squared (\code{\link{QTL_effects_GE}}).}
+#' R squared (\code{\link{QTL_R2_GE}}).}
 #'
 #' }
 #'
@@ -94,6 +94,8 @@
 #' \item{cofactors}{\code{Data.frame} with cofactors positions.}
 #'
 #' \item{QTL}{\code{Data.frame} with QTL positions.}
+#' 
+#' \item{Q_eff}{\code{list} containing the estimated QTL allelic effects.}
 #'
 #' \item{R2}{\code{List} containing R squared statistics of the QTL effects}
 #'
@@ -106,9 +108,13 @@
 #'
 #' \item{The list of cofactors (cofactors.RData).}
 #'
-#' \item{The list of QTL (QTL.RData).}
+#' \item{The list of QTL (QTLs.RData).}
+#' 
+#' \item{The list of QTL allelic effects (QTL_effects.RData).}
 #'
 #' \item{The QTL R squared statistics (QTL_R2.RData)}
+#' 
+#' \item{The number of detected QTLs and adjusted R2 (Glb_res.RData)}
 #'
 #' \item{The plot of the CIM profile (QTL_profile.pdf) with dotted vertical
 #' lines representing the cofactors positions and the
@@ -233,15 +239,27 @@ mppGE_proc_fast <- function(pop.name = "MPP", trait.name = "trait1", mppData, tr
   if (is.null(QTL)) { # test if QTL have been selected
     
     message("No QTL position detected based on the (last) CIM profile.")
-    return(NULL)
+    # return(NULL)
+    QTL <- cofactors
+    CIM_fail <- TRUE
+    
+  } else {
+    
+    CIM_fail <- FALSE
+    
     
   }
   
+  # save CIM results
+  save(QTL, file = file.path(folder.loc, "QTLs.RData"))
+  
+  
   ##### QTL effects #####
-  Q_eff <- QTL_effects_GE(mppData = mppData, trait = trait, Q.eff = Q.eff,
+  Q_eff <- QTL_effect_GE(mppData = mppData, trait = trait, Q.eff = Q.eff,
                           QTL = QTL, VCOV = VCOV, maxIter = maxIter,
                           msMaxIter = msMaxIter)
   
+  save(Q_eff, file = file.path(folder.loc, "QTL_effects.RData"))
   
   ##### QTL R2 #####
   R2 <- QTL_R2_GE(mppData = mppData, trait = trait, Q.eff = Q.eff, QTL = QTL)
@@ -254,6 +272,9 @@ mppGE_proc_fast <- function(pop.name = "MPP", trait.name = "trait1", mppData, tr
   
   save(QTL.R2, file = file.path(folder.loc, "QTL_R2.RData"))
   
+  # save N QTL and adjusted R2
+  glb_res <- list(N_QTL = nrow(QTL), adj_R2 = R2[[2]])
+  save(glb_res, file = file.path(folder.loc, "Glb_res.RData"))
   
   ##### plot and results processing #####
   
@@ -266,14 +287,26 @@ mppGE_proc_fast <- function(pop.name = "MPP", trait.name = "trait1", mppData, tr
     
   }
   
-  main.cim <- paste("CIM", pop.name, trait.name, Q.eff, VCOV)
+  if(CIM_fail){
+    
+    Qprof <- SIM
+    main_prof <- paste("SIM", pop.name, trait.name, Q.eff, VCOV)
+    
+  } else {
+    
+    Qprof <- CIM
+    main_prof <- paste("CIM", pop.name, trait.name, Q.eff, VCOV)
+    
+  }
+  
+  
   main.Qeff <- paste("QTL gen. effects", pop.name, trait.name, Q.eff, VCOV)
   
   if(Q.eff == "biall"){t_plot <- "h"} else {t_plot <- "l"}
   
   pdf(file.path(folder.loc, "QTL_profile.pdf"), height = 10, width = 16)
   
-  print(plot.QTLprof(x = CIM, QTL = cofactors, type = t_plot, main = main.cim,
+  print(plot.QTLprof(x = Qprof, QTL = cofactors, type = t_plot, main = main_prof,
                      threshold = thre.QTL, text.size = text.size))
   
   dev.off()
@@ -281,7 +314,7 @@ mppGE_proc_fast <- function(pop.name = "MPP", trait.name = "trait1", mppData, tr
   pdf(file.path(folder.loc, "gen_eff.pdf"), height = 10, width = 16)
   
   print(plot_genEffects_GE(mppData = mppData, nEnv = length(trait),
-                           EnvNames = EnvNames, Qprof = CIM, Q.eff = Q.eff,
+                           EnvNames = EnvNames, Qprof = Qprof, Q.eff = Q.eff,
                            QTL = QTL, main = main.Qeff, text.size = text.size))
   
   dev.off()
@@ -295,9 +328,8 @@ mppGE_proc_fast <- function(pop.name = "MPP", trait.name = "trait1", mppData, tr
   
   ### Return R object
   
-  
   results <- list(n.QTL = dim(QTL)[1], cofactors = cofactors[, 1:5],
-                  QTL = QTL[, 1:5], R2 = R2, Qeff = Q_eff)
+                  QTL = QTL[, 1:5], Q_eff = Q_eff, R2 = R2)
   
   return(results)
   

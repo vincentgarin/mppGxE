@@ -96,6 +96,8 @@ List containing the following items:
 
 \item{QTL}{\code{Data.frame} with QTL positions.}
 
+\item{Q_eff}{\code{list} containing the estimated QTL allelic effects.}
+
 \item{R2}{\code{List} containing R squared statistics of the QTL effects}
 
 Some output files are also saved at the specified location
@@ -107,9 +109,13 @@ Some output files are also saved at the specified location
 
 \item{The list of cofactors (cofactors.RData).}
 
-\item{The list of QTL (QTL.RData).}
+\item{The list of QTL (QTLs.RData).}
+
+\item{The list of QTL allelic effects (QTL_effects.RData).}
 
 \item{The QTL R squared statistics (QTL_R2.RData)}
+
+\item{The number of detected QTLs and adjusted R2 (Glb_res.RData)}
 
 \item{The plot of the CIM profile (QTL_profile.pdf) with dotted vertical
 lines representing the cofactors positions and the
@@ -135,10 +141,10 @@ The procedure is the following:
 (\code{\link{mppGE_CIM_fast}}).}
 
 \item{Estimation of QTLs additive allelic effect
-(\code{\link{QTL_effects_GE}}).}
+(\code{\link{QTL_effect_GE}}).}
 
 \item{Estimation of the global QTLs effect R squared and individual QTL effect
-R squared (\code{\link{QTL_effects_GE}}).}
+R squared (\code{\link{QTL_R2_GE}}).}
 
 }
 }

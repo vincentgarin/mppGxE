@@ -44,7 +44,8 @@
 #' @export
 
 plot_genEffects_GE <- function(mppData, nEnv, EnvNames, Qprof, Q.eff, QTL = NULL,
-                               main = "QTL genetic effects plot", text.size = 18)
+                               ref_par = NULL, main = "QTL genetic effects plot",
+                               text.size = 18)
 {
   
   # 1. check data format
@@ -64,6 +65,20 @@ plot_genEffects_GE <- function(mppData, nEnv, EnvNames, Qprof, Q.eff, QTL = NULL
     
     stop("The Qprof object does not contain any QTL p-value information.
          It was probably not obtained using plot.gen.eff = TRUE")
+    
+  }
+  
+  # Check if the reference parent is in the parent list
+  if(!is.null(ref_par)){
+    
+    if(!(ref_par %in% mppData$parents)){
+      
+      av_par <- paste(mppData$parents, collapse = ', ')
+      err_mes <- 'The reference parent specified (ref_par) is not in the parent list. It should be one of:'
+      
+      stop(paste(err_mes, av_par))
+      
+    }
     
   }
   
@@ -127,6 +142,10 @@ plot_genEffects_GE <- function(mppData, nEnv, EnvNames, Qprof, Q.eff, QTL = NULL
     names(all.ref) <- mppData$parents
     
     ord.par <- names(sort(all.ref))
+    
+    if(!is.null(ref_par)){
+      ord.par <- c(ord.par[-which(ord.par == ref_par)], ref_par)
+    }
     
     # order each environmental parts
     

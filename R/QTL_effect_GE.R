@@ -1,5 +1,5 @@
 ##################
-# QTL_effects_GE #
+# QTL_effect_GE #
 ##################
 
 #' MPP GxE QTL genetic effects
@@ -57,7 +57,7 @@
 #'
 #' Qpos <- c("PZE.105068880", "PZE.106098900")
 #'
-#' Qeff <- QTL_effects_GE(mppData = mppData_GE, trait = c('DMY_CIAM', 'DMY_TUM'),
+#' Qeff <- QTL_effect_GE(mppData = mppData_GE, trait = c('DMY_CIAM', 'DMY_TUM'),
 #'                           Q.eff = 'par', QTL = Qpos)
 #'
 #' Qeff
@@ -108,7 +108,7 @@
 # msMaxIter = 100
 
 
-QTL_effects_GE <- function(mppData, trait, Q.eff = "par", VCOV = "UN",
+QTL_effect_GE <- function(mppData, trait, Q.eff = "par", VCOV = "UN",
                            QTL = NULL, maxIter = 100, msMaxIter = 100){
   
   #### 1. Check data format and arguments ####
@@ -161,6 +161,8 @@ QTL_effects_GE <- function(mppData, trait, Q.eff = "par", VCOV = "UN",
   # remove problematic character in parents names
   QTL_nm <- gsub(pattern = '-', replacement = "", x = QTL_nm)
   QTL_nm <- gsub(pattern = ' ', replacement = "", x = QTL_nm)
+  QTL_nm <- gsub(pattern = '/', replacement = "", x = QTL_nm)
+  QTL_nm <- gsub(pattern = '*', replacement = "", x = QTL_nm)
   
   QTL_mat <- diag(nEnv) %x% QTL_mat
   colnames(QTL_mat) <- QTL_nm
@@ -213,6 +215,8 @@ QTL_effects_GE <- function(mppData, trait, Q.eff = "par", VCOV = "UN",
     p_nm <- mppData$parents
     p_nm <- gsub(pattern = '-', replacement = "", x = p_nm)
     p_nm <- gsub(pattern = ' ', replacement = "", x = p_nm)
+    p_nm <- gsub(pattern = '/', replacement = "", x = p_nm)
+    p_nm <- gsub(pattern = '*', replacement = "", x = p_nm)
     
     ref_QTL <- rep(paste0('QTL_', 1:nQTL), each = (mppData$n.par * nEnv))
     ref_QTL <- paste0(ref_QTL, '_', rep(p_nm, nEnv))

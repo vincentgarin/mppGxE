@@ -11,6 +11,7 @@ plot_genEffects_GE(
   Qprof,
   Q.eff,
   QTL = NULL,
+  ref_par = NULL,
   main = "QTL genetic effects plot",
   text.size = 18
 )
