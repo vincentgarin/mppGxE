@@ -14,7 +14,7 @@
 #'
 #' @param Q.eff \code{Character} expression indicating the assumption concerning
 #' the QTL effects: 1) "cr" for cross-specific; 2) "par" for parental; 3) "anc"
-#' for ancestral; 4) "biall" for a bi-allelic. Default = "cr".
+#' for ancestral; 4) "biall" for a bi-allelic. Default = "par".
 #'
 #' @param VCOV VCOV \code{Character} expression defining the type of variance
 #' covariance structure used. 'CS' for compound symmetry assuming a unique
@@ -81,7 +81,7 @@
 #'
 
 
-mppGE_CIM_fast <- function(mppData, trait, Q.eff = 'cr', VCOV = 'UN',
+mppGE_CIM_fast <- function(mppData, trait, Q.eff = 'par', VCOV = 'UN',
                            cofactors = NULL, window = 20, n.cores = 1,
                            maxIter = 100, msMaxIter = 100)
 {

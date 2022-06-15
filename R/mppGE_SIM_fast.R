@@ -14,7 +14,7 @@
 #'
 #' @param Q.eff \code{Character} expression indicating the assumption concerning
 #' the QTL effects: 1) "cr" for cross-specific; 2) "par" for parental; 3) "anc"
-#' for ancestral; 4) "biall" for a bi-allelic. Default = "cr".
+#' for ancestral; 4) "biall" for a bi-allelic. Default = "par".
 #'
 #' @param VCOV VCOV \code{Character} expression defining the type of variance
 #' covariance structure used. 'CS' for compound symmetry assuming a unique
@@ -57,8 +57,7 @@
 #'
 #' data(mppData_GE)
 #'
-#' SIM <- mppGE_SIM_fast(mppData = mppData_GE, trait = c('DMY_CIAM', 'DMY_TUM'),
-#'                  Q.eff = 'par', plot.gen.eff = TRUE)
+#' SIM <- mppGE_SIM_fast(mppData = mppData_GE, trait = c('DMY_CIAM', 'DMY_TUM'))
 #'
 #' Qpos <- QTL_select(Qprof = SIM, threshold = 3, window = 50)
 #'
@@ -70,9 +69,8 @@
 #' @export
 #'
 
-mppGE_SIM_fast <- function(mppData, trait, Q.eff = "cr", VCOV = "UN",
-                           n.cores = 1, maxIter = 100,
-                           msMaxIter = 100) {
+mppGE_SIM_fast <- function(mppData, trait, Q.eff = "par", VCOV = "UN",
+                           n.cores = 1, maxIter = 100, msMaxIter = 100) {
   
   ### 1. Check data format and arguments
   check_mod_mppGE(mppData = mppData, trait = trait, Q.eff = Q.eff, VCOV = VCOV,

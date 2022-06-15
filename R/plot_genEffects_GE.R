@@ -18,7 +18,7 @@
 #' \code{\link{mppGE_CIM}}, \code{\link{mppGE_oneS_SIM}} or
 #' \code{\link{mppGE_oneS_CIM}} using argument \code{plot.gen.effect = TRUE}.
 #'
-#' @param Q.eff on of "cr", "par", "anc" or "biall".
+#' @param Q.eff on of "cr", "par", "anc" or "biall". Default = 'par'
 #'
 #' @param QTL Optional argument. Object of class \code{QTLlist} representing a
 #' list of selected position obtained with the function \code{\link{QTL_select}}
@@ -43,7 +43,7 @@
 #'
 #' @export
 
-plot_genEffects_GE <- function(mppData, nEnv, EnvNames, Qprof, Q.eff, QTL = NULL,
+plot_genEffects_GE <- function(mppData, nEnv, EnvNames, Qprof, Q.eff = 'par', QTL = NULL,
                                ref_par = NULL, main = "QTL genetic effects plot",
                                text.size = 18)
 {
