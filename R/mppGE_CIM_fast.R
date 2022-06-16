@@ -24,6 +24,11 @@
 #' environmental variance covariance structure allowing a specific genotypic
 #' covariance for each pair of environments. Default = 'UN'
 #' 
+#' @param VCOV_data \code{Character} specifying if the reference VCOV should
+#' be formed  taking all cofactors into consideration ("unique") or if different
+#' VCOVs should be formed by removing the cofactor information that is too close
+#' of a tested cofactor position ("minus_cof"). Default = "unique"
+#' 
 #' @param cofactors Object of class \code{QTLlist} representing a list of
 #' selected marker positions obtained with the function QTL_select() or
 #' a vector of \code{character} marker positions names.
@@ -61,18 +66,16 @@
 #'
 #' @examples
 #'
-#' library(mppR)
-#'
 #' data(mppData_GE)
 #' 
 #' cofactors <- mppData_GE$map$mk.names[c(35, 61)]
 #'
 #' CIM <- mppGE_CIM_fast(mppData = mppData_GE, trait = c('DMY_CIAM', 'DMY_TUM'),
-#'                  Q.eff = 'par')
-#'
-#' Qpos <- QTL_select(Qprof = CIM, threshold = 3, window = 50)
-#'
-#' plot.QTLprof(x = CIM, QTL = Qpos)
+#'                      cofactors = cofactor, window = 20)
+#'                      
+#' Qpos <- QTL_select(CIM)
+#'                       
+#' plot.QTLprof(CIM)
 #'
 #' plot_genEffects_GE(mppData = mppData_GE, nEnv = 2, EnvNames = c('CIAM', 'TUM'),
 #'                    Qprof = CIM, Q.eff = 'par', QTL = Qpos, text.size = 14)
@@ -82,8 +85,8 @@
 
 
 mppGE_CIM_fast <- function(mppData, trait, Q.eff = 'par', VCOV = 'UN',
-                           cofactors = NULL, window = 20, n.cores = 1,
-                           maxIter = 100, msMaxIter = 100)
+                           VCOV_data = "unique", cofactors = NULL, window = 20,
+                           n.cores = 1, maxIter = 100, msMaxIter = 100)
 {
   
   #### 1. Check data format and arguments ####
@@ -157,26 +160,44 @@ mppGE_CIM_fast <- function(mppData, trait, Q.eff = 'par', VCOV = 'UN',
   
   names(cof_mat_list) <- unique.cof.comb
   
-  names(cof_mat_list) <- unique.cof.comb
-  
   #### 4. Calculate the VCOV matrices ####
   
-  VCOV_list <- vector(mode = 'list', length = n_cof_comb)
-  
-  for(i in 1:n_cof_comb){
+  # Calculate one VCOV for each combination of cofactors ...
+  if(VCOV_data == 'minus_cof'){
+    
+    VCOV_list <- vector(mode = 'list', length = n_cof_comb)
+    
+    for(i in 1:n_cof_comb){
+      
+      m <- MM_comp(mppData = mppData, nEnv = nEnv, y = TraitEnv,
+                   cof_mat = cof_mat_list[[i]], VCOV = VCOV,
+                   maxIter = maxIter, msMaxIter = msMaxIter)
+      
+      VCOV_list[[i]] <- getVCOV(mppData = mppData, model = m$model, VCOV = VCOV,
+                                data = m$data, nEnv = nEnv, inv = TRUE)
+      
+    }
+    
+    names(VCOV_list) <- unique.cof.comb
+    
+    # ... or calculate a unique VCOV with all cofactors.  
+  } else {
+    
+    s_cof_comb <- unique.cof.comb[which.max(nchar(unique.cof.comb))]
     
     m <- MM_comp(mppData = mppData, nEnv = nEnv, y = TraitEnv,
-                 cof_mat = cof_mat_list[[i]], VCOV = VCOV,
+                 cof_mat = cof_mat_list[[s_cof_comb]], VCOV = VCOV,
                  maxIter = maxIter, msMaxIter = msMaxIter)
     
-    VCOV_list[[i]] <- getVCOV(mppData = mppData, model = m$model, VCOV = VCOV,
-                              data = m$data, nEnv = nEnv, inv = TRUE)
+    VCOV_m <- getVCOV(mppData = mppData, model = m$model, VCOV = VCOV,
+                      data = m$data, nEnv = nEnv, inv = TRUE)
     
   }
   
-  names(VCOV_list) <- unique.cof.comb
-  
   ##### 5. Calculate the QTL effects #####
+  
+  if(n.cores > 1){ parallel <- TRUE; cluster <- makeCluster(n.cores)
+  } else { parallel <- FALSE; cluster <- NULL }
   
   nGeno <- dim(mppData$pheno)[1]
   env <- rep(paste0('E', 1:nEnv), each = nGeno)
@@ -193,7 +214,16 @@ mppGE_CIM_fast <- function(mppData, trait, Q.eff = 'par', VCOV = 'UN',
     
     sel_cof_comb <- unique.cof.comb[c]
     vect.pos <- which(cof.comb %in% sel_cof_comb)
-    Vi <- VCOV_list[[sel_cof_comb]]
+    
+    if(VCOV_data == "minus_cof"){ # selection of VCOV calculated minus cof pos ...
+      
+      Vi <- VCOV_list[[sel_cof_comb]]
+      
+    } else { # ... or global unique VCOV
+      
+      Vi <- VCOV_m
+      
+    }
     
     # form the cofactor matrices
     cof_mat_m <-  cof_mat_list[[sel_cof_comb]]
@@ -204,9 +234,6 @@ mppGE_CIM_fast <- function(mppData, trait, Q.eff = 'par', VCOV = 'UN',
     }
     
     #### possibility of PCA reduction
-    
-    if(n.cores > 1){ parallel <- TRUE; cluster <- makeCluster(n.cores)
-    } else { parallel <- FALSE; cluster <- NULL }
     
     if (parallel) {
       
@@ -226,8 +253,6 @@ mppGE_CIM_fast <- function(mppData, trait, Q.eff = 'par', VCOV = 'UN',
       
     }
     
-    if(n.cores > 1){stopCluster(cluster)}
-    
     log.pval <- t(data.frame(log.pval))
     log.pval[, 1] <- check.inf(x = log.pval[, 1]) # check if there are -/+ Inf value
     log.pval[is.na(log.pval[, 1]), 1] <- 0
@@ -239,6 +264,8 @@ mppGE_CIM_fast <- function(mppData, trait, Q.eff = 'par', VCOV = 'UN',
   
   log.pval <- log_pval_tot[order(log_pval_tot[, ncol(log_pval_tot)]), ]
   log.pval <- log.pval[, -ncol(log.pval)]
+  
+  if(n.cores > 1){stopCluster(cluster)}
   
   #### 6. format the results and return ####
   
