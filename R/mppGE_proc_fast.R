@@ -306,8 +306,8 @@ mppGE_proc_fast <- function(pop.name = "MPP", trait.name = "trait1", mppData, tr
   
   pdf(file.path(folder.loc, "QTL_profile.pdf"), height = 10, width = 16)
   
-  print(plot.QTLprof(x = Qprof, QTL = cofactors, type = t_plot, main = main_prof,
-                     threshold = thre.QTL, text.size = text.size))
+  print(plot(x = Qprof, QTL = cofactors, type = t_plot, main = main_prof,
+             threshold = thre.QTL, text.size = text.size))
   
   dev.off()
   

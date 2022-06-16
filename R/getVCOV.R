@@ -21,12 +21,7 @@
 # NA.rem: remove the rows/columns of the matrix associated with missing (NA)
 # values 
 
-
-# model <- m$model
-# VCOV <- VCOV
-# data <- m$data
-# nEnv <- nEnv
-# nGeno <- dim(mppData$pheno)[1]
+# inv: select if you want to get the inverse of the VCOV or not. Default = TRUE
 
 getVCOV <- function(mppData, model, VCOV, data, nEnv, NA.rem = TRUE, inv = TRUE){
   
@@ -96,6 +91,8 @@ getVCOV <- function(mppData, model, VCOV, data, nEnv, NA.rem = TRUE, inv = TRUE)
     VCOV <- as.matrix(VCOV)
     
   }
+  
+  VCOV <- Matrix(VCOV)
   
   return(VCOV)
   
