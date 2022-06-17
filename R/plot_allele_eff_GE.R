@@ -1,5 +1,5 @@
 ######################
-# plot_genEffects_GE #
+# plot_allele_eff_GE #
 ######################
 
 #' plot of genome wide QTL allelic effect significance
@@ -18,12 +18,14 @@
 #' \code{\link{mppGE_CIM}}, \code{\link{mppGE_oneS_SIM}} or
 #' \code{\link{mppGE_oneS_CIM}} using argument \code{plot.gen.effect = TRUE}.
 #'
-#' @param Q.eff on of "cr", "par", "anc" or "biall". Default = 'par'
+#' @param Q.eff one of "cr", "par", "anc" or "biall". Default = 'par'
 #'
 #' @param QTL Optional argument. Object of class \code{QTLlist} representing a
 #' list of selected position obtained with the function \code{\link{QTL_select}}
 #' or a vector of \code{character} marker or in between marker positions names.
 #' These positions will be plotted on the graph. Default = NULL.
+#' 
+#' @param ref_par \code{Charater} specifying the reference parent. Default = NULL.
 #'
 #' @param main Title of the graph. Default =  "QTL genetic effects plot".
 #'
@@ -39,11 +41,18 @@
 #'
 #' @examples
 #'
-#' # Come later
+#' data(mppData_GE)
+#'
+#' SIM <- mppGE_SIM_fast(mppData = mppData_GE, trait = c('DMY_CIAM', 'DMY_TUM'))
+#'
+#' Qpos <- QTL_select(Qprof = SIM, threshold = 3, window = 50)
+#'
+#' plot_allele_eff_GE(mppData = mppData_GE, nEnv = 2, EnvNames = c('CIAM', 'TUM'),
+#'                    Qprof = SIM, Q.eff = 'par', QTL = Qpos, text.size = 14)
 #'
 #' @export
 
-plot_genEffects_GE <- function(mppData, nEnv, EnvNames, Qprof, Q.eff = 'par', QTL = NULL,
+plot_allele_eff_GE <- function(mppData, nEnv, EnvNames, Qprof, Q.eff = 'par', QTL = NULL,
                                ref_par = NULL, main = "QTL genetic effects plot",
                                text.size = 18)
 {

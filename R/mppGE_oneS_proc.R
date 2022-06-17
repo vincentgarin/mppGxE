@@ -65,7 +65,7 @@
 #' @param plot.gen.eff \code{Logical} value. If \code{plot.gen.eff = TRUE},
 #' the function will save the significance of the QTL allelic effects per
 #' cross/parent along the genome. These results can be visualized with the
-#' function \code{\link{plot_genEffects_GE}}. Default value = FALSE.
+#' function \code{\link{plot_allele_eff_GE}}. Default value = FALSE.
 #'
 #' @param thre.cof \code{Numeric} value representing the -log10(p-value)
 #' threshold above which a position can be selected as cofactor. Default = 4.
@@ -129,7 +129,7 @@
 #' \item{The plot of the CIM profile (QTL_profile.pdf) with dotted vertical
 #' lines representing the cofactors positions. If \code{plot.gen.eff = TRUE},
 #' plot of the genetic effects per cross or parents obtained with
-#' \code{\link{plot_genEffects_GE}}  (gen_eff.pdf) with dashed
+#' \code{\link{plot_allele_eff_GE}}  (gen_eff.pdf) with dashed
 #' lines representing the QTL positions.}
 #'
 #' }
@@ -143,7 +143,7 @@
 #' \code{\link{mppGE_oneS_SIM}},
 #' \code{\link{mppGE_oneS_back_elim}},
 #' \code{\link{mppGE_oneS_QTL_effects}}
-#' \code{\link{plot_genEffects_GE}},
+#' \code{\link{plot_allele_eff_GE}},
 #'
 #' @examples
 #'
@@ -410,7 +410,7 @@ mppGE_oneS_proc <- function(pop.name = "MPP", trait.name = "trait1", plot_data,
 
     pdf(file.path(folder.loc, "gen_eff.pdf"), height = 10, width = 16)
 
-    print(plot_genEffects_GE(mppData = mppData, nEnv = length(EnvNames),
+    print(plot_allele_eff_GE(mppData = mppData, nEnv = length(EnvNames),
                              EnvNames = EnvNames, Qprof = CIM, Q.eff = Q.eff,
                              QTL = QTL, main = main.Qeff, text.size = text.size))
 

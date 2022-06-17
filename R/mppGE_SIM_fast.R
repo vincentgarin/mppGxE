@@ -37,9 +37,11 @@
 #'
 #' \item{SIM }{\code{Data.frame} of class \code{QTLprof}. with five columns :
 #' 1) QTL marker or in between position names; 2) chromosomes;
-#' 3) interger position indicators on the chromosome;
-#' 4) positions in centi-Morgan; and 5) -log10(p-val). And if
-#' \code{plot.gen.eff = TRUE}, p-values of the cross or parental QTL allelic effects.}
+#' 3) integer position indicators on the chromosome;
+#' 4) positions in centi-Morgan; and 5) -log10(p-val) of the global QTL effect
+#' across environments 6) p-values of the within environment QTL effects
+#' (one column per environment); and p-values of the within environment parental
+#' QTL allelic effects (one column per parent environment combination).}
 #'
 #' @author Vincent Garin
 #' 
@@ -63,7 +65,7 @@
 #'
 #' plot(x = SIM, QTL = Qpos)
 #'
-#' plot_genEffects_GE(mppData = mppData_GE, nEnv = 2, EnvNames = c('CIAM', 'TUM'),
+#' plot_allele_eff_GE(mppData = mppData_GE, nEnv = 2, EnvNames = c('CIAM', 'TUM'),
 #'                    Qprof = SIM, Q.eff = 'par', QTL = Qpos, text.size = 14)
 #'
 #' @export

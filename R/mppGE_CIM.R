@@ -31,7 +31,7 @@
 #' @param plot.gen.eff \code{Logical} value. If \code{plot.gen.eff = TRUE},
 #' the function will save the significance of the QTL allelic effects per
 #' cross/parent along the genome. These results can be visualized with the
-#' function \code{\link{plot_genEffects_GE}}. Default value = FALSE.
+#' function \code{\link{plot_allele_eff_GE}}. Default value = FALSE.
 #'
 #' @param parallel \code{Logical} value specifying if the function should be
 #' executed in parallel on multiple cores. To run the function in parallel user must
@@ -56,7 +56,7 @@
 #' @author Vincent Garin
 #'
 #'
-#' @seealso \code{\link{mppGE_SIM}}, \code{\link{plot_genEffects_GE}}
+#' @seealso \code{\link{mppGE_SIM}}, \code{\link{plot_allele_eff_GE}}
 #'
 #'
 #' @examples
@@ -78,7 +78,7 @@
 #'
 #' plot(x = CIM, QTL = Qpos)
 #'
-#' plot_genEffects_GE(mppData = mppData_GE, nEnv = 2, EnvNames = c('CIAM', 'TUM'),
+#' plot_allele_eff_GE(mppData = mppData_GE, nEnv = 2, EnvNames = c('CIAM', 'TUM'),
 #'                    Qprof = CIM, Q.eff = 'par', QTL = Qpos, text.size = 14)
 #'
 #' @import ggplot2

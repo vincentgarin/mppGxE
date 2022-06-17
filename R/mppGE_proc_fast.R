@@ -4,14 +4,13 @@
 
 #' MPP GxE QTL analysis
 #'
-#' QTL detection in MPP characterized in multiple environments using 'fast'
-#' algorithm.
+#' QTL detection in MPP characterized in multiple environments.
 #'
 #' The procedure is the following:
 #'
 #' \enumerate{
 #'
-#' \item{Simple interval mapping (SIM) to select cofactor
+#' \item{Simple interval mapping (SIM) to select cofactors
 #' (\code{\link{mppGE_SIM_fast}}).}
 #'
 #' \item{Composite interval mapping (CIM) with selected cofactors
@@ -51,6 +50,12 @@
 #' cross-specific within environment error term. 'UN' for unstructured
 #' environmental variance covariance structure allowing a specific genotypic
 #' covariance for each pair of environments. Default = 'UN'
+#' 
+#' @param VCOV_data \code{Character} specifying if the reference VCOV of the
+#' CIM profile computation should be formed  taking all cofactors into
+#' consideration ("unique") or if different VCOVs should be formed by removing
+#' the cofactor information that is too close of a tested cofactor position
+#' ("minus_cof"). Default = "unique"
 #'
 #' @param thre.cof \code{Numeric} value representing the -log10(p-value)
 #' threshold above which a position can be selected as cofactor. Default = 4.
@@ -119,7 +124,7 @@
 #' \item{The plot of the CIM profile (QTL_profile.pdf) with dotted vertical
 #' lines representing the cofactors positions and the
 #' plot of the genetic effects per cross or parents obtained with
-#' \code{\link{plot_genEffects_GE}} (gen_eff.pdf) with dashed
+#' \code{\link{plot_allele_eff_GE}} (gen_eff.pdf) with dashed
 #' lines representing the QTL positions.}
 #'
 #' }
@@ -136,28 +141,25 @@
 #'
 #' @examples
 #'
-#'\dontrun{
+#' \dontrun{
 #'
 #' data(mppData_GE)
 #'
-#' # Specify a location where your results will be saved
-#' my.loc <- tempdir()
+#' MPP_GE_QTL <- mppGE_proc_fast(pop.name = 'EUNAM', trait.name = 'DMY',
+#' mppData = mppData_GE, trait = c('DMY_CIAM', 'DMY_TUM'),
+#' n.cores = 1, output.loc = tempdir())
 #'
-#' QTL <- mppGE_proc_fast(pop.name = 'EUNAM', trait.name = 'DMY', mppData = mppData_GE,
-#'                   trait = c('DMY_CIAM', 'DMY_TUM'), EnvNames = c('CIAM', 'TUM'),
-#'                   Q.eff = 'par', thre.cof = 3, thre.QTL = 3, verbose = FALSE,
-#'                   output.loc = my.loc)
-#'
-#'}
+#' }
 #'
 #' @export
 #'
 
 
 mppGE_proc_fast <- function(pop.name = "MPP", trait.name = "trait1", mppData, trait,
-                            EnvNames = NULL,  Q.eff = "par", VCOV = "UN", thre.cof = 4,
-                            win.cof = 50, window = 20, thre.QTL = 4, win.QTL = 20,
-                            text.size = 18, n.cores = 1,  maxIter = 100, msMaxIter = 100,
+                            EnvNames = NULL,  Q.eff = "par", VCOV = "UN",
+                            VCOV_data = "unique", thre.cof = 4, win.cof = 50, window = 20,
+                            thre.QTL = 4, win.QTL = 20, text.size = 18,
+                            n.cores = 1,  maxIter = 100, msMaxIter = 100,
                             verbose = TRUE, output.loc = NULL) {
   
   
@@ -223,8 +225,8 @@ mppGE_proc_fast <- function(pop.name = "MPP", trait.name = "trait1", mppData, tr
   }
   
   CIM <- mppGE_CIM_fast(mppData = mppData, trait = trait, Q.eff = Q.eff,
-                        VCOV = VCOV, cofactors = cofactors, window = window,
-                        n.cores = n.cores, maxIter = maxIter,
+                        VCOV = VCOV, VCOV_data = VCOV_data, cofactors = cofactors,
+                        window = window, n.cores = n.cores, maxIter = maxIter,
                         msMaxIter = msMaxIter)
   
   # save the list of cofactors
@@ -313,7 +315,7 @@ mppGE_proc_fast <- function(pop.name = "MPP", trait.name = "trait1", mppData, tr
   
   pdf(file.path(folder.loc, "gen_eff.pdf"), height = 10, width = 16)
   
-  print(plot_genEffects_GE(mppData = mppData, nEnv = length(trait),
+  print(plot_allele_eff_GE(mppData = mppData, nEnv = length(trait),
                            EnvNames = EnvNames, Qprof = Qprof, Q.eff = Q.eff,
                            QTL = QTL, main = main.Qeff, text.size = text.size))
   

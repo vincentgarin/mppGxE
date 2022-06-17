@@ -4,7 +4,9 @@
 
 #' MPP GxE QTL R2
 #'
-#' Compute R2 statistics for MPP GxE QTL using a linear model.
+#' Compute global and partial R2 statistics for MPP GxE QTL using a linear model.
+#' The global R2 is the contribution of all QTL positions while the partial R2
+#' is the specific contribution of an individual QTL position.
 #'
 #' @param mppData An object of class \code{mppData}.
 #'
@@ -23,7 +25,8 @@
 #'
 #' @return Return:
 #'
-#' \item{}{}
+#' \code{List} containing the global unadjusted R2, the global adjusted R2,
+#' the partial unadjusted R2, and the partial adjusted R2.
 #'
 #' @author Vincent Garin
 #'
@@ -34,26 +37,10 @@
 #' Qpos <- c("PZE.105068880", "PZE.106098900")
 #'
 #' R2 <- QTL_R2_GE(mppData = mppData_GE, trait = c('DMY_CIAM', 'DMY_TUM'),
-#'                    Q.eff = 'par', QTL = Qpos)
+#'                 QTL = Qpos)
 #'
 #' @export
 #'
-
-# library(mppR)
-# 
-# source("~/WD/mppGxE/package/mppGxE/R/check_mod_mppGE.R")
-# source("~/WD/mppGxE/package/mppGxE/R/R2_lin_GE.R")
-# 
-# 
-# setwd('C:/Users/user/Documents/WD/ICRISAT/BCNAM/data')
-# load('./mppData/KK2013/mppData.RData')
-# 
-# tr_i <- c("KK1_G_YIELD", "KK2_G_YIELD", "KK3_G_YIELD", "KK4_G_YIELD")
-# trait = tr_i
-# Q.eff = 'par'
-# QTL <- c('S1_61851589', 'S3_53134126')
-# glb.only = TRUE
-
 
 QTL_R2_GE <- function(mppData, trait, Q.eff = "par", QTL = NULL,
                       glb.only = FALSE){
@@ -142,4 +129,4 @@ QTL_R2_GE <- function(mppData, trait, Q.eff = "par", QTL = NULL,
   return(QR2Res)
   
 
-  }
+}

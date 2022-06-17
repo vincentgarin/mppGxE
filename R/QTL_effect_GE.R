@@ -4,7 +4,10 @@
 
 #' MPP GxE QTL genetic effects
 #'
-#' Compute MPP GxE QTL genetic effects.
+#' Estimate the QTL parental allelic effects within environment. The estimation
+#' is performed using an exact mixed model with function from R package
+#' \code{nlme}. The significance of the allele effect is assessed using a 
+#' Wald test. 
 #'
 #' @param mppData An object of class \code{mppData}.
 #'
@@ -50,6 +53,12 @@
 #' }
 #'
 #' @author Vincent Garin
+#' 
+#' @references
+#' 
+#' Pinheiro J, Bates D, DebRoy S, Sarkar D, R Core Team (2021). nlme: Linear
+#' and Nonlinear Mixed Effects Models_. R package version 3.1-152,
+#' <URL: https://CRAN.R-project.org/package=nlme>.
 #'
 #' @examples
 #'
@@ -64,49 +73,6 @@
 #'
 #' @export
 #'
-
-# library(mppR)
-# library(mppGxE)
-# library(nlme)
-# library(Matrix)
-# 
-# source("~/WD/mppGxE/package/mppGxE/R/check_mod_mppGE.R")
-# source("~/WD/mppGxE/package/mppGxE/R/getVCOV.R")
-# source("~/WD/mppGxE/package/mppGxE/R/MM_comp.R")
-# source("~/WD/mppGxE/package/mppGxE/R/W_QTL.R")
-# source("~/WD/mppGxE/package/mppGxE/R/check.inf.R")
-# source("~/WD/mppGxE/package/mppGxE/R/lme_comp.R")
-# source("~/WD/mppGxE/package/mppGxE/R/sign.star.R")
-# 
-# setwd('C:/Users/user/Documents/WD/ICRISAT/BCNAM/data')
-# load('./mppData/KK2013/mppData.RData')
-# 
-# map <- mppData$map
-# 
-# set.seed(435436)
-# 
-# mk_sel <- map$mk.names[map$chr %in% c(1, 3)]
-# mk_sel <- mk_sel[sort(sample(x = 1:length(mk_sel), 500))]
-# 
-# mppData <- subset(x = mppData, mk.list = mk_sel)
-# 
-# #### SIM computation and cofactors selection ####
-# 
-# tr_i <- c("KK1_G_YIELD", "KK2_G_YIELD", "KK3_G_YIELD", "KK4_G_YIELD")
-# 
-# # SIM <- mppGE_SIM_fast(mppData = mppData, trait = tr_i,
-# #                       Q.eff = 'par', n.cores = 3)
-# # 
-# # QTL <- QTL_select(Qprof = SIM, threshold = 3, window = 200)
-# 
-# QTL <- c('S1_61851589', 'S3_53134126')
-# 
-# trait = tr_i
-# Q.eff = 'par'
-# VCOV = 'UN'
-# maxIter = 100
-# msMaxIter = 100
-
 
 QTL_effect_GE <- function(mppData, trait, Q.eff = "par", VCOV = "UN",
                            QTL = NULL, maxIter = 100, msMaxIter = 100){

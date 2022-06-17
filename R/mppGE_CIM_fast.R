@@ -2,11 +2,20 @@
 # mppGE_CIM_fast #
 ##################
 
-#' MPP GxE Composite Interval Mapping using fast MM GLS algorithm
-#'
-#' Computes a multi QTL models along the genome using different models. Add extra
-#' elements to provide more information about the procedure. The initial mixed
-#' are calculated with functions from the nlme package.
+#' MPP GxE Composite Interval Mapping
+#' 
+#' Computes multi-QTL models with cofactors along the genome using an approximate
+#' mixed model computation. An initial variance covariance (VCOV) structure is
+#' calculated using function from the \code{nlme} package. Then, this information
+#' is used to estimate the QTL global and within parental effect significance using a
+#' Wald test.
+#' 
+#' It is possible to calculate one initial VCOV using a null model with all
+#' the cofactors (\code{VCOV_data = "unique"}) or one VCOV per combination of
+#' cofactors (\code{VCOV_data = "minus_cof"}). In the later case, the cofactor
+#' that fall witin a distance of \code{window} on the left and right of a QTL
+#' position is removed for the calculation of the initial VCOV. Therefore,
+#' N_cof + 1 VCOV are calculated.
 #'
 #' @param mppData An object of class \code{mppData}.
 #'
@@ -50,9 +59,11 @@
 #'
 #' \item{CIM }{\code{Data.frame} of class \code{QTLprof}. with five columns :
 #' 1) QTL marker or in between position names; 2) chromosomes;
-#' 3) interger position indicators on the chromosome;
-#' 4) positions in centi-Morgan; 5) -log10(p-val); and 6 onwards) if
-#' p-values of the cross or parental QTL allelic effects.}
+#' 3) integer position indicators on the chromosome;
+#' 4) positions in centi-Morgan; and 5) -log10(p-val) of the global QTL effect
+#' across environments 6) p-values of the within environment QTL effects
+#' (one column per environment); and p-values of the within environment parental
+#' QTL allelic effects (one column per parent environment combination).}
 #'
 #' @author Vincent Garin
 #' 
@@ -62,7 +73,8 @@
 #' and Nonlinear Mixed Effects Models_. R package version 3.1-152,
 #' <URL: https://CRAN.R-project.org/package=nlme>.
 #'
-#' @seealso \code{\link{mppGE_SIM_fast}}
+#' \code{\link{mppGE_SIM}},
+#' \code{\link{mppGE_proc}}
 #'
 #' @examples
 #'
@@ -75,9 +87,9 @@
 #'                      
 #' Qpos <- QTL_select(CIM)
 #'                       
-#' plot.QTLprof(CIM)
+#' plot(CIM)
 #'
-#' plot_genEffects_GE(mppData = mppData_GE, nEnv = 2, EnvNames = c('CIAM', 'TUM'),
+#' plot_allele_eff_GE(mppData = mppData_GE, nEnv = 2, EnvNames = c('CIAM', 'TUM'),
 #'                    Qprof = CIM, Q.eff = 'par', QTL = Qpos, text.size = 14)
 #'
 #' @export
